@@ -9,7 +9,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cfml.dictionary</artifactId>
 	<packaging>jar</packaging>
-	<version>2.5.1</version>
 
 	<dependencies>
 		<dependency>
