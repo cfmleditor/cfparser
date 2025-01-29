@@ -7,7 +7,7 @@
 
 	<name>coldfusion-parser</name>
 	<description>Stand-Alone ColdFusion Parser. Combined forks from github.com/denuno/cfml.parsing and github.com/denuno/cfml.dictionary.</description>
-	<url>https://github.com/cfparser/cfparser</url>
+	<url>https://github.com/cfmleditor/cfparser</url>
 	<inceptionYear>2012</inceptionYear>
 	<organization>
 		<name>cfparser</name>

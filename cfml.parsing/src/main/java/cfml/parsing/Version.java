@@ -9,7 +9,7 @@ public class Version {
 	
 	public static String getVersion() {
 		final InputStream is = Version.class
-				.getResourceAsStream("/META-INF/maven/com.github.cfparser/cfml.parsing/pom.properties");
+				.getResourceAsStream("/META-INF/maven/com.github.cfmleditor/cfml.parsing/pom.properties");
 		try {
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 			String line = reader.readLine();

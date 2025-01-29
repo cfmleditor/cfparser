@@ -13,7 +13,7 @@ license {
 allprojects {
 	buildDir = rootProject.buildDir.path + File.separator + project.name
 	apply plugin: 'maven-publish'
-	group = 'com.github.cfparser'
+	group = 'com.github.cfmleditor'
 }
 
 subprojects {
