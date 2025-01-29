@@ -13,27 +13,24 @@ mvn clean install
 
 ```xml
 <dependency>
-    <groupId>com.github.cfparser</groupId>
+    <groupId>com.github.cfmleditor</groupId>
     <artifactId>cfml.parsing</artifactId>
-    <version>2.11.0</version>
+    <version>2.2.14-SNAPSHOT</version>
 </dependency>
 ```
 
 To update the version number prior to a build, run:
-`mvn versions:set -DnewVersion=2.2.13-SNAPSHOT` 
-
-To update the version number prior to a release, run:
-`mvn versions:set -DnewVersion=2.2.13` 
+`mvn versions:set -DnewVersion=2.2.14-SNAPSHOT` 
 
 #Release example
-(we do our final commit for 2.2.13-SNAPSHOT on the develop branch, we're ready to release it)
+(we do our final commit for 2.2.14-SNAPSHOT on the develop branch, we're ready to release it)
 ```
 [develop]$`git checkout master`
  [master]$`git merge --no-ff develop`
- [master]$`mvn versions:set -DnewVersion=2.2.13`
+ [master]$`mvn versions:set -DnewVersion=2.2.14`
  [master]$`mvn clean verify`
- [master]$`git commit -am 'Release version 2.2.13'`
- [master]$`git tag -a 2.2.13`
+ [master]$`git commit -am 'Release version 2.2.14'`
+ [master]$`git tag -a 2.2.14`
  [master]$`git checkout develop`
 [develop]$`git merge --no-ff master`
 [develop]$`mvn versions:set -DnewVersion=2.2.14-SNAPSHOT`
