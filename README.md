@@ -15,12 +15,12 @@ mvn clean install
 <dependency>
     <groupId>com.github.cfmleditor</groupId>
     <artifactId>cfml.parsing</artifactId>
-    <version>2.15.0-SNAPSHOT</version>
+    <version>2.15.1-SNAPSHOT</version>
 </dependency>
 ```
 
 To update the version number prior to a build, run:
-`mvn versions:set -DnewVersion=2.2.14-SNAPSHOT` 
+`mvn versions:set -DnewVersion=2.15.1-SNAPSHOT` 
 
 #Release example
 (we do our final commit for 2.2.14-SNAPSHOT on the develop branch, we're ready to release it)
