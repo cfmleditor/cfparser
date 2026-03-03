@@ -12,7 +12,7 @@
 
 	<properties>
 		<cfml.dictionary.version>2.15.0-SNAPSHOT</cfml.dictionary.version>
-		<antlr.version>4.13.1</antlr.version>
+		<antlr.version>4.13.2</antlr.version>
 		<slf4j.version>2.0.13</slf4j.version>
 
 		<antlr4.visitor>true</antlr4.visitor>
@@ -136,7 +136,7 @@
 				<configuration>
 					<forkCount>1</forkCount>
 					<reuseForks>true</reuseForks>
-					<argLine>-Xmx2048m</argLine>
+					<argLine>-Xmx2048m -Djdk.xml.totalEntitySizeLimit=0</argLine>
 				</configuration>
 			</plugin>
 		</plugins>
