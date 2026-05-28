@@ -51,6 +51,7 @@
 	<modules>
 		<module>cfml.dictionary</module>
 		<module>cfml.parsing</module>
+		<module>cfml.cli</module>
 	</modules>
 
 	<properties>

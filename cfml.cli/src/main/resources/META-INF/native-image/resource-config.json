@@ -1,0 +1,9 @@
+{
+  "resources": {
+    "includes": [
+      {"pattern": "org\\.cfeclipse\\.cfml/dictionary/.*"},
+      {"pattern": "dictionaries\\.zip"},
+      {"pattern": "git\\.properties"}
+    ]
+  }
+}
