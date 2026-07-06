@@ -555,7 +555,12 @@ public abstract class SyntaxDictionary {
 		factory.setNamespaceAware(false);
 		factory.setValidating(false);
 		final XMLReader xmlReader = factory.newSAXParser().getXMLReader();
-		
+		// The dictionary XML reuses a handful of shared attribute-group entities (event handlers,
+		// core/lang attributes etc.) across ~90 tag definitions, which legitimately accumulates
+		// past newer JDKs' tightened jdk.xml.totalEntitySizeLimit default - raise it for this
+		// parser instance only.
+		xmlReader.setProperty("http://www.oracle.com/xml/jaxp/properties/totalEntitySizeLimit", "10000000");
+
 		// setup the content handler and give it the maps for tags and functions
 		xmlReader.setContentHandler(new DictionaryContentHandler(syntaxelements, functions, scopeVars, scopes));
 		xmlReader.parse(input);
