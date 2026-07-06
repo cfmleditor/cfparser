@@ -82,6 +82,16 @@ public class DictionaryManager {
 
 	private static boolean initialized;
 
+	static {
+		// Trigger the default dictionary load (built-in classpath resources only, via the
+		// no-arg DictionaryPreferences defaults - no environment/filesystem dependence) as part
+		// of class initialization, not just on first explicit call. This lets AOT tooling (e.g.
+		// GraalVM native-image's --initialize-at-build-time) bake the parsed dictionaries into
+		// the build-time heap snapshot instead of re-parsing them on every process start.
+		// initDictionaries() is otherwise unchanged and remains safe/idempotent to call directly.
+		initDictionaries();
+	}
+
 	private DictionaryManager(DictionaryPreferences prefs) {
 		fPrefs = prefs;
 		init();

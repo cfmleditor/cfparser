@@ -58,7 +58,16 @@ public class CFMLParser {
 	CFScriptStatementVisitor scriptVisitor = new CFScriptStatementVisitor();
 	CFSCRIPTLexer lexer = null;
 	CFSCRIPTParser parser = null;
-	
+
+	// Callers (e.g. CFLint scanning a file's <cfset>/<cfif> tags one at a time) frequently
+	// re-parse textually-identical short expressions many times over - common boilerplate like
+	// "var result = StructNew()" can repeat dozens of times in one file. Cache the parse tree by
+	// source text and re-run the (cheap) visitor on a hit, skipping the expensive lex/parse/ATN
+	// simulation. We deliberately do NOT cache/share the resulting CFExpression itself - it has
+	// mutable state (CFParsedStatement.setParent()) that callers rely on per-use, so every hit
+	// gets a fresh visit() over the cached (read-only) parse tree instead.
+	private final Map<String, CfmlExpressionContext> exprTreeCache = new HashMap<>();
+
 	public void clearDFA() {
 		if (parser != null)
 			parser.getInterpreter().clearDFA();
@@ -124,7 +133,12 @@ public class CFMLParser {
 		if (errorReporter == null) {
 			errorReporter = this.errorReporter;
 		}
-		
+
+		final CfmlExpressionContext cachedTree = exprTreeCache.get(_infix);
+		if (cachedTree != null) {
+			return expressionVisitor.visit(cachedTree);
+		}
+
 		final CharStream input = CharStreams.fromString(_infix);
 		if (lexer == null) {
 			lexer = new CFSCRIPTLexer(input);
@@ -170,6 +184,7 @@ public class CFMLParser {
 			}
 		}
 		if (expressionContext != null) {
+			exprTreeCache.put(_infix, expressionContext);
 			return expressionVisitor.visit(expressionContext);
 		} else
 			return null;
