@@ -135,7 +135,11 @@
 				<configuration>
 					<forkCount>1</forkCount>
 					<reuseForks>true</reuseForks>
-					<argLine>-Xmx2048m -Djdk.xml.totalEntitySizeLimit=0</argLine>
+					<!-- @{argLine} is surefire's late-evaluation syntax, resolved after
+					     jacoco:prepare-agent sets the property. A plain ${argLine} would be
+					     interpolated at POM-parse time, before the agent exists, and every class
+					     would then report as uncovered. -->
+					<argLine>@{argLine} -Xmx2048m -Djdk.xml.totalEntitySizeLimit=0</argLine>
 				</configuration>
 			</plugin>
 		</plugins>

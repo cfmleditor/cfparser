@@ -93,7 +93,24 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'com.diffplug.gradle.osgi.bndmanifest'
 	apply plugin: 'signing'
+	apply plugin: 'jacoco'
 
+	jacoco {
+		toolVersion = '0.8.12'
+	}
+
+	// `gradle build` runs test, so coverage reports come along with the normal CI build.
+	test {
+		finalizedBy jacocoTestReport
+	}
+
+	jacocoTestReport {
+		dependsOn test
+		reports {
+			xml.enabled = true
+			html.enabled = true
+		}
+	}
 
 	javadoc {
 		options.addBooleanOption( "Xdoclint:none", true )
