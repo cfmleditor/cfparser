@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,13 +72,30 @@ public class CFMLParser {
 	// error listeners are attached, so caching an expression that produced errors would report those
 	// errors on the first parse only and silently drop them for every later occurrence (including
 	// occurrences in other files, with a different listener attached).
-	private final Map<String, CfmlExpressionContext> exprTreeCache = new HashMap<>();
+	//
+	// Each entry retains a parse tree along with its tokens and CharStream, so the cache is bounded
+	// and evicts least-recently-used entries. A long-lived parser walking a whole codebase sees a
+	// large number of distinct expressions, and an unbounded cache would grow for the lifetime of
+	// the parser. clearDFA() empties it outright for callers releasing memory.
+	private static final int EXPR_TREE_CACHE_MAX_ENTRIES = 500;
+
+	private final Map<String, CfmlExpressionContext> exprTreeCache = new LinkedHashMap<String, CfmlExpressionContext>(
+			16, 0.75f, true) {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected boolean removeEldestEntry(Map.Entry<String, CfmlExpressionContext> eldest) {
+			return size() > EXPR_TREE_CACHE_MAX_ENTRIES;
+		}
+	};
 
 	public void clearDFA() {
 		if (parser != null)
 			parser.getInterpreter().clearDFA();
 		if (lexer != null)
 			lexer.getInterpreter().clearDFA();
+		exprTreeCache.clear();
 	}
 	
 	public CFExpression parseCFExpression(String _infix, ANTLRErrorListener errorReporter) throws Exception {

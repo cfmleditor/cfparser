@@ -1,11 +1,14 @@
 package cfml.parsing;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -66,6 +69,58 @@ public class TestExpressionCache {
 			sawSyntaxError |= message.startsWith("SyntaxError");
 		}
 		assertTrue("a fresh error listener must still receive the syntax error", sawSyntaxError);
+	}
+
+	/** The cache is private; these tests assert its bounding invariants directly. */
+	@SuppressWarnings("unchecked")
+	private Map<String, ?> cache() throws Exception {
+		Field field = CFMLParser.class.getDeclaredField("exprTreeCache");
+		field.setAccessible(true);
+		return (Map<String, ?>) field.get(parser);
+	}
+
+	private int cacheLimit() throws Exception {
+		Field field = CFMLParser.class.getDeclaredField("EXPR_TREE_CACHE_MAX_ENTRIES");
+		field.setAccessible(true);
+		return field.getInt(null);
+	}
+
+	private String expression(int index) {
+		return "x" + index + " = " + index;
+	}
+
+	@Test
+	public void testCacheIsBounded() throws Exception {
+		int limit = cacheLimit();
+		for (int i = 0; i < limit + 100; i++) {
+			parser.parseCFMLExpression(expression(i), new ArrayErrorListener(new ArrayList<String>()));
+		}
+		assertEquals("cache must not grow past its limit", limit, cache().size());
+	}
+
+	@Test
+	public void testCacheEvictsLeastRecentlyUsed() throws Exception {
+		int limit = cacheLimit();
+		for (int i = 0; i < limit; i++) {
+			parser.parseCFMLExpression(expression(i), new ArrayErrorListener(new ArrayList<String>()));
+		}
+
+		// Re-parse the oldest entry, making it the most recently used, then overflow by one.
+		parser.parseCFMLExpression(expression(0), new ArrayErrorListener(new ArrayList<String>()));
+		parser.parseCFMLExpression(expression(limit), new ArrayErrorListener(new ArrayList<String>()));
+
+		assertTrue("a recently used entry must survive eviction", cache().containsKey(expression(0)));
+		assertFalse("the least recently used entry must be evicted", cache().containsKey(expression(1)));
+	}
+
+	@Test
+	public void testClearDFAEmptiesCache() throws Exception {
+		parser.parseCFMLExpression("var result = StructNew()", new ArrayErrorListener(new ArrayList<String>()));
+		assertTrue(cache().size() > 0);
+
+		parser.clearDFA();
+
+		assertEquals("clearDFA() must release the cached parse trees", 0, cache().size());
 	}
 
 	@Test
