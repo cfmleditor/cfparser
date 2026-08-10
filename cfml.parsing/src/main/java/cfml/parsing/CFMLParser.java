@@ -77,7 +77,12 @@ public class CFMLParser {
 	// and evicts least-recently-used entries. A long-lived parser walking a whole codebase sees a
 	// large number of distinct expressions, and an unbounded cache would grow for the lifetime of
 	// the parser. clearDFA() empties it outright for callers releasing memory.
-	private static final int EXPR_TREE_CACHE_MAX_ENTRIES = 500;
+	//
+	// The limit is sized to hold a large source file's worth of distinct expressions: a real
+	// ~8,700-line .cfc measured while developing this cache produced 2,619 calls over 1,786
+	// distinct strings. A smaller limit still captures locally clustered repeats, but drops
+	// roughly half the hits when a file's repeats are spread across its whole length.
+	private static final int EXPR_TREE_CACHE_MAX_ENTRIES = 2000;
 
 	private final Map<String, CfmlExpressionContext> exprTreeCache = new LinkedHashMap<String, CfmlExpressionContext>(
 			16, 0.75f, true) {
