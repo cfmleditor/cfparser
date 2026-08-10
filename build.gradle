@@ -1,6 +1,6 @@
 plugins {
-	id "com.github.hierynomus.license" version "0.15.0"
-	id "com.diffplug.gradle.osgi.bndmanifest" version "3.18.1"
+	id "com.github.hierynomus.license" version "0.16.1"
+	id "biz.aQute.bnd.builder" version "7.0.0" apply(false)
 	id 'net.researchgate.release' version '3.0.2' apply(false)
 }
 
@@ -91,7 +91,7 @@ publishing {
 
 subprojects {
 	apply plugin: 'java'
-	apply plugin: 'com.diffplug.gradle.osgi.bndmanifest'
+	apply plugin: 'biz.aQute.bnd.builder'
 	apply plugin: 'signing'
 	apply plugin: 'jacoco'
 
@@ -107,8 +107,8 @@ subprojects {
 	jacocoTestReport {
 		dependsOn test
 		reports {
-			xml.enabled = true
-			html.enabled = true
+			xml.required = true
+			html.required = true
 		}
 	}
 
@@ -123,13 +123,14 @@ subprojects {
 	}
 
 
-	jar.manifest.attributes(
-		'-removeheaders': 'Bnd-LastModified,Bundle-Name,Created-By,Tool,Private-Package',
-		'Bundle-SymbolicName': project.name,
-		'Bundle-Vendor': 'cfmleditor',
-	)
-	osgiBndManifest {
-		copyTo 'META-INF/MANIFEST.MF'
+	tasks.named('jar') {
+		bundle {
+			bnd(
+				'-removeheaders': 'Bnd-LastModified,Bundle-Name,Created-By,Tool,Private-Package',
+				'Bundle-SymbolicName': project.name,
+				'Bundle-Vendor': 'cfmleditor'
+			)
+		}
 	}
 
 	sourceCompatibility = 21

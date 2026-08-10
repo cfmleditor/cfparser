@@ -21,9 +21,11 @@ ext {
 	slf4jVersion = '2.0.17'
 }
 
-jar.manifest.attributes(
-	'-exportcontents': 'cfml.parsing.*, net.jericho.*',
-)
+tasks.named('jar') {
+	bundle {
+		bnd('-exportcontents': 'cfml.parsing.*, net.jericho.*')
+	}
+}
 
 dependencies {
 	implementation project(':cfml.dictionary')
@@ -35,4 +37,10 @@ dependencies {
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
 	implementation group: 'org.slf4j', name: 'slf4j-simple', version: slf4jVersion
 	testImplementation 'junit:junit:4.13.2'
+}
+
+// sourcesJar picks up the generated ANTLR sources, so it has to wait for them.
+// Gradle 8 fails the build on this implicit dependency rather than warning.
+tasks.named('sourcesJar') {
+	dependsOn tasks.named('generateGrammarSource')
 }
