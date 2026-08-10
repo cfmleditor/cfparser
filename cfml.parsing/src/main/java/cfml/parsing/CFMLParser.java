@@ -66,6 +66,11 @@ public class CFMLParser {
 	// simulation. We deliberately do NOT cache/share the resulting CFExpression itself - it has
 	// mutable state (CFParsedStatement.setParent()) that callers rely on per-use, so every hit
 	// gets a fresh visit() over the cached (read-only) parse tree instead.
+	//
+	// Only expressions that parsed without a syntax error are cached. A cache hit returns before the
+	// error listeners are attached, so caching an expression that produced errors would report those
+	// errors on the first parse only and silently drop them for every later occurrence (including
+	// occurrences in other files, with a different listener attached).
 	private final Map<String, CfmlExpressionContext> exprTreeCache = new HashMap<>();
 
 	public void clearDFA() {
@@ -165,29 +170,67 @@ public class CFMLParser {
 			lexer.addErrorListener(errorReporter);
 			parser.addErrorListener(errorReporter);
 		}
+		final SyntaxErrorFlagger errorFlagger = new SyntaxErrorFlagger();
+		lexer.addErrorListener(errorFlagger);
+		parser.addErrorListener(errorFlagger);
 		parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
 		parser.reset();
 		CfmlExpressionContext expressionContext = null;
 		try {
 			expressionContext = parser.cfmlExpression(); // Stage 1
 			// TestUtils.showGUI(expressionContext, CFSCRIPTParser.ruleNames);
-			
+
 		} catch (Exception e) {
 			tokens.seek(0); // rewind input stream
 			parser.reset();
 			parser.getInterpreter().setPredictionMode(PredictionMode.LL);
 			expressionContext = parser.cfmlExpression(); // STAGE 2
 		} finally {
+			lexer.removeErrorListener(errorFlagger);
+			parser.removeErrorListener(errorFlagger);
 			if (errorReporter != null) {
 				lexer.removeErrorListener(errorReporter);
 				parser.removeErrorListener(errorReporter);
 			}
 		}
 		if (expressionContext != null) {
-			exprTreeCache.put(_infix, expressionContext);
+			if (!errorFlagger.sawSyntaxError) {
+				exprTreeCache.put(_infix, expressionContext);
+			}
 			return expressionVisitor.visit(expressionContext);
 		} else
 			return null;
+	}
+
+	/**
+	 * Error listener that records only whether the parse emitted a syntax error, so a failed parse can
+	 * be kept out of the expression tree cache. Ambiguity and context-sensitivity reports are
+	 * diagnostics rather than errors and are deliberately ignored.
+	 */
+	private static final class SyntaxErrorFlagger implements ANTLRErrorListener {
+
+		boolean sawSyntaxError;
+
+		@Override
+		public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
+				String msg, RecognitionException e) {
+			sawSyntaxError = true;
+		}
+
+		@Override
+		public void reportContextSensitivity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, int prediction,
+				ATNConfigSet configs) {
+		}
+
+		@Override
+		public void reportAttemptingFullContext(Parser recognizer, DFA dfa, int startIndex, int stopIndex,
+				BitSet conflictingAlts, ATNConfigSet configs) {
+		}
+
+		@Override
+		public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, boolean exact,
+				BitSet ambigAlts, ATNConfigSet configs) {
+		}
 	}
 	
 	int skipToPosition = 0;
