@@ -58,6 +58,12 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<maven.compiler.release>11</maven.compiler.release>
+
+		<jacoco.version>0.8.12</jacoco.version>
+		<!-- jacoco:prepare-agent overwrites this at build time with the -javaagent setting.
+		     Declared empty so modules referencing @{argLine} still build when coverage is
+		     skipped (-Djacoco.skip=true) and nothing has set it. -->
+		<argLine></argLine>
 	</properties>
 
 	<dependencyManagement>
@@ -123,6 +129,26 @@
 	</profiles>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<executions>
+					<execution>
+						<id>jacoco-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
