@@ -57,7 +57,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<maven.compiler.release>11</maven.compiler.release>
+		<maven.compiler.release>21</maven.compiler.release>
 
 		<jacoco.version>0.8.12</jacoco.version>
 		<!-- jacoco:prepare-agent overwrites this at build time with the -javaagent setting.
