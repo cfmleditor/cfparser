@@ -82,6 +82,31 @@ public class DictionaryManager {
 
 	private static boolean initialized;
 
+	/**
+	 * Signature of the preferences the currently loaded dictionaries were built from, so that a later
+	 * initDictionaries(DictionaryPreferences) call with different preferences knows it has to reload
+	 * rather than short-circuit on the initialized flag.
+	 */
+	private static String initializedPrefsSignature;
+
+	static {
+		// Trigger the default dictionary load (built-in classpath resources only, via the
+		// no-arg DictionaryPreferences defaults - no environment/filesystem dependence) as part
+		// of class initialization, not just on first explicit call. This lets AOT tooling (e.g.
+		// GraalVM native-image's --initialize-at-build-time) bake the parsed dictionaries into
+		// the build-time heap snapshot instead of re-parsing them on every process start.
+		//
+		// A failure here must not poison the class: an exception escaping a static initializer
+		// becomes ExceptionInInitializerError, and every later use of DictionaryManager then fails
+		// with NoClassDefFoundError. Callers are still able to recover by supplying their own
+		// preferences via initDictionaries(DictionaryPreferences), so log and carry on.
+		try {
+			initDictionaries();
+		} catch (Throwable t) {
+			t.printStackTrace(System.err);
+		}
+	}
+
 	private DictionaryManager(DictionaryPreferences prefs) {
 		fPrefs = prefs;
 		init();
@@ -174,6 +199,7 @@ public class DictionaryManager {
 		// (System.currentTimeMillis() - time) + " ms");
 
 		initialized = true;
+		initializedPrefsSignature = prefsSignature(fPrefs);
 	}
 	
 	/**
@@ -183,7 +209,29 @@ public class DictionaryManager {
 	public static void initDictionaries(DictionaryPreferences prefs) {
 		fPrefs = prefs;
 		init();
+		// The dictionaries are eagerly loaded from the built-in defaults during class
+		// initialization, so by the time anyone can call this the initialized flag is already set.
+		// Honour the incoming preferences by forcing a reload whenever they select something other
+		// than what is currently loaded; identical preferences still short-circuit as before.
+		if (!prefsSignature(prefs).equals(initializedPrefsSignature)) {
+			initialized = false;
+		}
 		initDictionaries();
+	}
+
+	/**
+	 * Builds a comparable signature of the dictionary selections in the given preferences. Two
+	 * preference objects with the same signature load the same dictionaries.
+	 *
+	 * @param prefs the preferences to describe, may be null
+	 * @return a signature string, never null
+	 */
+	private static String prefsSignature(DictionaryPreferences prefs) {
+		if (prefs == null) {
+			return "";
+		}
+		return prefs.getDictionaryDir() + '\n' + prefs.getCFDictionary() + '\n' + prefs.getHTMLDictionary() + '\n'
+				+ prefs.getJSDictionary() + '\n' + prefs.getSQLDictionary();
 	}
 	
 	/**
