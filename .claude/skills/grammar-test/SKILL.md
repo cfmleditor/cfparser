@@ -27,52 +27,87 @@ then compares both against the expected file, normalising whitespace. If no `.ex
 the comparison is skipped and the test only checks that parsing does not blow up — still useful,
 but weaker.
 
+## First, check the reported behaviour actually reproduces
+
+Do this before writing anything. A fixture records whatever the parser currently does, so if you
+skip this step and the report was wrong, you will have pinned working behaviour as if it were the
+bug — or worse, pinned the bug as correct and made the suite permanently green on it.
+
+Build the modules and drive the parser directly over a handful of shapes of the construct
+(statement, `return`, call argument, condition, nested, inside a closure). If it parses cleanly,
+say so and reframe: the fixture then pins correct behaviour that was previously unpinned, which is
+still worth adding, but it is a different claim from "this fixes a bug".
+
 ## Adding a case
 
-1. Put the smallest CFML that reproduces the behaviour in a `.cfc` or `.cfm` under
+1. Put the smallest CFML that shows the behaviour in a `.cfc` or `.cfm` under
    `cfml.parsing/src/test/resources/cfml/tests/`, in whichever subdirectory fits.
-2. Generate the expected output rather than writing it by hand (see below).
-3. **Read the generated file before committing it.** Regeneration records whatever the parser
-   currently does, which is exactly what you want after a deliberate fix and exactly what you do
-   not want if the behaviour is still wrong. Committing a generated file blindly bakes in the bug
-   and makes the suite green forever.
+2. Run the suite. **The expected file is generated for you.** `TestFiles` writes
+   `<name>.expected.txt` unconditionally when none exists (`TestFiles.java:118-119`) — no
+   configuration, no switches.
 
-## Generating expected output
+   ```bash
+   mvn -pl cfml.dictionary,cfml.parsing -am test -Dtest=TestFiles
+   ```
 
-`cfml.parsing/src/test/resources/cfml/test.properties` carries two switches, both commented out
-by default:
+3. **Read the generated file before committing it.** This is the step that matters. Generation
+   records current behaviour, which is what you want only if current behaviour is right.
+
+   Two things to look for, both of which have bitten:
+
+   - **Identifiers that collide with CFML built-ins.** Names like `report`, `cache`, `setting` or
+     `form` lex as dictionary tokens and wrap the tree in `(cfmlFunction ...)` nodes. The parse is
+     correct, but the fixture then fails whenever the dictionary changes, for reasons unrelated to
+     what it is testing. Prefer plain identifiers.
+   - **Constructs whose current grouping is wrong.** If the expected tree records a grouping you
+     believe is a bug, do not commit it — leave that shape out of the fixture and raise the bug
+     separately. Committing it makes the suite defend the bug forever.
+
+## Updating an existing expected file
+
+Only when you have deliberately changed the grammar and the recorded output is now legitimately
+different. `cfml.parsing/src/test/resources/cfml/test.properties` carries two switches, commented
+out by default:
 
 ```properties
 #AutoReplaceFailedTestResults=Y
-#Uncomment the following line to run only the last updated test file.
 #RunSingleTest=*LAST
 ```
 
-- **`AutoReplaceFailedTestResults=Y`** — any fixture whose output does not match has its
-  `.expected.txt` rewritten with current actual output instead of failing.
-- **`RunSingleTest=*LAST`** — restricts the run to the most recently modified fixture, which makes
-  the loop fast while iterating on one case.
+- **`AutoReplaceFailedTestResults=Y`** — rewrites the `.expected.txt` of any fixture that *fails*
+  instead of failing the build. This is the only situation that needs it; a brand-new fixture does
+  not, because the missing-file path above already writes one.
+- **`RunSingleTest=*LAST`** — restricts the run to the most recently modified fixture, useful while
+  iterating.
 
-Workflow: uncomment both, run the suite, inspect the diff, then **comment them out again** before
-committing. Leaving `AutoReplaceFailedTestResults=Y` enabled turns the whole suite into a
-rubber stamp — every future regression would silently rewrite its own expectation instead of
-failing.
+Turn `AutoReplaceFailedTestResults` back off before committing, and prefer `git checkout --` over
+retyping the file — a plain rewrite flips its line endings. Leaving it enabled converts the whole
+suite into a rubber stamp: every future regression would silently rewrite its own expectation
+instead of failing.
 
 ```bash
-mvn -pl cfml.dictionary,cfml.parsing -am test -Dtest=TestFiles
 git diff --stat cfml.parsing/src/test/resources   # review before committing
 ```
 
 ## Confirming the test earns its place
 
-A regression test that passes before the fix proves nothing. Check it fails against the unfixed
-code — stash the source change, run the fixture, confirm a real assertion failure, then restore:
+A fixture that would pass no matter what proves nothing. Make it fail on purpose, then restore.
+
+If you are accompanying a source fix, stash the fix:
 
 ```bash
 git stash push -- cfml.parsing/src/main
 mvn -pl cfml.dictionary,cfml.parsing -am test -Dtest=TestFiles   # expect failure
 git stash pop
 ```
+
+If there is no fix to stash — you are pinning behaviour that already works — mutate the grammar
+instead and check the fixture notices. Editing `CFSCRIPTParser.g4` is the reliable lever; deleting
+a rule alternative usually will not compile, because the visitors reference the generated context
+methods, so change what a rule *matches* rather than removing it.
+
+Confirm the failure is the one you intended. `Parse trees do not match` means the fixture is
+really asserting on structure; a failure that only appears in the error list is much weaker.
 
 This matters more than usual here: a dictionary regression once shipped with a green suite because
 its test asserted something the built-in configuration satisfied whether or not the code worked.
