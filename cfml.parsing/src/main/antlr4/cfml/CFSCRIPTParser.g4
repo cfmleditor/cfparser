@@ -432,10 +432,12 @@ ternaryExpression
     : QUESTIONMARK ternaryExpression1=startExpression COLON ternaryExpression2=startExpression
     ;
 
+// ANTLR gives earlier alternatives of a left-recursive rule higher precedence, so the order
+// below is the operator precedence table. elvis sits immediately above the ternary it is
+// shorthand for: both bind loosest, so `a ?: b + 1` groups as `a ?: (b + 1)`.
 baseExpression
 	:
-	 left=baseExpression elvisOperator right=baseExpression
-	| unaryOperator=(MINUS | PLUS) right=baseExpression 
+	 unaryOperator=(MINUS | PLUS) right=baseExpression
 	| left=baseExpression powerOperator=POWER right=baseExpression
 	| left=baseExpression multiplicativeOperator=(STAR|SLASH) right=baseExpression
 	| left=baseExpression intDivOperator=BSLASH right=baseExpression
@@ -450,6 +452,7 @@ baseExpression
 	| anonymousFunctionDeclaration
 	| lambdaDeclaration
 	| unaryExpression
+	| left=baseExpression elvisOperator right=baseExpression
 	| left=baseExpression ternaryExpression
 	
 	;
