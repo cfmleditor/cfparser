@@ -40,6 +40,16 @@ mvn -pl cfml.dictionary,cfml.parsing -am package -DskipTests
 `cfml.cli/README.md` will not be stamped, because that module cannot build without GraalVM —
 set it by hand to match.
 
+Two things about the root `README.md` that cost time if you meet them cold:
+
+- **It is CRLF in git.** An editor that normalises line endings rewrites all 38 lines and buries
+  the one-line change. Check `git diff --stat` after editing it; if it reports far more than the
+  lines you touched, redo the edit preserving the endings.
+- **The `#Release example` block at lines 26 and 36 mentions `2.2.14-SNAPSHOT`.** That is
+  illustrative prose about a git-flow release, not a version declaration, and it was already stale
+  long before any current bump. Leave it alone — bumping it makes the verification grep below
+  return fourteen hits instead of twelve and destroys the signal that step depends on.
+
 ## 2. Verify nothing was missed
 
 This is the step that catches the recurring bug. One value should appear everywhere:
