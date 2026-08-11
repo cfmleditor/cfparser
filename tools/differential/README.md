@@ -38,8 +38,14 @@ space-separated arguments on any callee) because an editor grammar must not fail
 input. Those cases are tree-sitter over-accepting, not cfparser under-accepting.
 
 Group failures by their offending token before triaging — the disagreements collapse into far
-fewer root causes than the raw count suggests. When this was first run, 76 failures over 236 cases
-came down to a handful, of which 14 were a single offset bug.
+fewer root causes than the raw count suggests. The first run reported 76 failures over 236 cases;
+14 of those were a single offset bug (#17, since fixed) and 20 more were an extractor bug in this
+harness rather than anything about cfparser. The real figure after both was **37**.
+
+That is the standing lesson for this tool: a disagreement is a lead, not a defect, and the harness
+is as capable of being wrong as the parser it tests. Before filing anything, reduce the case to a
+minimal snippet and reproduce it directly against `CFSCRIPTParser` or `CFMLSource` — not through
+this harness.
 
 ## The cfquery corpus is excluded
 
