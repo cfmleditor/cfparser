@@ -125,6 +125,12 @@ public class Diff {
             String src = new String(Files.readAllBytes(base.resolve("cases").resolve(c.get("file"))),
                     StandardCharsets.UTF_8);
             List<String> errs = "cfscript".equals(c.get("lang")) ? parseScript(src) : parseTags(src);
+            // A .cfc can be pure cfscript with no tags at all, and the cfml corpus contains
+            // several. The tag path finds nothing to walk in those, which says nothing about
+            // cfparser — so fall back to the script parser rather than counting a disagreement.
+            if (errs.size() == 1 && "no elements parsed".equals(errs.get(0))) {
+                errs = parseScript(src);
+            }
             byLang.computeIfAbsent(c.get("lang"), k -> new int[2])[0]++;
             String status;
             if (errs.isEmpty()) { status = "ok"; pass++; }
