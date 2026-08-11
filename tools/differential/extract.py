@@ -49,9 +49,12 @@ def parse_corpus(path):
         name = " ".join(l for l in name_block if not l.strip().startswith(":")).strip()
         attrs = [l.strip() for l in name_block if l.strip().startswith(":")]
         payload = text[h.end(): heads[idx + 1].start() if idx + 1 < len(heads) else len(text)]
-        # payload is "<source>\n---\n<tree>"; split on the LAST bare '---' so a
-        # '---' inside CFML source doesn't truncate the snippet
-        parts = re.split(r"^---[ \t]*$", payload, flags=re.M)
+        # payload is "<source>\n---\n<tree>"; split on the LAST bare rule so a
+        # '---' inside CFML source doesn't truncate the snippet.
+        # The corpus uses two separator widths - a bare '---' and an 80-dash rule -
+        # so match any run of three or more. Matching only '---' silently glued the
+        # expected S-expression onto the source for every wide-rule case.
+        parts = re.split(r"^-{3,}[ \t]*$", payload, flags=re.M)
         if len(parts) >= 2:
             source, tree = "---".join(parts[:-1]), parts[-1]
         else:
