@@ -265,7 +265,15 @@ public class CFMLParser {
 		skipToPosition = 0;
 		visitor.visitElementStart(elem);
 		if (elem.getName().equalsIgnoreCase("cfset") || elem.getName().equalsIgnoreCase("cfreturn")) {
-			final String cfscript = elem.toString().substring(elem.getName().length() + 1, elem.toString().length() - 1).trim();
+			// Dropping the final '>' leaves the slash of a self-closing tag behind, so
+			// <cfset a = 1 /> would otherwise be parsed as the expression "a = 1 /".
+			// An expression can never legitimately end in '/' - division needs a right
+			// operand - so removing a trailing one is safe.
+			String cfscript = elem.toString().substring(elem.getName().length() + 1, elem.toString().length() - 1)
+					.trim();
+			if (cfscript.endsWith("/")) {
+				cfscript = cfscript.substring(0, cfscript.length() - 1).trim();
+			}
 			if (cfscript.length() > 0 && visitor.visitPreParseExpression("TAG", cfscript)) {
 				final CFExpression expression = parseCFExpression(cfscript, visitor);
 				

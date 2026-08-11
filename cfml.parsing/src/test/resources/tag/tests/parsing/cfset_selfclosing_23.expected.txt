@@ -1,0 +1,143 @@
+START:cfoutput
+  =========TAG=================
+  <cfoutput>prefix</cfoutput>
+END:cfoutput
+START:cfset
+  =========TAG=================
+  <cfset plain = 1>
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <plain>
+  '='                      <=>
+  INTEGER_LITERAL          <1>
+  ===========Tree================
+  (expression
+    (assignmentExpression
+      (startExpression
+        (baseExpression (unaryExpression (memberExpression (identifier plain))))
+      )
+      =
+      (startExpression
+        (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  plain = 1
+  ==================================
+END:cfset
+START:cfset
+  =========TAG=================
+  <cfset selfClosed = 2 />
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <selfClosed>
+  '='                      <=>
+  INTEGER_LITERAL          <2>
+  ===========Tree================
+  (expression
+    (assignmentExpression
+      (startExpression
+        (baseExpression (unaryExpression (memberExpression (identifier selfClosed))))
+      )
+      =
+      (startExpression
+        (baseExpression (unaryExpression (primaryExpression (literalExpression 2))))
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  selfClosed = 2
+  ==================================
+END:cfset
+START:cfset
+  =========TAG=================
+  <cfset endsWithSlashInString = "a/" />
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <endsWithSlashInString>
+  '='                      <=>
+  OPEN_STRING              <">
+  STRING_LITERAL           <a/>
+  CLOSE_STRING             <">
+  ===========Tree================
+  (expression
+    (assignmentExpression
+      (startExpression
+        (baseExpression
+          (unaryExpression (memberExpression (identifier endsWithSlashInString)))
+        )
+      )
+      =
+      (startExpression
+        (baseExpression
+          (unaryExpression
+            (primaryExpression
+              (literalExpression (stringLiteral " (stringLiteralPart a/) "))
+            )
+          )
+        )
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  endsWithSlashInString = 'a/'
+  ==================================
+END:cfset
+START:cfset
+  =========TAG=================
+  <cfset division = total / count />
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <division>
+  '='                      <=>
+  IDENTIFIER               <total>
+  '/'                      </>
+  IDENTIFIER               <count>
+  ===========Tree================
+  (expression
+    (assignmentExpression
+      (startExpression
+        (baseExpression (unaryExpression (memberExpression (identifier division))))
+      )
+      =
+      (startExpression
+        (baseExpression
+          (baseExpression (unaryExpression (memberExpression (identifier total))))
+          /
+          (baseExpression (unaryExpression (memberExpression (identifier count))))
+        )
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  division = total / count
+  ==================================
+END:cfset
+START:cffunction
+  =========TAG=================
+  <cffunction name="f">
+	<cfreturn selfClosed />
+</cffunction>
+  START:cfreturn
+    =========TAG=================
+    <cfreturn selfClosed />
+    TAG
+    ==========Tokens==============
+    IDENTIFIER               <selfClosed>
+    ===========Tree================
+    (expression
+      (startExpression
+        (baseExpression (unaryExpression (memberExpression (identifier selfClosed))))
+      )
+      <EOF>
+    )
+    ===========Expression===============
+    selfClosed
+    ==================================
+  END:cfreturn
+END:cffunction
