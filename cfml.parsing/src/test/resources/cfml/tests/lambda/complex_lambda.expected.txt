@@ -189,7 +189,17 @@ INTEGER_LITERAL          <1>
 /*======*/
 /*===DECOMPILE===*/
 {
-isOdd = numeric.nn % 2 == 0;
+isOdd = (n) =>   {
+    if(n % 2 == 0 )       {
+        return 'even';
+
+      }
+    else       {
+        return 'odd';
+
+      };
+
+  };
 dump(isOdd(1));
 
 }

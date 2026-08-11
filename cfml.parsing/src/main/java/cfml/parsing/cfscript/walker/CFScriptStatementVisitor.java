@@ -36,6 +36,7 @@ import cfml.CFSCRIPTParser.IfStatementContext;
 import cfml.CFSCRIPTParser.ImportStatementContext;
 import cfml.CFSCRIPTParser.IncludeStatementContext;
 import cfml.CFSCRIPTParser.InterfaceDeclarationContext;
+import cfml.CFSCRIPTParser.LambdaDeclarationContext;
 import cfml.CFSCRIPTParser.LocalAssignmentExpressionContext;
 import cfml.CFSCRIPTParser.LockStatementContext;
 import cfml.CFSCRIPTParser.ParamContext;
@@ -230,6 +231,26 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 				getText(ctx.accessType()), (CFIdentifier) visitExpression(ctx.typeSpec()), parameters, attributes,
 				visit(ctx.body), false, false, false);
 		return funcDeclStatement;
+	}
+	
+	@Override
+	public CFScriptStatement visitLambdaDeclaration(LambdaDeclarationContext ctx) {
+		List<CFFunctionParameter> parameters = new ArrayList<CFFunctionParameter>();
+		if (ctx.parameterList() != null) {
+			aggregator.push(parameters);
+			visitChildren(ctx.parameterList());
+			aggregator.pop();
+		}
+		
+		// An expression body is an implicit return. Wrapping it in a return statement gives the
+		// same shape as function(x) { return x; }, so consumers walking a function body do not
+		// need to special-case lambdas. CFLambdaExpression keeps hold of the expression itself so
+		// it can still decompile back to the arrow form.
+		CFScriptStatement body = ctx.body != null ? visit(ctx.body)
+				: new CFReturnStatement(ctx.LAMBDAOP().getSymbol(), cfExpressionVisitor.visit(ctx.simpleExpression));
+		
+		return new CFFuncDeclStatement(ctx.getStart(), (CFIdentifier) null, null, (CFIdentifier) null, parameters,
+				new LinkedHashMap<CFExpression, CFExpression>(), body, false, false, false);
 	}
 	
 	@Override
