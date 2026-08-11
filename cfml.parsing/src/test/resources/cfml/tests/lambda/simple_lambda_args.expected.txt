@@ -112,7 +112,7 @@ INTEGER_LITERAL          <3>
 /*======*/
 /*===DECOMPILE===*/
 {
-add = numeric.x.numeric.yx + y;
+add = (x, y) => x + y;
 dump(add(1, 3));
 
 }

@@ -1,0 +1,251 @@
+/*===TOKENS===*/
+Hidden:LINE_COMMENT             <// A lambda passed as a call argument keeps its own body>
+IDENTIFIER               <doubled>
+'='                      <=>
+IDENTIFIER               <arrayMap>
+'('                      <(>
+IDENTIFIER               <list>
+','                      <,>
+'('                      <(>
+IDENTIFIER               <item>
+')'                      <)>
+'=>'                     <=>>
+IDENTIFIER               <item>
+'*'                      <*>
+INTEGER_LITERAL          <2>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// An expression body is an implicit return, not a statement>
+IDENTIFIER               <label>
+'='                      <=>
+'('                      <(>
+IDENTIFIER               <item>
+')'                      <)>
+'=>'                     <=>>
+IDENTIFIER               <item>
+'.'                      <.>
+IDENTIFIER               <name>
+'?'                      <?>
+':'                      <:>
+OPEN_STRING              <'>
+STRING_LITERAL           <unnamed>
+CLOSE_STRING             <'>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// Lambdas nest>
+IDENTIFIER               <adder>
+'='                      <=>
+'('                      <(>
+IDENTIFIER               <x>
+')'                      <)>
+'=>'                     <=>>
+'('                      <(>
+IDENTIFIER               <y>
+')'                      <)>
+'=>'                     <=>>
+IDENTIFIER               <x>
+'+'                      <+>
+IDENTIFIER               <y>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// Parameters keep their defaults>
+IDENTIFIER               <greet>
+'='                      <=>
+'('                      <(>
+IDENTIFIER               <name>
+'='                      <=>
+OPEN_STRING              <'>
+STRING_LITERAL           <world>
+CLOSE_STRING             <'>
+')'                      <)>
+'=>'                     <=>>
+OPEN_STRING              <'>
+STRING_LITERAL           <hello>
+CLOSE_STRING             <'>
+'&'                      <&>
+IDENTIFIER               <name>
+';'                      <;>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier doubled))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (functionCall
+                  (identifier arrayMap)
+                  (
+                  (argumentList
+                    (argument
+                      (startExpression
+                        (baseExpression (unaryExpression (memberExpression (identifier list))))
+                      )
+                    )
+                    ,
+                    (argument
+                      (lambdaDeclaration
+                        (
+                        (parameterList (parameter (identifier item)))
+                        )
+                        =>
+                        (startExpression
+                          (baseExpression
+                            (baseExpression (unaryExpression (memberExpression (identifier item))))
+                            *
+                            (baseExpression (unaryExpression (primaryExpression (literalExpression 2))))
+                          )
+                        )
+                      )
+                    )
+                  )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier label))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (lambdaDeclaration
+              (
+              (parameterList (parameter (identifier item)))
+              )
+              =>
+              (startExpression
+                (baseExpression
+                  (baseExpression
+                    (unaryExpression (memberExpression (identifier item) . (identifier name)))
+                  )
+                  (elvisOperator ? :)
+                  (baseExpression
+                    (unaryExpression
+                      (primaryExpression
+                        (literalExpression (stringLiteral ' (stringLiteralPart unnamed) '))
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier adder))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (lambdaDeclaration
+              (
+              (parameterList (parameter (identifier x)))
+              )
+              =>
+              (startExpression
+                (baseExpression
+                  (lambdaDeclaration
+                    (
+                    (parameterList (parameter (identifier y)))
+                    )
+                    =>
+                    (startExpression
+                      (baseExpression
+                        (baseExpression (unaryExpression (memberExpression (identifier x))))
+                        +
+                        (baseExpression (unaryExpression (memberExpression (identifier y))))
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier greet))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (lambdaDeclaration
+              (
+              (parameterList
+                (parameter
+                  (identifier name)
+                  =
+                  (startExpression
+                    (baseExpression
+                      (unaryExpression
+                        (primaryExpression
+                          (literalExpression (stringLiteral ' (stringLiteralPart world) '))
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              )
+              =>
+              (startExpression
+                (baseExpression
+                  (baseExpression
+                    (unaryExpression
+                      (primaryExpression
+                        (literalExpression (stringLiteral ' (stringLiteralPart 'hello ') '))
+                      )
+                    )
+                  )
+                  &
+                  (baseExpression (unaryExpression (memberExpression (identifier name))))
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+{
+doubled = arrayMap(list, (item) => item * 2);
+label = (item) => item.name ?: 'unnamed';
+adder = (x) => (y) => x + y;
+greet = (name='world') => 'hello ' & name;
+
+}
+/*======*/

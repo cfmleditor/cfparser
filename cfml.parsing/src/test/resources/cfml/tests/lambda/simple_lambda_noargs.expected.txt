@@ -139,7 +139,7 @@ makeSix =  function ()   {
     return 5 + 1;
 
   };
-makeSix = 5 + 1;
+makeSix = () => 5 + 1;
 dump(makeSix());
 
 }

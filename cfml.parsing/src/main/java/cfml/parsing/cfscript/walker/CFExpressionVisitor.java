@@ -30,6 +30,7 @@ import cfml.CFSCRIPTParser.ImplicitOrderedStructContext;
 import cfml.CFSCRIPTParser.ImplicitStructContext;
 import cfml.CFSCRIPTParser.ImplicitStructExpressionContext;
 import cfml.CFSCRIPTParser.InnerExpressionContext;
+import cfml.CFSCRIPTParser.LambdaDeclarationContext;
 import cfml.CFSCRIPTParser.LiteralExpressionContext;
 import cfml.CFSCRIPTParser.LocalAssignmentExpressionContext;
 import cfml.CFSCRIPTParser.MemberExpressionContext;
@@ -63,6 +64,7 @@ import cfml.parsing.cfscript.CFExpression;
 import cfml.parsing.cfscript.CFFullVarExpression;
 import cfml.parsing.cfscript.CFFunctionExpression;
 import cfml.parsing.cfscript.CFIdentifier;
+import cfml.parsing.cfscript.CFLambdaExpression;
 import cfml.parsing.cfscript.CFLiteral;
 import cfml.parsing.cfscript.CFMember;
 import cfml.parsing.cfscript.CFNestedExpression;
@@ -74,6 +76,7 @@ import cfml.parsing.cfscript.CFTernaryExpression;
 import cfml.parsing.cfscript.CFUnaryExpression;
 import cfml.parsing.cfscript.CFVarDeclExpression;
 import cfml.parsing.cfscript.script.CFFuncDeclStatement;
+import cfml.parsing.cfscript.script.CFReturnStatement;
 
 public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression> {
 	
@@ -530,6 +533,17 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 		CFFuncDeclStatement funcDeclStatement = (CFFuncDeclStatement) getCFScriptStatementVisitor()
 				.visitAnonymousFunctionDeclaration(ctx);
 		return new CFAnonymousFunctionExpression(ctx.FUNCTION().getSymbol(), funcDeclStatement);
+	}
+	
+	@Override
+	public CFExpression visitLambdaDeclaration(LambdaDeclarationContext ctx) {
+		CFFuncDeclStatement funcDeclStatement = (CFFuncDeclStatement) getCFScriptStatementVisitor()
+				.visitLambdaDeclaration(ctx);
+		// Take the body back off the implicit return the statement visitor built rather than
+		// visiting simpleExpression a second time, so the lambda holds one expression tree.
+		CFExpression expressionBody = funcDeclStatement.getBody() instanceof CFReturnStatement
+				? ((CFReturnStatement) funcDeclStatement.getBody()).getExpression() : null;
+		return new CFLambdaExpression(ctx.getStart(), funcDeclStatement, expressionBody);
 	}
 	
 	public synchronized CFScriptStatementVisitor getCFScriptStatementVisitor() {
