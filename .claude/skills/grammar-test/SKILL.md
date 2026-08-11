@@ -102,12 +102,30 @@ git stash pop
 ```
 
 If there is no fix to stash — you are pinning behaviour that already works — mutate the grammar
-instead and check the fixture notices. Editing `CFSCRIPTParser.g4` is the reliable lever; deleting
-a rule alternative usually will not compile, because the visitors reference the generated context
-methods, so change what a rule *matches* rather than removing it.
+instead and check the fixture notices.
+
+Two things constrain which mutations are even possible in `CFSCRIPTParser.g4`. Deleting a rule
+alternative will not compile, because the visitors call the generated context accessors
+(`CFExpressionVisitor` calls `ctx.elvisOperator()`). Retyping an operand will not compile either,
+because `left`/`right` are shared labels across every alternative of `baseExpression`. What does
+work is changing what a rule *matches* or how it associates:
+
+```
+elvisOperator: QUESTIONMARK COLON COLON;              // change the token sequence
+<assoc=right> left=baseExpression elvisOperator ...   // change associativity
+```
+
+**Prefer a mutation the existing fixtures survive.** If your mutation breaks five fixtures, all
+you have learned is that the grammar is load-bearing. If it breaks only yours, you have shown your
+fixture covers something nothing else does — which is the actual claim a new regression test is
+making. Running this both ways is cheap and the contrast is the useful part: an `<assoc=right>`
+mutation on the elvis alternative fails only a fixture with a *chained* elvis, because the two
+pre-existing elvis fixtures each contain a single use.
 
 Confirm the failure is the one you intended. `Parse trees do not match` means the fixture is
 really asserting on structure; a failure that only appears in the error list is much weaker.
+
+Restore the grammar with `git checkout --` and confirm it is byte-identical before moving on.
 
 This matters more than usual here: a dictionary regression once shipped with a green suite because
 its test asserted something the built-in configuration satisfied whether or not the code worked.
