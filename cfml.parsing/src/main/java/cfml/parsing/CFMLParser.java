@@ -281,16 +281,26 @@ public class CFMLParser {
 			// if (m.matches()) {
 			
 			// TODO if LUCEE?
+			// Jericho reports tag positions as absolute offsets into the whole document, but
+			// elem.toString() is indexed from the start of this element. Both have to be made
+			// element-relative before being used as string indices - otherwise the offset is
+			// added twice, reading past the end of the tag (and out of the string entirely once
+			// the element sits far enough into the file).
+			final int elemBegin = elem.getBegin();
 			final int uglyNotPos = elem.toString().lastIndexOf("<>");
-			int endPos = elem.getStartTag().getEnd() - 1;
-			
+			int endPos = elem.getStartTag().getEnd() - 1 - elemBegin;
+
 			if (uglyNotPos > 0) {
 				final int nextPos = elem.toString().indexOf(">", uglyNotPos + 2);
-				if (nextPos > 0 && nextPos < elem.getEndTag().getBegin()) {
+				// An unclosed or self-closing tag has no end tag; fall back to the element's own
+				// extent rather than dereferencing null.
+				final int endTagBegin = elem.getEndTag() == null ? elem.toString().length()
+						: elem.getEndTag().getBegin() - elemBegin;
+				if (nextPos > 0 && nextPos < endTagBegin) {
 					endPos = nextPos;
 				}
 			}
-			
+
 			final String cfscript = elem.toString().substring(elem.getName().length() + 1, endPos);
 			if (cfscript.length() > 0 && visitor.visitPreParseExpression("TAG", cfscript)) {
 				final CFExpression expression = parseCFExpression(cfscript, visitor);

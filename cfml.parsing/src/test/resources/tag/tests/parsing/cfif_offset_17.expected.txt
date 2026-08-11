@@ -1,0 +1,63 @@
+START:cfoutput
+  =========TAG=================
+  <cfoutput>prefix</cfoutput>
+END:cfoutput
+START:cfif
+  =========TAG=================
+  <cfif classname neq ''>
+	one
+<cfelseif other eq 1>
+	two
+<cfelse>
+	three
+</cfif>
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <classname>
+  NEQ                      <neq>
+  OPEN_STRING              <'>
+  CLOSE_STRING             <'>
+  ===========Tree================
+  (expression
+    (startExpression
+      (baseExpression
+        (baseExpression (unaryExpression (memberExpression (identifier classname))))
+        (compareExpressionOperator neq)
+        (baseExpression
+          (unaryExpression (primaryExpression (literalExpression (stringLiteral ' '))))
+        )
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  classname neq ''
+  ==================================
+  START:cfelseif
+    =========TAG=================
+    <cfelseif other eq 1>
+    TAG
+    ==========Tokens==============
+    IDENTIFIER               <other>
+    EQ                       <eq>
+    INTEGER_LITERAL          <1>
+    ===========Tree================
+    (expression
+      (startExpression
+        (baseExpression
+          (baseExpression (unaryExpression (memberExpression (identifier other))))
+          (compareExpressionOperator eq)
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+        )
+      )
+      <EOF>
+    )
+    ===========Expression===============
+    other eq 1
+    ==================================
+  END:cfelseif
+  START:cfelse
+    =========TAG=================
+    <cfelse>
+  END:cfelse
+END:cfif
