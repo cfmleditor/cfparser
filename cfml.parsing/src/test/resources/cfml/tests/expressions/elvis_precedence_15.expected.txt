@@ -1,0 +1,286 @@
+/*===TOKENS===*/
+COMPONENT                <component>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+FUNCTION                 <function>
+IDENTIFIER               <precedence>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+IDENTIFIER               <add>
+'='                      <=>
+IDENTIFIER               <alpha>
+'?'                      <?>
+':'                      <:>
+IDENTIFIER               <beta>
+'+'                      <+>
+INTEGER_LITERAL          <1>
+';'                      <;>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+IDENTIFIER               <neg>
+'='                      <=>
+'-'                      <->
+IDENTIFIER               <alpha>
+'?'                      <?>
+':'                      <:>
+IDENTIFIER               <beta>
+';'                      <;>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+IDENTIFIER               <addLeft>
+'='                      <=>
+IDENTIFIER               <alpha>
+'+'                      <+>
+IDENTIFIER               <beta>
+'?'                      <?>
+':'                      <:>
+IDENTIFIER               <gamma>
+';'                      <;>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+IDENTIFIER               <cmp>
+'='                      <=>
+IDENTIFIER               <alpha>
+'?'                      <?>
+':'                      <:>
+IDENTIFIER               <beta>
+EQ                       <eq>
+IDENTIFIER               <gamma>
+';'                      <;>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+IDENTIFIER               <cat>
+'='                      <=>
+IDENTIFIER               <alpha>
+'?'                      <?>
+':'                      <:>
+IDENTIFIER               <beta>
+'&'                      <&>
+OPEN_STRING              <">
+STRING_LITERAL           <z>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+IDENTIFIER               <grouped>
+'='                      <=>
+'('                      <(>
+IDENTIFIER               <alpha>
+'?'                      <?>
+':'                      <:>
+IDENTIFIER               <beta>
+')'                      <)>
+'&'                      <&>
+OPEN_STRING              <">
+STRING_LITERAL           <z>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+RETURN                   <return>
+IDENTIFIER               <add>
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+/*===TREE===*/
+(scriptBlock
+  (componentDeclaration
+    component
+    (componentGuts
+      {
+      (element
+        (functionDeclaration
+          function
+          (identifier precedence)
+          (
+          parameterList
+          )
+          (compoundStatement
+            {
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier add))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (baseExpression (unaryExpression (memberExpression (identifier alpha))))
+                    (elvisOperator ? :)
+                    (baseExpression
+                      (baseExpression (unaryExpression (memberExpression (identifier beta))))
+                      +
+                      (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier neg))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (baseExpression
+                      -
+                      (baseExpression (unaryExpression (memberExpression (identifier alpha))))
+                    )
+                    (elvisOperator ? :)
+                    (baseExpression (unaryExpression (memberExpression (identifier beta))))
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier addLeft))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (baseExpression
+                      (baseExpression (unaryExpression (memberExpression (identifier alpha))))
+                      +
+                      (baseExpression (unaryExpression (memberExpression (identifier beta))))
+                    )
+                    (elvisOperator ? :)
+                    (baseExpression (unaryExpression (memberExpression (identifier gamma))))
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier cmp))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (baseExpression (unaryExpression (memberExpression (identifier alpha))))
+                    (elvisOperator ? :)
+                    (baseExpression
+                      (baseExpression (unaryExpression (memberExpression (identifier beta))))
+                      (compareExpressionOperator eq)
+                      (baseExpression (unaryExpression (memberExpression (identifier gamma))))
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier cat))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (baseExpression (unaryExpression (memberExpression (identifier alpha))))
+                    (elvisOperator ? :)
+                    (baseExpression
+                      (baseExpression (unaryExpression (memberExpression (identifier beta))))
+                      &
+                      (baseExpression
+                        (unaryExpression
+                          (primaryExpression
+                            (literalExpression (stringLiteral " (stringLiteralPart z) "))
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier grouped))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (baseExpression
+                      (unaryExpression
+                        (memberExpression
+                          (parentheticalExpression
+                            (
+                            (startExpression
+                              (baseExpression
+                                (baseExpression (unaryExpression (memberExpression (identifier alpha))))
+                                (elvisOperator ? :)
+                                (baseExpression (unaryExpression (memberExpression (identifier beta))))
+                              )
+                            )
+                            )
+                          )
+                        )
+                      )
+                    )
+                    &
+                    (baseExpression
+                      (unaryExpression
+                        (primaryExpression
+                          (literalExpression (stringLiteral " (stringLiteralPart z) "))
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (returnStatement
+                return
+                (anExpression
+                  (startExpression
+                    (baseExpression (unaryExpression (memberExpression (identifier add))))
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            }
+          )
+        )
+      )
+      }
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+component {
+  public function precedence()     {
+      var add = alpha ?: beta + 1;
+      var neg = -alpha ?: beta;
+      var addLeft = alpha + beta ?: gamma;
+      var cmp = alpha ?: beta eq gamma;
+      var cat = alpha ?: beta & 'z';
+      var grouped = (alpha ?: beta) & 'z';
+      return add;
+
+    }
+}
+/*======*/
