@@ -1,0 +1,65 @@
+# Differential test against tree-sitter-cfml
+
+Parses the test-corpus snippets from
+[`cfmleditor/tree-sitter-cfml`](https://github.com/cfmleditor/tree-sitter-cfml) with cfparser and
+reports which ones cfparser rejects.
+
+```bash
+mvn -pl cfml.dictionary,cfml.parsing -am install    # harness runs against target/classes
+./tools/differential/run.sh
+```
+
+Clones tree-sitter-cfml into `target/differential/` if you do not pass an existing checkout.
+Results land in `target/differential/results.tsv`, one row per snippet.
+
+## Why a second parser is worth testing against
+
+The corpus is its own oracle. Every case records the parse tree tree-sitter produced, and a tree
+containing no `ERROR` or `MISSING` node means tree-sitter parsed that snippet cleanly. So a
+cfparser failure on the same input is a genuine disagreement between two independent
+implementations, not a badly-formed test input — and it costs nothing to check, because the
+expected trees do not need to be run or compared.
+
+What this deliberately does **not** do is compare trees. tree-sitter emits a concrete syntax tree
+with its own node vocabulary (`expression_statement`, `binary_expression`); cfparser emits a typed
+AST from ANTLR rule names (`baseExpression`, `scriptBlock`). Mapping between them would be a
+project in itself and a fragile one. Parse-success comparison needs no mapping and still finds
+real bugs — issues #17 and #18 both came out of it.
+
+## Reading the output
+
+`results.tsv` columns: `id`, `lang`, `corpus`, `status`, `name`, `first_error`.
+
+A `FAIL` row means cfparser rejected a snippet tree-sitter accepts. That is a disagreement, not
+automatically a cfparser bug — check it against
+[`LIMITATIONS.md`](https://github.com/cfmleditor/tree-sitter-cfml/blob/master/LIMITATIONS.md)
+first. tree-sitter is deliberately permissive in places (bare reserved words as statements,
+space-separated arguments on any callee) because an editor grammar must not fail on incomplete
+input. Those cases are tree-sitter over-accepting, not cfparser under-accepting.
+
+Group failures by their offending token before triaging — the disagreements collapse into far
+fewer root causes than the raw count suggests. When this was first run, 76 failures over 236 cases
+came down to a handful, of which 14 were a single offset bug.
+
+## The cfquery corpus is excluded
+
+`extract.py` skips it via `SKIP_LANGS`. Those snippets are bare SQL — tree-sitter-cfml has a
+separate grammar for the body *inside* a `<cfquery>`, and cfparser does not model SQL at all.
+Including them produced 68 meaningless failures out of 72 on the first run.
+
+## Entry points
+
+Each snippet is parsed the same way the existing suites parse that flavour of CFML, so a
+disagreement reflects the real code path rather than a harness shortcut:
+
+| corpus | entry point | mirrors |
+|---|---|---|
+| `cfscript` | `CFSCRIPTParser.scriptBlock()`, SLL with LL retry | `TestFiles` |
+| `cfml` | `CFMLSource` + `CFMLParser.visit()` | `TestTagFiles` |
+
+## Not wired into the build
+
+This is a manual tool, not a JUnit test. It needs an external repository, so making it part of
+`mvn test` would either break the build wherever that clone is unavailable or vendor a copy of the
+corpus that immediately starts drifting. Run it when changing the grammar, or periodically to pick
+up new cases as tree-sitter-cfml's corpus grows.
