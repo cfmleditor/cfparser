@@ -465,8 +465,14 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 	@Override
 	public CFScriptStatement visitIncludeStatement(IncludeStatementContext ctx) {
 		// System.out.println("visitIncludeStatement");
+		if (ctx.baseExpression() != null) {
+			return new CFIncludeStatement(ctx.INCLUDE().getSymbol(), cfExpressionVisitor.visit(ctx.baseExpression()));
+		}
 		CFIncludeStatement includeStatement = new CFIncludeStatement(ctx.INCLUDE().getSymbol(),
-				cfExpressionVisitor.visit(ctx.baseExpression()));
+				new LinkedHashMap<CFIdentifier, CFExpression>());
+		aggregator.push(includeStatement);
+		visitChildren(ctx.paramStatementAttributes());
+		aggregator.pop();
 		return includeStatement;
 	}
 	
@@ -498,9 +504,12 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 		Map<CFIdentifier, CFExpression> _attr = new HashMap<CFIdentifier, CFExpression>();
 		CFMLFunctionStatement cfmlFunctionStatement = new CFMLFunctionStatement(ctx.start, ctx.cfmlFunction().start, _attr,
 				visitNullSafe(ctx.compoundStatement()));
-		if (ctx.paramStatementAttributes() != null) {
+		// The attributes arrive bare or parenthesised; visitParam fills the statement either way.
+		ParserRuleContext attributes = ctx.paramStatementAttributes() != null ? ctx.paramStatementAttributes()
+				: ctx.tagAttributeList();
+		if (attributes != null) {
 			aggregator.push(cfmlFunctionStatement);
-			visitChildren(ctx.paramStatementAttributes());
+			visitChildren(attributes);
 			aggregator.pop();
 		}
 		return cfmlFunctionStatement;

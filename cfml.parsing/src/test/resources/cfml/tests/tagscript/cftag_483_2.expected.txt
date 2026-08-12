@@ -10,7 +10,7 @@ IDENTIFIER               <init>
 ')'                      <)>
 '{'                      <{>
 Hidden:NEWLINE                  <>
-IDENTIFIER               <cfwddx>
+WDDX                     <cfwddx>
 '('                      <(>
 IDENTIFIER               <action>
 '='                      <=>
@@ -55,75 +55,69 @@ Hidden:NEWLINE                  <>
           (compoundStatement
             {
             (statement
-              (startExpression
-                (baseExpression
-                  (unaryExpression
-                    (memberExpression
-                      (functionCall
-                        (identifier cfwddx)
-                        (
-                        (argumentList
-                          (argument
-                            (argumentName (identifier action))
-                            =
-                            (startExpression
-                              (baseExpression
-                                (unaryExpression
-                                  (primaryExpression
-                                    (literalExpression (stringLiteral " (stringLiteralPart fml2wddx) "))
-                                  )
-                                )
-                              )
+              (tagOperatorStatement
+                (tagFunctionStatement
+                  (cfmlFunction cfwddx)
+                  (
+                  (parameterList
+                    (parameter
+                      (identifier action)
+                      =
+                      (startExpression
+                        (baseExpression
+                          (unaryExpression
+                            (primaryExpression
+                              (literalExpression (stringLiteral " (stringLiteralPart fml2wddx) "))
                             )
                           )
-                          ,
-                          (argument
-                            (argumentName (identifier (cfmlFunction input)))
-                            =
-                            (startExpression
-                              (baseExpression
-                                (unaryExpression
-                                  (primaryExpression
-                                    (literalExpression
-                                      (stringLiteral
-                                        "
-                                        #
-                                        (anExpression
-                                          (startExpression
-                                            (baseExpression (unaryExpression (memberExpression (identifier attribs))))
-                                          )
-                                        )
-                                        #
-                                        "
-                                      )
+                        )
+                      )
+                    )
+                    ,
+                    (parameter
+                      (identifier (cfmlFunction input))
+                      =
+                      (startExpression
+                        (baseExpression
+                          (unaryExpression
+                            (primaryExpression
+                              (literalExpression
+                                (stringLiteral
+                                  "
+                                  #
+                                  (anExpression
+                                    (startExpression
+                                      (baseExpression (unaryExpression (memberExpression (identifier attribs))))
                                     )
                                   )
-                                )
-                              )
-                            )
-                          )
-                          ,
-                          (argument
-                            (argumentName (identifier (cfmlFunction output)))
-                            =
-                            (startExpression
-                              (baseExpression
-                                (unaryExpression
-                                  (primaryExpression
-                                    (literalExpression (stringLiteral " (stringLiteralPart attribsWDDX) "))
-                                  )
+                                  #
+                                  "
                                 )
                               )
                             )
                           )
                         )
+                      )
+                    )
+                    ,
+                    (parameter
+                      (identifier (cfmlFunction output))
+                      =
+                      (startExpression
+                        (baseExpression
+                          (unaryExpression
+                            (primaryExpression
+                              (literalExpression (stringLiteral " (stringLiteralPart attribsWDDX) "))
+                            )
+                          )
                         )
                       )
                     )
                   )
+                  )
+                  ;
                 )
               )
-              ;
             )
             }
           )

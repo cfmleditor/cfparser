@@ -1,5 +1,5 @@
 /*===TOKENS===*/
-IDENTIFIER               <cfmail>
+MAIL                     <cfmail>
 '('                      <(>
 Hidden:NEWLINE                  <>
 TO                       <to>
@@ -50,112 +50,109 @@ Hidden:NEWLINE                  <>
 (scriptBlock
   (element
     (statement
-      (startExpression
-        (baseExpression
-          (unaryExpression
-            (memberExpression
-              (functionCall
-                (identifier cfmail)
-                (
-                (argumentList
-                  (argument
-                    (argumentName (identifier to))
-                    =
-                    (startExpression
-                      (baseExpression (unaryExpression (memberExpression (identifier toAddress))))
-                    )
-                  )
-                  ,
-                  (argument
-                    (argumentName (identifier from))
-                    =
-                    (startExpression
-                      (baseExpression (unaryExpression (memberExpression (identifier adminEmail))))
-                    )
-                  )
-                  ,
-                  (argument
-                    (argumentName (identifier replyto))
-                    =
-                    (startExpression
-                      (baseExpression (unaryExpression (memberExpression (identifier adminEmail))))
-                    )
-                  )
-                  ,
-                  (argument
-                    (argumentName (identifier failto))
-                    =
-                    (startExpression
-                      (baseExpression (unaryExpression (memberExpression (identifier adminEmail))))
-                    )
-                  )
-                  ,
-                  (argument
-                    (argumentName (identifier subject))
-                    =
-                    (startExpression
-                      (baseExpression
-                        (unaryExpression
-                          (primaryExpression
-                            (literalExpression (stringLiteral " (stringLiteralPart Test email) "))
-                          )
-                        )
-                      )
-                    )
-                  )
-                  ,
-                  (argument
-                    (argumentName (identifier type))
-                    =
-                    (startExpression
-                      (baseExpression
-                        (unaryExpression
-                          (primaryExpression
-                            (literalExpression (stringLiteral " (stringLiteralPart html) "))
-                          )
-                        )
-                      )
+      (tagOperatorStatement
+        (tagFunctionStatement
+          (cfmlFunction cfmail)
+          (
+          (parameterList
+            (parameter
+              (identifier to)
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier toAddress))))
+              )
+            )
+            ,
+            (parameter
+              (identifier from)
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier adminEmail))))
+              )
+            )
+            ,
+            (parameter
+              (identifier replyto)
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier adminEmail))))
+              )
+            )
+            ,
+            (parameter
+              (identifier failto)
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier adminEmail))))
+              )
+            )
+            ,
+            (parameter
+              (identifier subject)
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart Test email) "))
                     )
                   )
                 )
-                )
-                (compoundStatement
-                  {
-                  (statement
-                    (startExpression
-                      (baseExpression
-                        (unaryExpression
-                          (memberExpression
-                            (functionCall
-                              (identifier writeOutput)
-                              (
-                              (argumentList
-                                (argument
-                                  (startExpression
-                                    (baseExpression (unaryExpression (memberExpression (identifier mailBody))))
-                                  )
-                                )
-                              )
-                              )
-                            )
-                          )
-                        )
-                      )
+              )
+            )
+            ,
+            (parameter
+              (identifier type)
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart html) "))
                     )
-                    ;
                   )
-                  }
                 )
               )
             )
           )
+          )
+          (compoundStatement
+            {
+            (statement
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (memberExpression
+                      (functionCall
+                        (identifier writeOutput)
+                        (
+                        (argumentList
+                          (argument
+                            (startExpression
+                              (baseExpression (unaryExpression (memberExpression (identifier mailBody))))
+                            )
+                          )
+                        )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              ;
+            )
+            }
+          )
         )
       )
-      ;
     )
   )
+  (element (statement ;))
 )
 /*======*/
 /*===DECOMPILE===*/
-cfmail(to = toAddress, from = adminEmail, replyto = adminEmail, failto = adminEmail, subject = 'Test email', type = 'html')
+cfmail(to = toAddress, from = adminEmail, replyto = adminEmail, failto = adminEmail, subject = 'Test email', type = 'html')  {
+writeOutput(mailBody);
+
+  }
 /*======*/

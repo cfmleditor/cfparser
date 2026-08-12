@@ -5,7 +5,7 @@ IDENTIFIER               <foo>
 ')'                      <)>
 '{'                      <{>
 Hidden:NEWLINE                  <>
-IDENTIFIER               <cfstoredproc>
+STOREDPROC               <cfstoredproc>
 '('                      <(>
 Hidden:NEWLINE                  <>
 IDENTIFIER               <procedure>
@@ -24,7 +24,7 @@ Hidden:NEWLINE                  <>
 ')'                      <)>
 '{'                      <{>
 Hidden:NEWLINE                  <>
-IDENTIFIER               <cfprocparam>
+PROCPARAM                <cfprocparam>
 '('                      <(>
 IDENTIFIER               <value>
 '='                      <=>
@@ -38,7 +38,7 @@ CLOSE_STRING             <">
 ')'                      <)>
 ';'                      <;>
 Hidden:NEWLINE                  <>
-IDENTIFIER               <cfprocresult>
+PROCRESULT               <cfprocresult>
 '('                      <(>
 IDENTIFIER               <resultset>
 '='                      <=>
@@ -75,118 +75,108 @@ Hidden:NEWLINE                  <>
       (compoundStatement
         {
         (statement
-          (functionCall
-            (identifier cfstoredproc)
-            (
-            (argumentList
-              (argument
-                (argumentName (identifier procedure))
-                =
-                (startExpression
-                  (baseExpression
-                    (unaryExpression
-                      (primaryExpression
-                        (literalExpression (stringLiteral " (stringLiteralPart dbo.myTestProcedure) "))
-                      )
-                    )
-                  )
-                )
-              )
-              ,
-              (argument
-                (argumentName (identifier datasource))
-                =
-                (startExpression
-                  (baseExpression
-                    (unaryExpression
-                      (memberExpression (identifier Variables) . (identifier datasource))
-                    )
-                  )
-                )
-              )
-            )
-            )
-            (compoundStatement
-              {
-              (statement
-                (startExpression
-                  (baseExpression
-                    (unaryExpression
-                      (memberExpression
-                        (functionCall
-                          (identifier cfprocparam)
-                          (
-                          (argumentList
-                            (argument
-                              (argumentName (identifier value))
-                              =
-                              (startExpression
-                                (baseExpression (unaryExpression (memberExpression (identifier myId))))
-                              )
-                            )
-                            ,
-                            (argument
-                              (argumentName (identifier cfsqltype))
-                              =
-                              (startExpression
-                                (baseExpression
-                                  (unaryExpression
-                                    (primaryExpression
-                                      (literalExpression (stringLiteral " (stringLiteralPart cf_sql_integer) "))
-                                    )
-                                  )
-                                )
-                              )
-                            )
-                          )
-                          )
+          (tagOperatorStatement
+            (tagFunctionStatement
+              (cfmlFunction cfstoredproc)
+              (
+              (parameterList
+                (parameter
+                  (identifier procedure)
+                  =
+                  (startExpression
+                    (baseExpression
+                      (unaryExpression
+                        (primaryExpression
+                          (literalExpression (stringLiteral " (stringLiteralPart dbo.myTestProcedure) "))
                         )
                       )
                     )
                   )
                 )
-                ;
-              )
-              (statement
-                (startExpression
-                  (baseExpression
-                    (unaryExpression
-                      (memberExpression
-                        (functionCall
-                          (identifier cfprocresult)
-                          (
-                          (argumentList
-                            (argument
-                              (argumentName (identifier resultset))
-                              =
-                              (startExpression
-                                (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
-                              )
-                            )
-                            ,
-                            (argument
-                              (argumentName (identifier name))
-                              =
-                              (startExpression
-                                (baseExpression
-                                  (unaryExpression
-                                    (primaryExpression
-                                      (literalExpression (stringLiteral " (stringLiteralPart myQuery) "))
-                                    )
-                                  )
-                                )
-                              )
-                            )
-                          )
-                          )
-                        )
+                ,
+                (parameter
+                  (identifier datasource)
+                  =
+                  (startExpression
+                    (baseExpression
+                      (unaryExpression
+                        (memberExpression (identifier Variables) . (identifier datasource))
                       )
                     )
                   )
                 )
-                ;
               )
-              }
+              )
+              (compoundStatement
+                {
+                (statement
+                  (tagOperatorStatement
+                    (tagFunctionStatement
+                      (cfmlFunction cfprocparam)
+                      (
+                      (parameterList
+                        (parameter
+                          (identifier value)
+                          =
+                          (startExpression
+                            (baseExpression (unaryExpression (memberExpression (identifier myId))))
+                          )
+                        )
+                        ,
+                        (parameter
+                          (identifier cfsqltype)
+                          =
+                          (startExpression
+                            (baseExpression
+                              (unaryExpression
+                                (primaryExpression
+                                  (literalExpression (stringLiteral " (stringLiteralPart cf_sql_integer) "))
+                                )
+                              )
+                            )
+                          )
+                        )
+                      )
+                      )
+                      ;
+                    )
+                  )
+                )
+                (statement
+                  (tagOperatorStatement
+                    (tagFunctionStatement
+                      (cfmlFunction cfprocresult)
+                      (
+                      (parameterList
+                        (parameter
+                          (identifier resultset)
+                          =
+                          (startExpression
+                            (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                          )
+                        )
+                        ,
+                        (parameter
+                          (identifier name)
+                          =
+                          (startExpression
+                            (baseExpression
+                              (unaryExpression
+                                (primaryExpression
+                                  (literalExpression (stringLiteral " (stringLiteralPart myQuery) "))
+                                )
+                              )
+                            )
+                          )
+                        )
+                      )
+                      )
+                      ;
+                    )
+                  )
+                )
+                }
+              )
             )
           )
         )
@@ -214,7 +204,11 @@ Hidden:NEWLINE                  <>
 /*======*/
 /*===DECOMPILE===*/
 public function foo()   {
-cfstoredproc(procedure = 'dbo.myTestProcedure', datasource = Variables.datasource);
+cfstoredproc(procedure = 'dbo.myTestProcedure', datasource = Variables.datasource)      {
+cfprocparam(value = myId, cfsqltype = 'cf_sql_integer');
+cfprocresult(resultset = 1, name = 'myQuery');
+
+      };
 Variables.myTest = [];
 
   }

@@ -1,0 +1,381 @@
+/*===TOKENS===*/
+Hidden:LINE_COMMENT             <// Script-syntax tags: the cf-prefixed spelling, and attributes separated by spaces>
+Hidden:LINE_COMMENT             <// rather than commas. Both are how the engines' own test suites write these.>
+FILE                     <cffile>
+IDENTIFIER               <action>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <write>
+CLOSE_STRING             <">
+FILE                     <file>
+'='                      <=>
+IDENTIFIER               <destination>
+OUTPUT                   <output>
+'='                      <=>
+IDENTIFIER               <body>
+';'                      <;>
+Hidden:NEWLINE                  <>
+DIRECTORY                <cfdirectory>
+'('                      <(>
+DIRECTORY                <directory>
+'='                      <=>
+IDENTIFIER               <target>
+IDENTIFIER               <action>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <list>
+CLOSE_STRING             <">
+IDENTIFIER               <name>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <found>
+CLOSE_STRING             <">
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// Space at the first junction, comma later on -- both are allowed after the first.>
+LOG                      <cflog>
+'('                      <(>
+FILE                     <file>
+'='                      <=>
+IDENTIFIER               <logFile>
+IDENTIFIER               <text>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <started>
+CLOSE_STRING             <">
+','                      <,>
+IDENTIFIER               <type>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <information>
+CLOSE_STRING             <">
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// A parenthesised tag keeps its body.>
+QUERY                    <cfquery>
+'('                      <(>
+IDENTIFIER               <name>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <users>
+CLOSE_STRING             <">
+IDENTIFIER               <datasource>
+'='                      <=>
+IDENTIFIER               <ds>
+')'                      <)>
+'{'                      <{>
+IDENTIFIER               <echo>
+'('                      <(>
+OPEN_STRING              <">
+STRING_LITERAL           <SELECT 1>
+CLOSE_STRING             <">
+')'                      <)>
+';'                      <;>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+APPLICATION              <application>
+IDENTIFIER               <action>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <update>
+CLOSE_STRING             <">
+IDENTIFIER               <NULLSupport>
+'='                      <=>
+IDENTIFIER               <nullSupport>
+';'                      <;>
+Hidden:NEWLINE                  <>
+INCLUDE                  <include>
+IDENTIFIER               <template>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <header.cfm>
+CLOSE_STRING             <">
+IDENTIFIER               <runOnce>
+'='                      <=>
+BOOLEAN_LITERAL          <true>
+';'                      <;>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction cffile)
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier action))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart write) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier (cfmlFunction file)))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier destination))))
+              )
+            )
+            (param
+              (multipartIdentifier (identifier (cfmlFunction output)))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier body))))
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction cfdirectory)
+          (
+          (tagAttributeList
+            (param
+              (multipartIdentifier (identifier (cfmlFunction directory)))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier target))))
+              )
+            )
+            (param
+              (multipartIdentifier (identifier action))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart list) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier name))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart found) "))
+                    )
+                  )
+                )
+              )
+            )
+          )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction cflog)
+          (
+          (tagAttributeList
+            (param
+              (multipartIdentifier (identifier (cfmlFunction file)))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier logFile))))
+              )
+            )
+            (param
+              (multipartIdentifier (identifier text))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart started) "))
+                    )
+                  )
+                )
+              )
+            )
+            ,
+            (param
+              (multipartIdentifier (identifier type))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart information) "))
+                    )
+                  )
+                )
+              )
+            )
+          )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction cfquery)
+          (
+          (tagAttributeList
+            (param
+              (multipartIdentifier (identifier name))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart users) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier datasource))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier ds))))
+              )
+            )
+          )
+          )
+          (compoundStatement
+            {
+            (statement
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (memberExpression
+                      (functionCall
+                        (identifier echo)
+                        (
+                        (argumentList
+                          (argument
+                            (startExpression
+                              (baseExpression
+                                (unaryExpression
+                                  (primaryExpression
+                                    (literalExpression (stringLiteral " (stringLiteralPart SELECT 1) "))
+                                  )
+                                )
+                              )
+                            )
+                          )
+                        )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              ;
+            )
+            }
+          )
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction application)
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier action))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart update) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier NULLSupport))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier nullSupport))))
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (includeStatement
+          include
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier template))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart header.cfm) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier runOnce))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (primaryExpression (literalExpression true))))
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+{
+cffile action='write' file=destination output=body;;
+cfdirectory action='list' directory=target name='found';;
+cflog file=logFile text='started' type='information';;
+cfquery datasource=ds name='users'{
+echo('SELECT 1');
+
+};
+application NULLSupport=nullSupport action='update';;
+include runOnce=true template='header.cfm';
+
+}
+/*======*/
