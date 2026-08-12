@@ -38,6 +38,7 @@ element
 componentModifier
   : ABSTRACT
   | FINAL
+  | STATIC
   ;
 
 functionModifier
@@ -63,7 +64,10 @@ anonymousFunctionDeclaration
 
 lambdaDeclaration
   : LEFTPAREN parameterList? RIGHTPAREN
-  	LAMBDAOP (body=compoundStatement | simpleExpression =startExpression) 
+  	operator=(LAMBDAOP | THINARROW) (body=compoundStatement | simpleExpression =startExpression) 
+  // A single parameter may drop the parentheses: t -> t.b(), target => target.name.
+  | single=identifier
+  	operator=(LAMBDAOP | THINARROW) (body=compoundStatement | simpleExpression =startExpression) 
   ;
 
 accessType
@@ -445,8 +449,10 @@ cfmlExpression
 	|   importStatement EOF
 	;
 	
+// FINAL is Lucee's immutable local; it takes the same shape as VAR and may combine
+// with it, as in `final var x = 1;`.
 localAssignmentExpression 
-	:	VAR left=startExpression ( (EQUALSOP otherIdentifiers)* EQUALSOP right=startExpression )? //-> ^( VARLOCAL identifier ( EQUALSOP baseExpression )? )
+	:	(VAR | FINAL VAR? | VAR FINAL) left=startExpression ( (EQUALSOP otherIdentifiers)* EQUALSOP right=startExpression )? //-> ^( VARLOCAL identifier ( EQUALSOP baseExpression )? )
 	;
 	
 otherIdentifiers:
@@ -510,6 +516,8 @@ compareExpressionOperator:
     |   CONTAINS //-> ^(CONTAINS)
     |   DOESNOTCONTAIN
     |   INSTANCEOF
+    |   CT
+    |   NCT
  ;
 	
 
@@ -672,6 +680,8 @@ identifier
   | TO
   | DEFAULT // default is a cfscript keyword that's always allowed as a var name
   | INSTANCEOF // ColdBox's Matcher and TestBox's Assertion both declare function instanceOf()
+  | CT   // two-letter operator abbreviations; far too likely as ordinary names
+  | NCT
   | INCLUDE
   | NEW
   | ABORT
@@ -773,8 +783,9 @@ newComponentExpression
   : NEW componentPath LEFTPAREN argumentList RIGHTPAREN
   ;
   
+// Lucee types the path being instantiated: new java:java.io.File(p), new cfml:foo.Bar().
 componentPath
   : stringLiteral
-  | identifier
-  | multipartIdentifier
+  | (prefix=identifier COLON)? identifier
+  | (prefix=identifier COLON)? multipartIdentifier
   ;

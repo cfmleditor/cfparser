@@ -30,6 +30,9 @@ public class CFCompDeclStatement extends CFParsedStatement {
 	
 	private String returnType;
 	
+	/** abstract, final or static on the declaration itself; all three were being dropped. */
+	private String modifier;
+	
 	// TODO: prevent function declared inside function. May want to do this elsewhere
 	public CFCompDeclStatement(Token _t, Map<CFExpression, CFExpression> _attr, CFScriptStatement _body) {
 		super(_t);
@@ -60,6 +63,15 @@ public class CFCompDeclStatement extends CFParsedStatement {
 		body.checkIndirectAssignments(scriptSource);
 	}
 	
+	/** The declaration modifier as written, or null when there was none. */
+	public String getModifier() {
+		return modifier;
+	}
+	
+	public void setModifier(String _modifier) {
+		modifier = _modifier;
+	}
+	
 	public CFStatementResult Exec(CFContext context) {
 		return null;
 	}
@@ -68,6 +80,9 @@ public class CFCompDeclStatement extends CFParsedStatement {
 	public String Decompile(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Indent(indent));
+		if (modifier != null) {
+			sb.append(modifier).append(" ");
+		}
 		sb.append("component ");
 		for (Entry<CFExpression, CFExpression> entry : attributes.entrySet()) {
 			sb.append(entry.getKey().Decompile(0));

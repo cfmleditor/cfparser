@@ -22,9 +22,28 @@ public class CFLambdaExpression extends CFAnonymousFunctionExpression {
 	/** Non-null when the body is a bare expression rather than a block. */
 	private CFExpression expressionBody;
 
-	public CFLambdaExpression(Token _t, CFFuncDeclStatement funcDeclStatement, CFExpression expressionBody) {
+	/** The arrow itself: Lucee runs => as a closure and -> as a lambda, capturing scope differently. */
+	private Token operator;
+
+	public CFLambdaExpression(Token _t, Token operator, CFFuncDeclStatement funcDeclStatement,
+			CFExpression expressionBody) {
 		super(_t, funcDeclStatement);
+		this.operator = operator;
 		this.expressionBody = expressionBody;
+	}
+
+	/** The arrow token, <code>=&gt;</code> or <code>-&gt;</code>. */
+	public Token getOperator() {
+		return operator;
+	}
+
+	/**
+	 * True for <code>=&gt;</code>, which Lucee evaluates as a closure over the enclosing scope, as
+	 * against <code>-&gt;</code>, which does not capture it. The two are otherwise identical, so
+	 * nothing but this tells them apart.
+	 */
+	public boolean isClosure() {
+		return operator != null && "=>".equals(operator.getText());
 	}
 
 	/**
@@ -49,7 +68,7 @@ public class CFLambdaExpression extends CFAnonymousFunctionExpression {
 			}
 			sb.append(formals.get(i));
 		}
-		sb.append(") => ");
+		sb.append(") ").append(operator == null ? "=>" : operator.getText()).append(" ");
 		if (expressionBody != null) {
 			sb.append(expressionBody.Decompile(0));
 		} else {

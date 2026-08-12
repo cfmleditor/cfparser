@@ -181,6 +181,7 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 	public CFExpression visitLocalAssignmentExpression(LocalAssignmentExpressionContext ctx) {
 		final CFExpression initExpression = ctx.right == null ? null : visit(ctx.right);
 		CFVarDeclExpression retval = new CFVarDeclExpression(ctx.start, visit(ctx.left), initExpression);
+		retval.setFinal(ctx.FINAL() != null);
 		if (ctx.otherIdentifiers().size() > 0) {
 			for (OtherIdentifiersContext oi : ctx.otherIdentifiers()) {
 				CFIdentifier otherid = (CFIdentifier) visit(oi.identifier());
@@ -437,7 +438,16 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 				}
 			}
 		}
-		CFNewExpression newExpression = new CFNewExpression(ctx.NEW().getSymbol(), visit(ctx.componentPath()), args);
+		ComponentPathContext path = ctx.componentPath();
+		String prefix = null;
+		ParseTree pathNode = path;
+		if (path.prefix != null) {
+			// children are [prefix, ':', path]; visiting the whole rule would fold the prefix into
+			// the path and `new java:java.io.File(p)` would name java.java.io.File.
+			prefix = path.prefix.getText();
+			pathNode = path.getChild(2);
+		}
+		CFNewExpression newExpression = new CFNewExpression(ctx.NEW().getSymbol(), visit(pathNode), prefix, args);
 		return newExpression;
 	}
 	
@@ -559,7 +569,7 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 		// visiting simpleExpression a second time, so the lambda holds one expression tree.
 		CFExpression expressionBody = funcDeclStatement.getBody() instanceof CFReturnStatement
 				? ((CFReturnStatement) funcDeclStatement.getBody()).getExpression() : null;
-		return new CFLambdaExpression(ctx.getStart(), funcDeclStatement, expressionBody);
+		return new CFLambdaExpression(ctx.getStart(), ctx.operator, funcDeclStatement, expressionBody);
 	}
 	
 	public synchronized CFScriptStatementVisitor getCFScriptStatementVisitor() {

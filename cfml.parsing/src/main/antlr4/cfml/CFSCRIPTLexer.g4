@@ -115,6 +115,9 @@ CONTAINS:	[cC][oO][nN][tT][aA][iI][nN][sS];
 CONTAIN: [cC][oO][nN][tT][aA][iI][nN];
 DOESNOTCONTAIN: [dD][oO][eE][sS][ ]+[nN][oO][tT][ ]+[cC][oO][nN][tT][aA][iI][nN];
 INSTANCEOF: [iI][nN][sS][tT][aA][nN][cC][eE][oO][fF];
+// Railo/Lucee abbreviations for contains and does not contain.
+CT: [cC][tT];
+NCT: [nN][cC][tT];
 IS:	[iI][sS] -> type(EQ);
 IS_NOT:	[iI][sS][ ]+[nN][oO][tT] -> type(NEQ);
 GT: [gG][tT];
@@ -181,6 +184,9 @@ CONCAT: '&';
 EQUALSEQUALSOP: '==' -> type(EQ);
 EQUALSEQUALSEQUALSOP: '===' -> type(EQ);
 LAMBDAOP: '=>';
+// Lucee's second arrow. Syntactically the same declaration; the engines differ at
+// runtime, where => captures scope as a closure and -> does not.
+THINARROW: '->';
 EQUALSOP: '=';
 PLUSEQUALS: '+=';
 MINUSEQUALS: '-=';
