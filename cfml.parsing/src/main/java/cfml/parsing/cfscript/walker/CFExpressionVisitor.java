@@ -511,11 +511,10 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 	@Override
 	public CFExpression visitTagFunctionStatement(TagFunctionStatementContext ctx) {
 		ArgumentsVector args = new ArgumentsVector();
-		if (ctx.parameterList() != null) {
-			for (ParameterContext argCtx : ctx.parameterList().parameter()) {
+		if (ctx.argumentList() != null) {
+			for (ArgumentContext argCtx : ctx.argumentList().argument()) {
 				if (argCtx.name != null) {
-					args.addNamedArg(visit(argCtx.name),
-							argCtx.startExpression() == null ? null : visit(argCtx.startExpression()));
+					args.addNamedArg(visit(argCtx.name), visit(argCtx.startExpression()));
 				} else {
 					args.add(visit(argCtx));
 				}
