@@ -54,41 +54,41 @@ Hidden:NEWLINE                  <>
         (tagFunctionStatement
           (cfmlFunction cfmail)
           (
-          (parameterList
-            (parameter
-              (identifier to)
+          (argumentList
+            (argument
+              (argumentName (identifier to))
               =
               (startExpression
                 (baseExpression (unaryExpression (memberExpression (identifier toAddress))))
               )
             )
             ,
-            (parameter
-              (identifier from)
+            (argument
+              (argumentName (identifier from))
               =
               (startExpression
                 (baseExpression (unaryExpression (memberExpression (identifier adminEmail))))
               )
             )
             ,
-            (parameter
-              (identifier replyto)
+            (argument
+              (argumentName (identifier replyto))
               =
               (startExpression
                 (baseExpression (unaryExpression (memberExpression (identifier adminEmail))))
               )
             )
             ,
-            (parameter
-              (identifier failto)
+            (argument
+              (argumentName (identifier failto))
               =
               (startExpression
                 (baseExpression (unaryExpression (memberExpression (identifier adminEmail))))
               )
             )
             ,
-            (parameter
-              (identifier subject)
+            (argument
+              (argumentName (identifier subject))
               =
               (startExpression
                 (baseExpression
@@ -101,8 +101,8 @@ Hidden:NEWLINE                  <>
               )
             )
             ,
-            (parameter
-              (identifier type)
+            (argument
+              (argumentName (identifier type))
               =
               (startExpression
                 (baseExpression

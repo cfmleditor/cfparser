@@ -63,17 +63,17 @@ Hidden:NEWLINE                  <>
                 (tagFunctionStatement
                   (cfmlFunction location)
                   (
-                  (parameterList
-                    (parameter
-                      (identifier x)
+                  (argumentList
+                    (argument
+                      (argumentName (identifier x))
                       =
                       (startExpression
                         (baseExpression (unaryExpression (primaryExpression (literalExpression true))))
                       )
                     )
                     ,
-                    (parameter
-                      (identifier y)
+                    (argument
+                      (argumentName (identifier y))
                       =
                       (startExpression
                         (baseExpression

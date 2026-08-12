@@ -38,9 +38,9 @@ Hidden:NEWLINE                  <>
         (tagFunctionStatement
           (cfmlFunction cfloop)
           (
-          (parameterList
-            (parameter
-              (identifier (cfmlFunction query))
+          (argumentList
+            (argument
+              (argumentName (identifier (cfmlFunction query)))
               =
               (startExpression
                 (baseExpression
@@ -74,9 +74,9 @@ Hidden:NEWLINE                  <>
         (tagFunctionStatement
           (cfmlFunction loop)
           (
-          (parameterList
-            (parameter
-              (identifier (cfmlFunction query))
+          (argumentList
+            (argument
+              (argumentName (identifier (cfmlFunction query)))
               =
               (startExpression
                 (baseExpression

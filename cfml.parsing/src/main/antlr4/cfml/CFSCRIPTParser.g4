@@ -270,17 +270,26 @@ cfmlfunctionStatement
   ;
 
 // Attributes of a parenthesised script-syntax tag: cffile( action="write" file=f ).
-// The first junction must be a space, never a comma. With a comma there the call is
+// At least one junction must be a space. A list separated entirely by commas is
 // indistinguishable from an ordinary named-argument call -- update(id=1, name="x") is
-// far more likely a user function than <cfupdate> -- so the comma form is left as the
-// function call it already parsed as. argumentList requires the commas this rule forbids,
-// which is why the space-separated form had no rule to match at all.
+// far more likely a user function than <cfupdate> -- so that stays the function call it
+// already was. One space anywhere settles it, because argumentList requires a comma at
+// every junction, so a mixed list cannot be a function call at all.
+//
+// Read as: a comma-separated prefix, then two params with no comma between them, then
+// anything. cflog( file=f text="t", type="error" ) and
+// cflog( file=f, text="t" type="error" ) both match; cflog( file=f, text="t" ) does not.
 tagAttributeList
-  : param param (COMMA? param)*
+  : (param COMMA)* param param (COMMA? param)*
   ;
 
+// A tag name called with comma-separated arguments is treated as an ordinary call, so it
+// takes argumentList like any other. It used to take parameterList -- the rule for a
+// function *declaration's* parameters -- whose trailing parameterAttribute* silently ate
+// any argument that followed without a comma, and which turned a positional argument into
+// a named one with no value. See #30.
 tagFunctionStatement
-  : cfmlFunction (LEFTPAREN parameterList RIGHTPAREN)? (body=compoundStatement | SEMICOLON)?
+  : cfmlFunction (LEFTPAREN argumentList RIGHTPAREN)? (body=compoundStatement | SEMICOLON)?
   ;
 
 cfmlFunction

@@ -1,0 +1,219 @@
+/*===TOKENS===*/
+Hidden:LINE_COMMENT             <// A space anywhere in the attribute list settles it as a tag, because a function call>
+Hidden:LINE_COMMENT             <// needs a comma at every junction. recurse=true used to be swallowed and dropped.>
+DIRECTORY                <cfdirectory>
+'('                      <(>
+DIRECTORY                <directory>
+'='                      <=>
+IDENTIFIER               <target>
+','                      <,>
+IDENTIFIER               <action>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <list>
+CLOSE_STRING             <">
+IDENTIFIER               <recurse>
+'='                      <=>
+BOOLEAN_LITERAL          <true>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// Separated entirely by commas, so this stays an ordinary call.>
+DIRECTORY                <cfdirectory>
+'('                      <(>
+DIRECTORY                <directory>
+'='                      <=>
+IDENTIFIER               <target>
+','                      <,>
+IDENTIFIER               <action>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <list>
+CLOSE_STRING             <">
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// Positional arguments to a tag-named callee. The first used to come out as a named>
+Hidden:LINE_COMMENT             <// argument with no value, the second used to split into two statements.>
+LOG                      <cflog>
+'('                      <(>
+IDENTIFIER               <message>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+LOG                      <cflog>
+'('                      <(>
+OPEN_STRING              <">
+STRING_LITERAL           <started>
+CLOSE_STRING             <">
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+FILE                     <cffile>
+'('                      <(>
+IDENTIFIER               <source>
+','                      <,>
+IDENTIFIER               <destination>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction cfdirectory)
+          (
+          (tagAttributeList
+            (param
+              (multipartIdentifier (identifier (cfmlFunction directory)))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier target))))
+              )
+            )
+            ,
+            (param
+              (multipartIdentifier (identifier action))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart list) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier recurse))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (primaryExpression (literalExpression true))))
+              )
+            )
+          )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (tagFunctionStatement
+          (cfmlFunction cfdirectory)
+          (
+          (argumentList
+            (argument
+              (argumentName (identifier (cfmlFunction directory)))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier target))))
+              )
+            )
+            ,
+            (argument
+              (argumentName (identifier action))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart list) "))
+                    )
+                  )
+                )
+              )
+            )
+          )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (tagFunctionStatement
+          (cfmlFunction cflog)
+          (
+          (argumentList
+            (argument
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier message))))
+              )
+            )
+          )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (tagFunctionStatement
+          (cfmlFunction cflog)
+          (
+          (argumentList
+            (argument
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart started) "))
+                    )
+                  )
+                )
+              )
+            )
+          )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (tagFunctionStatement
+          (cfmlFunction cffile)
+          (
+          (argumentList
+            (argument
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier source))))
+              )
+            )
+            ,
+            (argument
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier destination))))
+              )
+            )
+          )
+          )
+          ;
+        )
+      )
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+{
+cfdirectory action='list' directory=target recurse=true;;
+cfdirectory(directory = target, action = 'list');
+cflog(message);
+cflog('started');
+cffile(source, destination);
+
+}
+/*======*/

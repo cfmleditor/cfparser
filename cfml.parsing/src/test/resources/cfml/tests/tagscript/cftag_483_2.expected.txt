@@ -59,9 +59,9 @@ Hidden:NEWLINE                  <>
                 (tagFunctionStatement
                   (cfmlFunction cfwddx)
                   (
-                  (parameterList
-                    (parameter
-                      (identifier action)
+                  (argumentList
+                    (argument
+                      (argumentName (identifier action))
                       =
                       (startExpression
                         (baseExpression
@@ -74,8 +74,8 @@ Hidden:NEWLINE                  <>
                       )
                     )
                     ,
-                    (parameter
-                      (identifier (cfmlFunction input))
+                    (argument
+                      (argumentName (identifier (cfmlFunction input)))
                       =
                       (startExpression
                         (baseExpression
@@ -100,8 +100,8 @@ Hidden:NEWLINE                  <>
                       )
                     )
                     ,
-                    (parameter
-                      (identifier (cfmlFunction output))
+                    (argument
+                      (argumentName (identifier (cfmlFunction output)))
                       =
                       (startExpression
                         (baseExpression
