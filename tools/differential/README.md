@@ -24,7 +24,18 @@ What this deliberately does **not** do is compare trees. tree-sitter emits a con
 with its own node vocabulary (`expression_statement`, `binary_expression`); cfparser emits a typed
 AST from ANTLR rule names (`baseExpression`, `scriptBlock`). Mapping between them would be a
 project in itself and a fragile one. Parse-success comparison needs no mapping and still finds
-real bugs — issues #17 and #18 both came out of it.
+real bugs — issues #15, #17, #18, #23 and #25 all came out of it.
+
+## It measures parse success, and nothing else
+
+A snippet that parses into completely the wrong tree counts as agreement. #30 was exactly that:
+`log("hello")` parsed cleanly and produced two statements instead of one, and `directory(foo)`
+turned a positional argument into a named one with no value. The harness was silent throughout,
+and the count did not move when that was fixed.
+
+So a green run is not evidence the parser is right about anything — only that it did not reject
+the input. Anything about tree shape or AST correctness has to be checked another way, usually a
+`TestFiles` fixture, which does compare the tree.
 
 ## Reading the output
 
@@ -40,12 +51,27 @@ input. Those cases are tree-sitter over-accepting, not cfparser under-accepting.
 Group failures by their offending token before triaging — the disagreements collapse into far
 fewer root causes than the raw count suggests. The first run reported 76 failures over 236 cases;
 14 of those were a single offset bug (#17, since fixed) and 20 more were an extractor bug in this
-harness rather than anything about cfparser. The real figure after both was **37**.
+harness rather than anything about cfparser. The real figure after both was 37. Successive grammar
+fixes took that to **8**, where it stands.
 
 That is the standing lesson for this tool: a disagreement is a lead, not a defect, and the harness
 is as capable of being wrong as the parser it tests. Before filing anything, reduce the case to a
 minimal snippet and reproduce it directly against `CFSCRIPTParser` or `CFMLSource` — not through
 this harness.
+
+## Diff the cases, never the count
+
+Compare `results.tsv` against the previous run case by case, not by total:
+
+```bash
+comm -23 <(awk -F'\t' '$4=="FAIL"{print $5}' new.tsv | sort) \
+         <(awk -F'\t' '$4=="FAIL"{print $5}' old.tsv | sort)   # newly broken
+```
+
+Every grammar change in this repo that introduced a keyword broke something that used to parse,
+and each time the total still went down. Adding `instanceOf` broke `function instanceOf()`, which
+ColdBox's `Matcher` and TestBox's `Assertion` both declare — the count read 20 → 18 and looked
+like progress. The newly-broken list is the only part of the output that catches that.
 
 ## The cfquery corpus is excluded
 
