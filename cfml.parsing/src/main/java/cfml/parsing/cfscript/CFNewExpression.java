@@ -14,9 +14,19 @@ public class CFNewExpression extends CFExpression {
 	
 	private CFExpression componentPath;
 	private List<CFExpression> args;
+	private String pathPrefix;
 	
 	public CFNewExpression(Token _t, CFExpression _component, ArrayList<CFExpression> _args) {
+		this(_t, _component, null, _args);
+	}
+	
+	/**
+	 * Lucee types the path being instantiated: <code>new java:java.io.File(p)</code>. The prefix has
+	 * to be kept separate from the path -- writing it back with a dot would name a different class.
+	 */
+	public CFNewExpression(Token _t, CFExpression _component, String _pathPrefix, ArrayList<CFExpression> _args) {
 		super(_t);
+		pathPrefix = _pathPrefix;
 		componentPath = _component;
 		if (componentPath != null) {
 			componentPath.setParent(this);
@@ -31,6 +41,9 @@ public class CFNewExpression extends CFExpression {
 	public String Decompile(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("new ");
+		if (pathPrefix != null) {
+			sb.append(pathPrefix).append(":");
+		}
 		sb.append(componentPath.Decompile(0));
 		sb.append("(");
 		for (int i = 0; i < args.size(); i++) {
@@ -42,6 +55,11 @@ public class CFNewExpression extends CFExpression {
 		sb.append(")");
 		
 		return sb.toString();
+	}
+	
+	/** The type prefix of a Lucee path, without the colon, or null for a plain component path. */
+	public String getPathPrefix() {
+		return pathPrefix;
 	}
 	
 	public CFExpression getComponentPath() {

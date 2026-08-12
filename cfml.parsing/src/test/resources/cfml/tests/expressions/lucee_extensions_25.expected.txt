@@ -1,0 +1,615 @@
+/*===TOKENS===*/
+Hidden:LINE_COMMENT             <// The thin arrow. Lucee runs => as a closure and -> as a lambda, which capture scope>
+Hidden:LINE_COMMENT             <// differently, so the operator has to survive into the tree rather than being normalised.>
+IDENTIFIER               <increment>
+'='                      <=>
+'('                      <(>
+IDENTIFIER               <x>
+')'                      <)>
+'->'                     <->>
+IDENTIFIER               <x>
+'+'                      <+>
+INTEGER_LITERAL          <1>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <closure>
+'='                      <=>
+'('                      <(>
+IDENTIFIER               <x>
+')'                      <)>
+'=>'                     <=>>
+IDENTIFIER               <x>
+'+'                      <+>
+INTEGER_LITERAL          <1>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <addBoth>
+'='                      <=>
+'('                      <(>
+IDENTIFIER               <a>
+','                      <,>
+IDENTIFIER               <b>
+')'                      <)>
+'->'                     <->>
+'{'                      <{>
+RETURN                   <return>
+IDENTIFIER               <a>
+'+'                      <+>
+IDENTIFIER               <b>
+';'                      <;>
+'}'                      <}>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// A single parameter may drop the parentheses.>
+IDENTIFIER               <double>
+'='                      <=>
+IDENTIFIER               <t>
+'->'                     <->>
+IDENTIFIER               <t>
+'*'                      <*>
+INTEGER_LITERAL          <2>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <names>
+'='                      <=>
+IDENTIFIER               <urls>
+'.'                      <.>
+IDENTIFIER               <map>
+'('                      <(>
+IDENTIFIER               <target>
+'->'                     <->>
+IDENTIFIER               <target>
+'.'                      <.>
+IDENTIFIER               <toString>
+'('                      <(>
+')'                      <)>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// -- followed by > is a decrement and a comparison, not an arrow.>
+IDENTIFIER               <shrinking>
+'='                      <=>
+IDENTIFIER               <i>
+'--'                     <-->
+GT                       <>>
+INTEGER_LITERAL          <0>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// A typed path. The prefix is not part of the path -- java.java.io.File is a different class.>
+IDENTIFIER               <handle>
+'='                      <=>
+NEW                      <new>
+IDENTIFIER               <java>
+':'                      <:>
+IDENTIFIER               <java>
+'.'                      <.>
+IDENTIFIER               <io>
+'.'                      <.>
+FILE                     <File>
+'('                      <(>
+IDENTIFIER               <target>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <local>
+'='                      <=>
+NEW                      <new>
+IDENTIFIER               <cfml>
+':'                      <:>
+IDENTIFIER               <models>
+'.'                      <.>
+IDENTIFIER               <User>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <plain>
+'='                      <=>
+NEW                      <new>
+IDENTIFIER               <models>
+'.'                      <.>
+IDENTIFIER               <User>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// final declares an immutable local; it is not a synonym for var.>
+FINAL                    <final>
+IDENTIFIER               <limit>
+'='                      <=>
+INTEGER_LITERAL          <10>
+';'                      <;>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+IDENTIFIER               <total>
+'='                      <=>
+INTEGER_LITERAL          <0>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// CT and NCT abbreviate contains and does not contain, and stay usable as names.>
+IF                       <if>
+'('                      <(>
+IDENTIFIER               <haystack>
+CT                       <CT>
+IDENTIFIER               <needle>
+')'                      <)>
+'{'                      <{>
+IDENTIFIER               <found>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+IF                       <if>
+'('                      <(>
+IDENTIFIER               <haystack>
+NCT                      <NCT>
+IDENTIFIER               <needle>
+')'                      <)>
+'{'                      <{>
+IDENTIFIER               <missing>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+CT                       <ct>
+'='                      <=>
+INTEGER_LITERAL          <1>
+';'                      <;>
+Hidden:NEWLINE                  <>
+NCT                      <nct>
+'='                      <=>
+CT                       <ct>
+';'                      <;>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier increment))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (lambdaDeclaration
+              (
+              (parameterList (parameter (identifier x)))
+              )
+              ->
+              (startExpression
+                (baseExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier x))))
+                  +
+                  (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier closure))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (lambdaDeclaration
+              (
+              (parameterList (parameter (identifier x)))
+              )
+              =>
+              (startExpression
+                (baseExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier x))))
+                  +
+                  (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier addBoth))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (lambdaDeclaration
+              (
+              (parameterList (parameter (identifier a)) , (parameter (identifier b)))
+              )
+              ->
+              (compoundStatement
+                {
+                (statement
+                  (returnStatement
+                    return
+                    (anExpression
+                      (startExpression
+                        (baseExpression
+                          (baseExpression (unaryExpression (memberExpression (identifier a))))
+                          +
+                          (baseExpression (unaryExpression (memberExpression (identifier b))))
+                        )
+                      )
+                    )
+                  )
+                  (endOfStatement ;)
+                )
+                }
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier double))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (lambdaDeclaration
+              (identifier t)
+              ->
+              (startExpression
+                (baseExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier t))))
+                  *
+                  (baseExpression (unaryExpression (primaryExpression (literalExpression 2))))
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier names))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier urls)
+                .
+                (qualifiedFunctionCall
+                  (identifier map)
+                  (
+                  (argumentList
+                    (argument
+                      (lambdaDeclaration
+                        (identifier target)
+                        ->
+                        (startExpression
+                          (baseExpression
+                            (unaryExpression
+                              (memberExpression
+                                (identifier target)
+                                .
+                                (qualifiedFunctionCall (identifier toString) ( argumentList ))
+                              )
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier shrinking))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (baseExpression
+              (unaryExpression (unaryExpression (memberExpression (identifier i))) --)
+            )
+            (compareExpressionOperator >)
+            (baseExpression (unaryExpression (primaryExpression (literalExpression 0))))
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier handle))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (newComponentExpression
+                  new
+                  (componentPath
+                    (identifier java)
+                    :
+                    (multipartIdentifier
+                      (identifier java)
+                      .
+                      (identifierOrReservedWord (identifier io))
+                      .
+                      (identifierOrReservedWord (identifier (cfmlFunction File)))
+                    )
+                  )
+                  (
+                  (argumentList
+                    (argument
+                      (startExpression
+                        (baseExpression (unaryExpression (memberExpression (identifier target))))
+                      )
+                    )
+                  )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier local))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (newComponentExpression
+                  new
+                  (componentPath
+                    (identifier cfml)
+                    :
+                    (multipartIdentifier
+                      (identifier models)
+                      .
+                      (identifierOrReservedWord (identifier User))
+                    )
+                  )
+                  (
+                  argumentList
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier plain))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (newComponentExpression
+                  new
+                  (componentPath
+                    (multipartIdentifier
+                      (identifier models)
+                      .
+                      (identifierOrReservedWord (identifier User))
+                    )
+                  )
+                  (
+                  argumentList
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (localAssignmentExpression
+        final
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier limit))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 10))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (localAssignmentExpression
+        var
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier total))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 0))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (ifStatement
+        if
+        (condition
+          (
+          (baseExpression
+            (baseExpression (unaryExpression (memberExpression (identifier haystack))))
+            (compareExpressionOperator CT)
+            (baseExpression (unaryExpression (memberExpression (identifier needle))))
+          )
+          )
+        )
+        (statement
+          (compoundStatement
+            {
+            (statement
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (memberExpression (functionCall (identifier found) ( argumentList )))
+                  )
+                )
+              )
+              ;
+            )
+            }
+          )
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (ifStatement
+        if
+        (condition
+          (
+          (baseExpression
+            (baseExpression (unaryExpression (memberExpression (identifier haystack))))
+            (compareExpressionOperator NCT)
+            (baseExpression (unaryExpression (memberExpression (identifier needle))))
+          )
+          )
+        )
+        (statement
+          (compoundStatement
+            {
+            (statement
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (memberExpression (functionCall (identifier missing) ( argumentList )))
+                  )
+                )
+              )
+              ;
+            )
+            }
+          )
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier ct))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier nct))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier ct))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+{
+increment = (x) -> x + 1;
+closure = (x) => x + 1;
+addBoth = (a, b) ->   {
+    return a + b;
+
+  };
+double = (t) -> t * 2;
+names = urls.map((target) -> target.toString());
+shrinking = i-- > 0;
+handle = new java:java.io.File(target);
+local = new cfml:models.User();
+plain = new models.User();
+  final limit = 10;
+  var total = 0;
+  if(haystack CT needle )     {
+found();
+
+    };
+  if(haystack NCT needle )     {
+missing();
+
+    };
+ct = 1;
+nct = ct;
+
+}
+/*======*/

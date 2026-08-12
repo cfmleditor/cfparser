@@ -1,0 +1,69 @@
+/*===TOKENS===*/
+STATIC                   <static>
+COMPONENT                <component>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+FUNCTION                 <function>
+IDENTIFIER               <ping>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+RETURN                   <return>
+OPEN_STRING              <">
+STRING_LITERAL           <pong>
+CLOSE_STRING             <">
+';'                      <;>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (componentDeclaration
+    (componentModifier static)
+    component
+    (componentGuts
+      {
+      (element
+        (functionDeclaration
+          function
+          (identifier ping)
+          (
+          parameterList
+          )
+          (compoundStatement
+            {
+            (statement
+              (returnStatement
+                return
+                (anExpression
+                  (startExpression
+                    (baseExpression
+                      (unaryExpression
+                        (primaryExpression
+                          (literalExpression (stringLiteral " (stringLiteralPart pong) "))
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            }
+          )
+        )
+      )
+      }
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+static component {
+  public function ping()     {
+      return 'pong';
+
+    }
+}
+/*======*/

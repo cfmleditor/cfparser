@@ -117,6 +117,9 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 		Map<CFExpression, CFExpression> _attr = new LinkedHashMap<CFExpression, CFExpression>();
 		CFCompDeclStatement compDeclStatement = new CFCompDeclStatement(ctx.COMPONENT().getSymbol(), _attr,
 				visit(ctx.componentGuts()));
+		if (ctx.componentModifier() != null) {
+			compDeclStatement.setModifier(getText(ctx.componentModifier()));
+		}
 		for (ComponentAttributeContext attr : ctx.componentAttribute()) {
 			CFIdentifier name = (CFIdentifier) visitExpression(attr.id);
 			if (attr.prefix != null) {
@@ -240,6 +243,10 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 			aggregator.push(parameters);
 			visitChildren(ctx.parameterList());
 			aggregator.pop();
+		} else if (ctx.single != null) {
+			// The parenthesis-less single parameter, t -> t.b().
+			parameters.add(new CFFunctionParameter((CFIdentifier) cfExpressionVisitor.visit(ctx.single), false, null,
+					null));
 		}
 		
 		// An expression body is an implicit return. Wrapping it in a return statement gives the
@@ -247,7 +254,7 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 		// need to special-case lambdas. CFLambdaExpression keeps hold of the expression itself so
 		// it can still decompile back to the arrow form.
 		CFScriptStatement body = ctx.body != null ? visit(ctx.body)
-				: new CFReturnStatement(ctx.LAMBDAOP().getSymbol(), cfExpressionVisitor.visit(ctx.simpleExpression));
+				: new CFReturnStatement(ctx.operator, cfExpressionVisitor.visit(ctx.simpleExpression));
 		
 		return new CFFuncDeclStatement(ctx.getStart(), (CFIdentifier) null, null, (CFIdentifier) null, parameters,
 				new LinkedHashMap<CFExpression, CFExpression>(), body, false, false, false);

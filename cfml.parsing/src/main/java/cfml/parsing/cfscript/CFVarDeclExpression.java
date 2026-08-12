@@ -14,6 +14,8 @@ public class CFVarDeclExpression extends CFExpression {
 	
 	private CFExpression var;
 	private CFExpression init; // null if none
+	/** True for Lucee's `final x = 1;`, which is a different declaration from `var x = 1;`. */
+	private boolean finalDecl = false;
 	List<CFIdentifier> otherVars = new ArrayList<CFIdentifier>();
 	List<CFIdentifier> otherIds = new ArrayList<CFIdentifier>();
 	
@@ -40,7 +42,7 @@ public class CFVarDeclExpression extends CFExpression {
 	@Override
 	public String Decompile(int indent) {
 		StringBuilder s = new StringBuilder(Indent(indent));
-		s.append("var ");
+		s.append(finalDecl ? "final " : "var ");
 		s.append(var.Decompile(0));
 		for (CFIdentifier id : otherVars) {
 			s.append(" = var ");
@@ -55,6 +57,14 @@ public class CFVarDeclExpression extends CFExpression {
 			s.append(init.Decompile(indent + 2));
 		}
 		return s.toString();
+	}
+	
+	public boolean isFinal() {
+		return finalDecl;
+	}
+	
+	public void setFinal(boolean b) {
+		finalDecl = b;
 	}
 	
 	public CFExpression getInit() {
