@@ -418,7 +418,7 @@ everyOther = readings[1:10:2];
 head = readings[:6];
 tail = readings[4:];
 first = readings[1];
-empty = [];
+empty = [:];
 instanceOf = candidate;
 matched = matcher.instanceOf('admin.User');
 
