@@ -1,0 +1,169 @@
+/*===TOKENS===*/
+COMPONENT                <component>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// The typed shorthand with attributes after it: name and type used to be dropped here.>
+PROPERTY                 <property>
+STRING                   <string>
+IDENTIFIER               <email>
+DEFAULT                  <default>
+'='                      <=>
+OPEN_STRING              <">
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+PROPERTY                 <property>
+NUMERIC                  <numeric>
+IDENTIFIER               <rank>
+DEFAULT                  <default>
+'='                      <=>
+INTEGER_LITERAL          <0>
+REQUIRED                 <required>
+'='                      <=>
+BOOLEAN_LITERAL          <true>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// The two spellings that already parsed.>
+PROPERTY                 <property>
+STRING                   <string>
+IDENTIFIER               <nickname>
+';'                      <;>
+Hidden:NEWLINE                  <>
+PROPERTY                 <property>
+IDENTIFIER               <name>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <createdOn>
+CLOSE_STRING             <">
+IDENTIFIER               <type>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <date>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (componentDeclaration
+    component
+    (componentGuts
+      {
+      (element
+        (statement
+          (tagOperatorStatement
+            (propertyStatement
+              property
+              (typeSpec (type string))
+              (multipartIdentifier (identifier email))
+              (paramStatementAttributes
+                (param
+                  (multipartIdentifier (identifier default))
+                  =
+                  (startExpression
+                    (baseExpression
+                      (unaryExpression (primaryExpression (literalExpression (stringLiteral " "))))
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+          )
+        )
+      )
+      (element
+        (statement
+          (tagOperatorStatement
+            (propertyStatement
+              property
+              (typeSpec (type numeric))
+              (multipartIdentifier (identifier rank))
+              (paramStatementAttributes
+                (param
+                  (multipartIdentifier (identifier default))
+                  =
+                  (startExpression
+                    (baseExpression (unaryExpression (primaryExpression (literalExpression 0))))
+                  )
+                )
+                (param
+                  (multipartIdentifier (identifier required))
+                  =
+                  (startExpression
+                    (baseExpression (unaryExpression (primaryExpression (literalExpression true))))
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+          )
+        )
+      )
+      (element
+        (statement
+          (tagOperatorStatement
+            (propertyStatement
+              property
+              (typeSpec (type string))
+              (multipartIdentifier (identifier nickname))
+              (endOfStatement ;)
+            )
+          )
+        )
+      )
+      (element
+        (statement
+          (tagOperatorStatement
+            (propertyStatement
+              property
+              (paramStatementAttributes
+                (param
+                  (multipartIdentifier (identifier name))
+                  =
+                  (startExpression
+                    (baseExpression
+                      (unaryExpression
+                        (primaryExpression
+                          (literalExpression (stringLiteral " (stringLiteralPart createdOn) "))
+                        )
+                      )
+                    )
+                  )
+                )
+                (param
+                  (multipartIdentifier (identifier type))
+                  =
+                  (startExpression
+                    (baseExpression
+                      (unaryExpression
+                        (primaryExpression
+                          (literalExpression (stringLiteral " (stringLiteralPart date) "))
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+          )
+        )
+      )
+      }
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+component {
+  {
+property string email default='';
+property numeric rank default=0 required=true;
+property string nickname;
+property name='createdOn' type='date';
+
+  }
+}
+/*======*/

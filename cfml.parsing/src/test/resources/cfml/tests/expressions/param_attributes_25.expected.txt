@@ -1,0 +1,204 @@
+/*===TOKENS===*/
+Hidden:LINE_COMMENT             <// The typed shorthand may carry attributes rather than an equals sign.>
+PARAM                    <param>
+STRING                   <string>
+IDENTIFIER               <emailAddress>
+DEFAULT                  <default>
+'='                      <=>
+OPEN_STRING              <">
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+PARAM                    <param>
+NUMERIC                  <numeric>
+IDENTIFIER               <age>
+DEFAULT                  <default>
+'='                      <=>
+INTEGER_LITERAL          <18>
+IDENTIFIER               <max>
+'='                      <=>
+INTEGER_LITERAL          <100>
+IDENTIFIER               <min>
+'='                      <=>
+INTEGER_LITERAL          <0>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// Both spellings that already parsed still do -- and the equals form no longer>
+Hidden:LINE_COMMENT             <// decompiles to a bare `param`, which is what it used to do.>
+PARAM                    <param>
+STRING                   <string>
+IDENTIFIER               <mode>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <live>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+PARAM                    <param>
+IDENTIFIER               <name>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <url.page>
+CLOSE_STRING             <">
+IDENTIFIER               <type>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <numeric>
+CLOSE_STRING             <">
+DEFAULT                  <default>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <1>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (element
+    (statement
+      (tagOperatorStatement
+        (paramStatement
+          param
+          (paramExpression
+            (type string)
+            (multipartIdentifier (identifier emailAddress))
+            (paramStatementAttributes
+              (param
+                (multipartIdentifier (identifier default))
+                =
+                (startExpression
+                  (baseExpression
+                    (unaryExpression (primaryExpression (literalExpression (stringLiteral " "))))
+                  )
+                )
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (paramStatement
+          param
+          (paramExpression
+            (type numeric)
+            (multipartIdentifier (identifier age))
+            (paramStatementAttributes
+              (param
+                (multipartIdentifier (identifier default))
+                =
+                (startExpression
+                  (baseExpression (unaryExpression (primaryExpression (literalExpression 18))))
+                )
+              )
+              (param
+                (multipartIdentifier (identifier max))
+                =
+                (startExpression
+                  (baseExpression (unaryExpression (primaryExpression (literalExpression 100))))
+                )
+              )
+              (param
+                (multipartIdentifier (identifier min))
+                =
+                (startExpression
+                  (baseExpression (unaryExpression (primaryExpression (literalExpression 0))))
+                )
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (paramStatement
+          param
+          (paramExpression
+            (type string)
+            (multipartIdentifier (identifier mode))
+            =
+            (startExpression
+              (baseExpression
+                (unaryExpression
+                  (primaryExpression
+                    (literalExpression (stringLiteral " (stringLiteralPart live) "))
+                  )
+                )
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (paramStatement
+          param
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier name))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart url.page) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier type))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart numeric) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier default))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart 1) "))
+                    )
+                  )
+                )
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+{
+param string emailAddress default='';
+param numeric age default=18 max=100 min=0;
+param string mode = 'live';
+param default='1' name='url.page' type='numeric';
+
+}
+/*======*/
