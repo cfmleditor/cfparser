@@ -158,7 +158,11 @@ statement
   
 endOfStatement
    :
-   {_input.get(_input.LT(-1).getTokenIndex()+1).getType()==NEWLINE}?
+   // A newline stands in for the semicolon. So does end of input: a file whose last
+   // statement ends in a block and carries no trailing newline has EOF here, not NEWLINE,
+   // and without this it demands a semicolon the same text does not need one line up.
+   {_input.get(_input.LT(-1).getTokenIndex()+1).getType()==NEWLINE
+     || _input.get(_input.LT(-1).getTokenIndex()+1).getType()==Token.EOF}?
      semicolon = SEMICOLON?
    |
     semicolon = SEMICOLON; 
