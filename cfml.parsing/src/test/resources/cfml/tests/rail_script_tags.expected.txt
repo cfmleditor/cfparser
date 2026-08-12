@@ -32,7 +32,7 @@ OPEN_STRING              <">
 STRING_LITERAL           <information>
 CLOSE_STRING             <">
 Hidden:NEWLINE                  <>
-IDENTIFIER               <application>
+APPLICATION              <application>
 '='                      <=>
 OPEN_STRING              <">
 STRING_LITERAL           <yes>
@@ -300,7 +300,7 @@ IDENTIFIER               <getUsers>
               )
             )
             (param
-              (multipartIdentifier (identifier application))
+              (multipartIdentifier (identifier (cfmlFunction application)))
               =
               (startExpression
                 (baseExpression

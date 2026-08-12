@@ -251,8 +251,10 @@ tagOperatorStatement
 rethrowStatment:
   lc=RETHROW endOfStatement ;
 
+// include "a.cfm"; and include template="a.cfm" runOnce=true; are both <cfinclude>.
+// The attribute form has no leading expression, so baseExpression cannot be required.
 includeStatement
-  : lc=INCLUDE baseExpression (paramStatementAttributes)? SEMICOLON  
+  : lc=INCLUDE (baseExpression (paramStatementAttributes)? | paramStatementAttributes) SEMICOLON
   ;
 
 importStatement
@@ -264,7 +266,17 @@ transactionStatement
   ;
   
 cfmlfunctionStatement
-  : cfmlFunction (paramStatementAttributes)? (body=compoundStatement | SEMICOLON) 
+  : cfmlFunction (LEFTPAREN tagAttributeList RIGHTPAREN | paramStatementAttributes)? (body=compoundStatement | SEMICOLON)
+  ;
+
+// Attributes of a parenthesised script-syntax tag: cffile( action="write" file=f ).
+// The first junction must be a space, never a comma. With a comma there the call is
+// indistinguishable from an ordinary named-argument call -- update(id=1, name="x") is
+// far more likely a user function than <cfupdate> -- so the comma form is left as the
+// function call it already parsed as. argumentList requires the commas this rule forbids,
+// which is why the space-separated form had no rule to match at all.
+tagAttributeList
+  : param param (COMMA? param)*
   ;
 
 tagFunctionStatement
@@ -273,6 +285,7 @@ tagFunctionStatement
 
 cfmlFunction
   : SAVECONTENT
+  | APPLICATION
   | FILE
   | PROPERTY
   | DIRECTORY

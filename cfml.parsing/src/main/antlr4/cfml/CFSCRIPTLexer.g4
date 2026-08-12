@@ -249,7 +249,8 @@ INTERFACE: [iI][nN][tT][eE][rR][fF][aA][cC][eE];
 LOG: [lL][oO][gG];
 //TEXT: [tT][eE][xX][tT];
 //TYPE: [tT][yY][pP][eE];
-//APPLICATION: [aA][pP][pP][lL][iI][cC][aA][tT][iI][oO][nN];
+APPLICATION: [aA][pP][pP][lL][iI][cC][aA][tT][iI][oO][nN];
+CFAPPLICATION: [cC][fF] APPLICATION -> type(APPLICATION);
 
 APPLET: [Aa][Pp][Pp][Ll][Ee][Tt];
 ASSOCIATE: [Aa][Ss][Ss][Oo][Cc][Ii][Aa][Tt][Ee];
@@ -306,6 +307,72 @@ TREEITEM: [Tt][Rr][Ee][Ee][Ii][Tt][Ee][Mm];
 UPDATE: [Uu][Pp][Dd][Aa][Tt][Ee];
 WDDX: [Ww][Dd][Dd][Xx];
 ZIP: [Zz][Ii][Pp];
+
+// The cf-prefixed spelling of every tag above. CFML accepts a script-syntax tag
+// either way -- cffile and file are the same tag -- so each maps onto the
+// unprefixed token and the parser needs no second list. CFLOOP above is the
+// pattern; CFHTTP and CFHTTPPARAM predate it and stayed distinct tokens.
+// cfscript and cfset are deliberately absent: <cfscript> is the script delimiter
+// itself and <cfset> is spelled as an assignment, so neither has a script-syntax
+// form to enable, and aliasing them would reserve the words for nothing.
+CFSAVECONTENT: [cC][fF] SAVECONTENT -> type(SAVECONTENT);
+CFFILE: [cC][fF] FILE -> type(FILE);
+CFPROPERTY: [cC][fF] PROPERTY -> type(PROPERTY);
+CFDIRECTORY: [cC][fF] DIRECTORY -> type(DIRECTORY);
+CFSETTING: [cC][fF] SETTING -> type(SETTING);
+CFQUERY: [cC][fF] QUERY -> type(QUERY);
+CFLOG: [cC][fF] LOG -> type(LOG);
+CFAPPLET: [cC][fF] APPLET -> type(APPLET);
+CFASSOCIATE: [cC][fF] ASSOCIATE -> type(ASSOCIATE);
+CFAUTHENTICATE: [cC][fF] AUTHENTICATE -> type(AUTHENTICATE);
+CFCACHE: [cC][fF] CACHE -> type(CACHE);
+CFCOL: [cC][fF] COL -> type(COL);
+CFCOLLECTION: [cC][fF] COLLECTION -> type(COLLECTION);
+CFCONTENT: [cC][fF] CONTENT -> type(CONTENT);
+CFCOOKIE: [cC][fF] COOKIE -> type(COOKIE);
+CFERROR: [cC][fF] ERROR -> type(ERROR);
+CFEXECUTE: [cC][fF] EXECUTE -> type(EXECUTE);
+CFFORM: [cC][fF] FORM -> type(FORM);
+CFFTP: [cC][fF] FTP -> type(FTP);
+CFGRID: [cC][fF] GRID -> type(GRID);
+CFGRIDCOLUMN: [cC][fF] GRIDCOLUMN -> type(GRIDCOLUMN);
+CFGRIDROW: [cC][fF] GRIDROW -> type(GRIDROW);
+CFGRIDUPDATE: [cC][fF] GRIDUPDATE -> type(GRIDUPDATE);
+CFHEADER: [cC][fF] HEADER -> type(HEADER);
+CFHTMLHEAD: [cC][fF] HTMLHEAD -> type(HTMLHEAD);
+CFIMPERSONATE: [cC][fF] IMPERSONATE -> type(IMPERSONATE);
+CFINDEX: [cC][fF] INDEX -> type(INDEX);
+CFINPUT: [cC][fF] INPUT -> type(INPUT);
+CFINSERT: [cC][fF] INSERT -> type(INSERT);
+CFLDAP: [cC][fF] LDAP -> type(LDAP);
+CFLOCATION: [cC][fF] LOCATION -> type(LOCATION);
+CFMAIL: [cC][fF] MAIL -> type(MAIL);
+CFMAILPARAM: [cC][fF] MAILPARAM -> type(MAILPARAM);
+CFMODULE: [cC][fF] MODULE -> type(MODULE);
+CFOBJECT: [cC][fF] OBJECT -> type(OBJECT);
+CFOUTPUT: [cC][fF] OUTPUT -> type(OUTPUT);
+CFPOP: [cC][fF] POP -> type(POP);
+CFPROCESSINGDIRECTIVE: [cC][fF] PROCESSINGDIRECTIVE -> type(PROCESSINGDIRECTIVE);
+CFPROCPARAM: [cC][fF] PROCPARAM -> type(PROCPARAM);
+CFPROCRESULT: [cC][fF] PROCRESULT -> type(PROCRESULT);
+CFQUERYPARAM: [cC][fF] QUERYPARAM -> type(QUERYPARAM);
+CFREGISTRY: [cC][fF] REGISTRY -> type(REGISTRY);
+CFREPORT: [cC][fF] REPORT -> type(REPORT);
+CFSCHEDULE: [cC][fF] SCHEDULE -> type(SCHEDULE);
+CFSEARCH: [cC][fF] SEARCH -> type(SEARCH);
+CFSELECT: [cC][fF] SELECT -> type(SELECT);
+CFSERVLET: [cC][fF] SERVLET -> type(SERVLET);
+CFSERVLETPARAM: [cC][fF] SERVLETPARAM -> type(SERVLETPARAM);
+CFSILENT: [cC][fF] SILENT -> type(SILENT);
+CFSLIDER: [cC][fF] SLIDER -> type(SLIDER);
+CFSTOREDPROC: [cC][fF] STOREDPROC -> type(STOREDPROC);
+CFTABLE: [cC][fF] TABLE -> type(TABLE);
+CFTEXTINPUT: [cC][fF] TEXTINPUT -> type(TEXTINPUT);
+CFTREE: [cC][fF] TREE -> type(TREE);
+CFTREEITEM: [cC][fF] TREEITEM -> type(TREEITEM);
+CFUPDATE: [cC][fF] UPDATE -> type(UPDATE);
+CFWDDX: [cC][fF] WDDX -> type(WDDX);
+CFZIP: [cC][fF] ZIP -> type(ZIP);
 
 CFCUSTOM_IDENTIFIER: [cC][fF]'_' IDENTIFIER+;
 
