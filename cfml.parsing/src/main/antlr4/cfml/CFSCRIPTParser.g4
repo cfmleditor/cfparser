@@ -388,12 +388,17 @@ paramStatement
   : lc=PARAM (paramStatementAttributes | paramExpression) SEMICOLON //-> ^(PARAMSTATEMENT[$lc] paramStatementAttributes)
   ;
   
+// `param string foo = "x";` gives the default with an equals sign; `param string foo
+// default="x" max=100;` gives it, and anything else, as attributes. Both are the typed
+// shorthand, as against the all-attributes `param name="foo" type="string" ...`.
 paramExpression
   : type? multipartIdentifier EQUALSOP startExpression
+  | type? multipartIdentifier paramStatementAttributes
   ;
+// The typed shorthand may carry attributes too: `property string email default="";`.
 propertyStatement
   : lc=PROPERTY paramStatementAttributes endOfStatement
-  | lc=PROPERTY typeSpec? name=multipartIdentifier endOfStatement
+  | lc=PROPERTY typeSpec? name=multipartIdentifier paramStatementAttributes? endOfStatement
   ;
   
 paramStatementAttributes

@@ -35,9 +35,7 @@ public class CFPropertyStatement extends CFParsedAttributeStatement {
 	public String Decompile(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("property");
-		if (!shorthand) {
-			DecompileAttributes(sb);
-		} else {
+		if (shorthand) {
 			sb.append(" ");
 			if (propertyType != null) {
 				sb.append(propertyType.Decompile(0));
@@ -45,6 +43,8 @@ public class CFPropertyStatement extends CFParsedAttributeStatement {
 			}
 			sb.append(propertyName.Decompile(0));
 		}
+		// The shorthand can carry attributes as well: property string email default="";
+		DecompileAttributes(sb);
 		return sb.toString();
 	}
 	
