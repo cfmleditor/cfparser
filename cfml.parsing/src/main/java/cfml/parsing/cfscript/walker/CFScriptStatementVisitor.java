@@ -40,6 +40,7 @@ import cfml.CFSCRIPTParser.LambdaDeclarationContext;
 import cfml.CFSCRIPTParser.LocalAssignmentExpressionContext;
 import cfml.CFSCRIPTParser.LockStatementContext;
 import cfml.CFSCRIPTParser.ParamContext;
+import cfml.CFSCRIPTParser.ParamExpressionContext;
 import cfml.CFSCRIPTParser.ParamStatementAttributesContext;
 import cfml.CFSCRIPTParser.ParamStatementContext;
 import cfml.CFSCRIPTParser.ParameterContext;
@@ -590,8 +591,20 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 		Map<CFIdentifier, CFExpression> _attributes = new HashMap<CFIdentifier, CFExpression>();
 		CFParamStatement paramStatement = new CFParamStatement(ctx.PARAM().getSymbol(), _attributes);
 		aggregator.push(paramStatement);
-		if (ctx.paramStatementAttributes() != null)
+		if (ctx.paramStatementAttributes() != null) {
 			visitChildren(ctx.paramStatementAttributes());
+		} else if (ctx.paramExpression() != null) {
+			// The typed shorthand used to be parsed and then thrown away, so
+			// `param string foo = "x";` decompiled to a bare `param`.
+			ParamExpressionContext shorthand = ctx.paramExpression();
+			paramStatement.setIsShortHand(true);
+			paramStatement.setParamName(visitExpression(shorthand.multipartIdentifier()));
+			paramStatement.setParamType(visitExpression(shorthand.type()));
+			paramStatement.setDefaultExpression(visitExpression(shorthand.startExpression()));
+			if (shorthand.paramStatementAttributes() != null) {
+				visitChildren(shorthand.paramStatementAttributes());
+			}
+		}
 		aggregator.pop();
 		return paramStatement;
 	}
@@ -602,17 +615,15 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 		Map<CFIdentifier, CFExpression> _attributes = new HashMap<CFIdentifier, CFExpression>();
 		CFPropertyStatement propertyStatement = new CFPropertyStatement(ctx.PROPERTY().getSymbol(), _attributes);
 		aggregator.push(propertyStatement);
-		if (ctx.paramStatementAttributes() != null) {
-			visitChildren(ctx.paramStatementAttributes());
-		} else {
+		// The two are not exclusive: `property string email default="";` is the typed shorthand
+		// *and* carries an attribute, and branching on the attributes alone lost the name and type.
+		if (ctx.multipartIdentifier() != null) {
 			propertyStatement.setIsShortHand(true);
 			propertyStatement.setPropertyName((CFIdentifier) visitExpression(ctx.multipartIdentifier()));
 			propertyStatement.setPropertyType(visitExpression(ctx.typeSpec()));
-			/*
-			 * if (ctx.type() != null) { propertyStatement.getAttributes().put(new CFIdentifier(ctx.type().start,
-			 * "type"), visitExpression(ctx.type())); } propertyStatement.getAttributes().put(new
-			 * CFIdentifier(ctx.identifier().start, "name"), visitExpression(ctx.identifier()));
-			 */
+		}
+		if (ctx.paramStatementAttributes() != null) {
+			visitChildren(ctx.paramStatementAttributes());
 		}
 		aggregator.pop();
 		return propertyStatement;

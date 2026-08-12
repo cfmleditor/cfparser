@@ -47,8 +47,12 @@ functionModifier
   | FINAL
   ;
 
+// `public static string function f()` and `static public string function f()` are the
+// same declaration, so the access type may sit either side of the modifiers. Written as
+// one optional accessType between two modifier lists rather than (functionModifier |
+// accessType)*, which would also admit two access types.
 functionDeclaration
-  : functionModifier* accessType? typeSpec? FUNCTION identifier 
+  : functionModifier* accessType? functionModifier* typeSpec? FUNCTION identifier 
   	LEFTPAREN parameterList? RIGHTPAREN
   	functionAttribute* body=compoundStatement?
   ;
@@ -274,17 +278,26 @@ cfmlfunctionStatement
   ;
 
 // Attributes of a parenthesised script-syntax tag: cffile( action="write" file=f ).
-// The first junction must be a space, never a comma. With a comma there the call is
+// At least one junction must be a space. A list separated entirely by commas is
 // indistinguishable from an ordinary named-argument call -- update(id=1, name="x") is
-// far more likely a user function than <cfupdate> -- so the comma form is left as the
-// function call it already parsed as. argumentList requires the commas this rule forbids,
-// which is why the space-separated form had no rule to match at all.
+// far more likely a user function than <cfupdate> -- so that stays the function call it
+// already was. One space anywhere settles it, because argumentList requires a comma at
+// every junction, so a mixed list cannot be a function call at all.
+//
+// Read as: a comma-separated prefix, then two params with no comma between them, then
+// anything. cflog( file=f text="t", type="error" ) and
+// cflog( file=f, text="t" type="error" ) both match; cflog( file=f, text="t" ) does not.
 tagAttributeList
-  : param param (COMMA? param)*
+  : (param COMMA)* param param (COMMA? param)*
   ;
 
+// A tag name called with comma-separated arguments is treated as an ordinary call, so it
+// takes argumentList like any other. It used to take parameterList -- the rule for a
+// function *declaration's* parameters -- whose trailing parameterAttribute* silently ate
+// any argument that followed without a comma, and which turned a positional argument into
+// a named one with no value. See #30.
 tagFunctionStatement
-  : cfmlFunction (LEFTPAREN parameterList RIGHTPAREN)? (body=compoundStatement | SEMICOLON)?
+  : cfmlFunction (LEFTPAREN argumentList RIGHTPAREN)? (body=compoundStatement | SEMICOLON)?
   ;
 
 cfmlFunction
@@ -392,12 +405,17 @@ paramStatement
   : lc=PARAM (paramStatementAttributes | paramExpression) SEMICOLON //-> ^(PARAMSTATEMENT[$lc] paramStatementAttributes)
   ;
   
+// `param string foo = "x";` gives the default with an equals sign; `param string foo
+// default="x" max=100;` gives it, and anything else, as attributes. Both are the typed
+// shorthand, as against the all-attributes `param name="foo" type="string" ...`.
 paramExpression
   : type? multipartIdentifier EQUALSOP startExpression
+  | type? multipartIdentifier paramStatementAttributes
   ;
+// The typed shorthand may carry attributes too: `property string email default="";`.
 propertyStatement
   : lc=PROPERTY paramStatementAttributes endOfStatement
-  | lc=PROPERTY typeSpec? name=multipartIdentifier endOfStatement
+  | lc=PROPERTY typeSpec? name=multipartIdentifier paramStatementAttributes? endOfStatement
   ;
   
 paramStatementAttributes
@@ -497,6 +515,7 @@ compareExpressionOperator:
     |   NEQ //-> ^(NEQ)
     |   CONTAINS //-> ^(CONTAINS)
     |   DOESNOTCONTAIN
+    |   INSTANCEOF
     |   CT
     |   NCT
  ;
@@ -553,6 +572,17 @@ identifier | reservedWord;
 
 arrayMemberExpression
 	:LEFTBRACKET startExpression RIGHTBRACKET 
+	| arraySlice
+	;
+
+// Slicing: s[4:13], s[4:13:2], and either bound omitted -- s[:6], s[4:].
+// Listed after the plain subscript so an ordinary index still takes that path.
+// At least one bound is required, spelled as two alternatives rather than making both
+// optional: [:] with neither is the empty ordered struct literal, not a slice, and a
+// fully optional rule swallows it (structures/emptyOrderedStructColon.cfc catches this).
+arraySlice
+	: LEFTBRACKET from=startExpression COLON to=startExpression? (COLON by=startExpression?)? RIGHTBRACKET
+	| LEFTBRACKET COLON to=startExpression (COLON by=startExpression?)? RIGHTBRACKET
 	;
 
 functionCall
@@ -649,6 +679,7 @@ identifier
   | VAR
   | TO
   | DEFAULT // default is a cfscript keyword that's always allowed as a var name
+  | INSTANCEOF // ColdBox's Matcher and TestBox's Assertion both declare function instanceOf()
   | CT   // two-letter operator abbreviations; far too likely as ordinary names
   | NCT
   | INCLUDE

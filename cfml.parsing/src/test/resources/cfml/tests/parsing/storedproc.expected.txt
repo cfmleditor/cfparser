@@ -79,9 +79,9 @@ Hidden:NEWLINE                  <>
             (tagFunctionStatement
               (cfmlFunction cfstoredproc)
               (
-              (parameterList
-                (parameter
-                  (identifier procedure)
+              (argumentList
+                (argument
+                  (argumentName (identifier procedure))
                   =
                   (startExpression
                     (baseExpression
@@ -94,8 +94,8 @@ Hidden:NEWLINE                  <>
                   )
                 )
                 ,
-                (parameter
-                  (identifier datasource)
+                (argument
+                  (argumentName (identifier datasource))
                   =
                   (startExpression
                     (baseExpression
@@ -114,17 +114,17 @@ Hidden:NEWLINE                  <>
                     (tagFunctionStatement
                       (cfmlFunction cfprocparam)
                       (
-                      (parameterList
-                        (parameter
-                          (identifier value)
+                      (argumentList
+                        (argument
+                          (argumentName (identifier value))
                           =
                           (startExpression
                             (baseExpression (unaryExpression (memberExpression (identifier myId))))
                           )
                         )
                         ,
-                        (parameter
-                          (identifier cfsqltype)
+                        (argument
+                          (argumentName (identifier cfsqltype))
                           =
                           (startExpression
                             (baseExpression
@@ -147,17 +147,17 @@ Hidden:NEWLINE                  <>
                     (tagFunctionStatement
                       (cfmlFunction cfprocresult)
                       (
-                      (parameterList
-                        (parameter
-                          (identifier resultset)
+                      (argumentList
+                        (argument
+                          (argumentName (identifier resultset))
                           =
                           (startExpression
                             (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
                           )
                         )
                         ,
-                        (parameter
-                          (identifier name)
+                        (argument
+                          (argumentName (identifier name))
                           =
                           (startExpression
                             (baseExpression

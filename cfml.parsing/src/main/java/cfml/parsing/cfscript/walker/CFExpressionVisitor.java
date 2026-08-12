@@ -11,6 +11,7 @@ import cfml.CFSCRIPTParser.AnonymousFunctionDeclarationContext;
 import cfml.CFSCRIPTParser.ArgumentContext;
 import cfml.CFSCRIPTParser.ArrayContext;
 import cfml.CFSCRIPTParser.ArrayMemberExpressionContext;
+import cfml.CFSCRIPTParser.ArraySliceContext;
 import cfml.CFSCRIPTParser.AssignmentExpressionContext;
 import cfml.CFSCRIPTParser.BaseExpressionContext;
 import cfml.CFSCRIPTParser.CfmlFunctionContext;
@@ -47,6 +48,7 @@ import cfml.CFSCRIPTParser.PrimaryExpressionIRWContext;
 import cfml.CFSCRIPTParser.QualifiedFunctionCallContext;
 import cfml.CFSCRIPTParser.ReservedWordContext;
 import cfml.CFSCRIPTParser.SpecialWordContext;
+import cfml.CFSCRIPTParser.StartExpressionContext;
 import cfml.CFSCRIPTParser.StringLiteralContext;
 import cfml.CFSCRIPTParser.StringLiteralPartContext;
 import cfml.CFSCRIPTParser.TagFunctionStatementContext;
@@ -69,6 +71,7 @@ import cfml.parsing.cfscript.CFLiteral;
 import cfml.parsing.cfscript.CFMember;
 import cfml.parsing.cfscript.CFNestedExpression;
 import cfml.parsing.cfscript.CFNewExpression;
+import cfml.parsing.cfscript.CFSliceMember;
 import cfml.parsing.cfscript.CFStringExpression;
 import cfml.parsing.cfscript.CFStructElementExpression;
 import cfml.parsing.cfscript.CFStructExpression;
@@ -316,8 +319,22 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 	
 	@Override
 	public CFExpression visitArrayMemberExpression(ArrayMemberExpressionContext ctx) {
+		if (ctx.arraySlice() != null) {
+			return visitArraySlice(ctx.arraySlice());
+		}
 		CFMember member = new CFMember(ctx.getStart(), visit(ctx.getChild(1)));
 		return member;
+	}
+	
+	@Override
+	public CFExpression visitArraySlice(ArraySliceContext ctx) {
+		// Every bound is optional -- s[:6] and s[4:] are both legal -- so each visit is guarded.
+		return new CFSliceMember(ctx.getStart(), visitNullable(ctx.from), visitNullable(ctx.to),
+				visitNullable(ctx.by));
+	}
+	
+	private CFExpression visitNullable(StartExpressionContext ctx) {
+		return ctx == null ? null : visit(ctx);
 	}
 	
 	@Override
@@ -504,11 +521,10 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 	@Override
 	public CFExpression visitTagFunctionStatement(TagFunctionStatementContext ctx) {
 		ArgumentsVector args = new ArgumentsVector();
-		if (ctx.parameterList() != null) {
-			for (ParameterContext argCtx : ctx.parameterList().parameter()) {
+		if (ctx.argumentList() != null) {
+			for (ArgumentContext argCtx : ctx.argumentList().argument()) {
 				if (argCtx.name != null) {
-					args.addNamedArg(visit(argCtx.name),
-							argCtx.startExpression() == null ? null : visit(argCtx.startExpression()));
+					args.addNamedArg(visit(argCtx.name), visit(argCtx.startExpression()));
 				} else {
 					args.add(visit(argCtx));
 				}
