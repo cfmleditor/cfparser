@@ -1,0 +1,270 @@
+/*===TOKENS===*/
+COMPONENT                <component>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// An access type either side of static, with a return type after both.>
+PUBLIC                   <public>
+STATIC                   <static>
+STRING                   <string>
+FUNCTION                 <function>
+IDENTIFIER               <label>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+RETURN                   <return>
+OPEN_STRING              <">
+STRING_LITERAL           <a>
+CLOSE_STRING             <">
+';'                      <;>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+STATIC                   <static>
+PUBLIC                   <public>
+STRING                   <string>
+FUNCTION                 <function>
+IDENTIFIER               <caption>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+RETURN                   <return>
+OPEN_STRING              <">
+STRING_LITERAL           <b>
+CLOSE_STRING             <">
+';'                      <;>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// The combinations that already worked stay working.>
+STATIC                   <static>
+FUNCTION                 <function>
+IDENTIFIER               <plain>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+PUBLIC                   <public>
+STATIC                   <static>
+FUNCTION                 <function>
+IDENTIFIER               <noType>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+STATIC                   <static>
+STRING                   <string>
+FUNCTION                 <function>
+IDENTIFIER               <noAccess>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+RETURN                   <return>
+OPEN_STRING              <">
+STRING_LITERAL           <c>
+CLOSE_STRING             <">
+';'                      <;>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+PRIVATE                  <private>
+FINAL                    <final>
+NUMERIC                  <numeric>
+FUNCTION                 <function>
+IDENTIFIER               <locked>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+RETURN                   <return>
+INTEGER_LITERAL          <1>
+';'                      <;>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (componentDeclaration
+    component
+    (componentGuts
+      {
+      (element
+        (functionDeclaration
+          (accessType public)
+          (functionModifier static)
+          (typeSpec (type string))
+          function
+          (identifier label)
+          (
+          parameterList
+          )
+          (compoundStatement
+            {
+            (statement
+              (returnStatement
+                return
+                (anExpression
+                  (startExpression
+                    (baseExpression
+                      (unaryExpression
+                        (primaryExpression
+                          (literalExpression (stringLiteral " (stringLiteralPart a) "))
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            }
+          )
+        )
+      )
+      (element
+        (functionDeclaration
+          (functionModifier static)
+          (accessType public)
+          (typeSpec (type string))
+          function
+          (identifier caption)
+          (
+          parameterList
+          )
+          (compoundStatement
+            {
+            (statement
+              (returnStatement
+                return
+                (anExpression
+                  (startExpression
+                    (baseExpression
+                      (unaryExpression
+                        (primaryExpression
+                          (literalExpression (stringLiteral " (stringLiteralPart b) "))
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            }
+          )
+        )
+      )
+      (element
+        (functionDeclaration
+          (functionModifier static)
+          function
+          (identifier plain)
+          (
+          parameterList
+          )
+          (compoundStatement { })
+        )
+      )
+      (element
+        (functionDeclaration
+          (accessType public)
+          (functionModifier static)
+          function
+          (identifier noType)
+          (
+          parameterList
+          )
+          (compoundStatement { })
+        )
+      )
+      (element
+        (functionDeclaration
+          (functionModifier static)
+          (typeSpec (type string))
+          function
+          (identifier noAccess)
+          (
+          parameterList
+          )
+          (compoundStatement
+            {
+            (statement
+              (returnStatement
+                return
+                (anExpression
+                  (startExpression
+                    (baseExpression
+                      (unaryExpression
+                        (primaryExpression
+                          (literalExpression (stringLiteral " (stringLiteralPart c) "))
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            }
+          )
+        )
+      )
+      (element
+        (functionDeclaration
+          (accessType private)
+          (functionModifier final)
+          (typeSpec (type numeric))
+          function
+          (identifier locked)
+          (
+          parameterList
+          )
+          (compoundStatement
+            {
+            (statement
+              (returnStatement
+                return
+                (anExpression
+                  (startExpression
+                    (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            }
+          )
+        )
+      )
+      }
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+component {
+  {
+    static public string function caption()       {
+        return 'b';
+
+      };
+    static public string function label()       {
+        return 'a';
+
+      };
+    static public function plain()       {
+
+      };
+    static public function noType()       {
+
+      };
+    static public string function noAccess()       {
+        return 'c';
+
+      };
+    final private numeric function locked()       {
+        return 1;
+
+      };
+
+  }
+}
+/*======*/
