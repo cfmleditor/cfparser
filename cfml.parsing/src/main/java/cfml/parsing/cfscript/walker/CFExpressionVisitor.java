@@ -401,7 +401,8 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 	
 	@Override
 	public CFExpression visitImplicitOrderedStruct(ImplicitOrderedStructContext ctx) {
-		CFStructExpression structExpression = new CFStructExpression(ctx.getStart(), true);
+		CFStructExpression structExpression = new CFStructExpression(ctx.getStart(), true,
+				ctx.emptyDeclaration == null ? null : ctx.emptyDeclaration.getText());
 		aggregator.push(structExpression);
 		CFExpression retval = super.visitImplicitOrderedStruct(ctx);
 		aggregator.pop();
