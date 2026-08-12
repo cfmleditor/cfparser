@@ -711,17 +711,13 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 				((CFCompoundStatement) aggregate).add(nextResult);
 				return aggregate;
 			} else {
+				// Both in source order. This branch used to send function declarations through
+				// CFCompoundStatement.addFunction, which inserts at index 0 -- calling it for each
+				// of a pair transposed them, so a component's first two functions came out
+				// swapped. Every other branch here appends, and so does this one now.
 				CFCompoundStatement statement = new CFCompoundStatement();
-				if (aggregate instanceof CFFuncDeclStatement) {
-					statement.addFunction(aggregate);
-				} else {
-					statement.add(aggregate);
-				}
-				if (nextResult instanceof CFFuncDeclStatement) {
-					statement.addFunction(nextResult);
-				} else {
-					statement.add(nextResult);
-				}
+				statement.add(aggregate);
+				statement.add(nextResult);
 				aggregate = statement;
 				return statement;
 			}
