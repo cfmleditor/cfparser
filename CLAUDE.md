@@ -54,11 +54,18 @@ It deploys the parent pom plus the two library modules. The parent matters: cons
 
 ## Tests
 
-300 tests, ~15s. `mvn -pl cfml.dictionary,cfml.parsing -am test`.
+309 tests, ~15s. `mvn -pl cfml.dictionary,cfml.parsing -am test`.
 
-`TestFiles` and `TestTagFiles` are `@RunWith(Parameterized.class)` over the ~237 fixture files in
-`cfml.parsing/src/test/resources/cfml` and `/tag`. **Adding a regression case for a grammar bug is
-usually just dropping in a `.cfc`/`.cfm` file** — no Java needed.
+`TestFiles` and `TestTagFiles` are `@RunWith(Parameterized.class)` over the fixture files under
+`cfml.parsing/src/test/resources/cfml/tests` (112) and `/tag` (12) — the test counts and the file
+counts are the same number, so a suite total that has not moved after adding a fixture means the
+file is not where the runner looks. **Adding a regression case for a grammar bug is usually just
+dropping in a `.cfc`/`.cfm` file** — no Java needed.
+
+An expected file has three sections: tokens, tree, decompile. `AutoReplaceFailedTestResults=Y` in
+`cfml/test.properties` regenerates the first two on a failing fixture — but the decompile assertion
+runs *after* the write path with no auto-replace, so a change that only alters decompiled output
+makes the switch appear to do nothing. Edit that block by hand.
 
 `DictionaryManager` is entirely static state and loads eagerly in a static initializer, so tests
 in `TestDictionaryManager` leak into each other and order matters. Assertions there must check the
@@ -74,6 +81,32 @@ build then reports every class as uncovered while still passing. The tell is one
 green output: `Skipping JaCoCo execution due to missing execution data file`.
 
 Baseline when introduced: `cfml.dictionary` 52% line / 36% branch, `cfml.parsing` 39% / 25%.
+
+## Changing the grammar
+
+**A new keyword breaks code that used that word as a name.** Three for three, and each was found
+only by the differential harness rather than by the suite:
+
+| token added | what it broke |
+|---|---|
+| `APPLICATION` | `log text="t" application="yes"` — the word as an *attribute name* |
+| `INSTANCEOF` | `function instanceOf()` — ColdBox's `Matcher`, TestBox's `Assertion` |
+| `CT` / `NCT` | `x = ct;` — the word as an ordinary variable |
+
+The fix each time is to add the token to the `identifier` rule, which already carries `default`,
+`var`, `to`, `include`, `new` and others for the same reason. Assume the breakage exists and go
+looking for it; do not wait to be told.
+
+**Parsing cleanly is not the bar — the visitors have to be taught the new shape.** ANTLR's default
+`visitChildren` plus `aggregateResult` silently folds an unhandled rule into whatever expression is
+nearby. Arrow functions parsed for years while `(a, b) => a + b` built the identifier chain `a.ba + b`
+(#16), and array slicing parsed cleanly and then threw NPE building the AST (#18). After a grammar
+change, decompile the new construct and read the output — a green parse says nothing.
+
+**Alternative order in a left-recursive rule *is* the precedence table** — earlier binds tighter.
+`baseExpression` had elvis first, giving `?:` the highest binary precedence when CFML gives it
+nearly the lowest (#15). Nothing in the suite noticed, because `Decompile` emits no parentheses and
+both groupings round-trip to identical text.
 
 ## Parser API
 
@@ -106,6 +139,22 @@ accumulates across a scan.
 
 CFLint must stay on the same Java baseline. Its artifacts cannot load class file version 65 on an
 older JVM.
+
+**Adding a lexer token renumbers every token constant, so CFLint must be recompiled — swapping the
+jar is not enough.** CFLint calls `isExpectedToken(CFSCRIPTParser.SEMICOLON)` to choose between
+reporting `MISSING_SEMI` and a generic parse error. That constant is a compile-time `static final
+int` inlined into CFLint's bytecode, so against a renumbered parser it asks about a different
+token and quietly misclassifies. It presents as CFLint failures that bisect to an innocent grammar
+hunk; `mvn clean test` on the CFLint side makes them vanish.
+
+Worth running as the real end-to-end after grammar work, since cfparser's own suite cannot see it:
+
+```bash
+mvn -pl cfml.dictionary,cfml.parsing -am clean install -DskipTests   # into ~/.m2
+cd <CFLint checkout> && mvn -o clean test                            # 675 tests
+```
+
+CFLint's pom pins `cfparser.version`, so this only resolves locally while the two versions match.
 
 ## Verifying against a published SNAPSHOT
 

@@ -80,10 +80,24 @@ out by default:
 - **`RunSingleTest=*LAST`** — restricts the run to the most recently modified fixture, useful while
   iterating.
 
+**It only regenerates the tokens and tree sections.** The decompile assertion runs after the write
+path and has no auto-replace, so a change that leaves tokens and tree alone and alters only
+decompiled output will fail with the switch on exactly as it did with the switch off — the switch
+looks broken when it is doing what it does. Edit that block by hand. Classify the failures before
+reaching for the switch at all:
+
+```bash
+grep -c "Parse trees do not match" surefire.log   # auto-replaceable
+grep -c "Token lists do not match" surefire.log   # auto-replaceable
+# anything else is a decompile mismatch — hand-edit
+```
+
 Turn `AutoReplaceFailedTestResults` back off before committing, and prefer `git checkout --` over
-retyping the file — a plain rewrite flips its line endings. Leaving it enabled converts the whole
-suite into a rubber stamp: every future regression would silently rewrite its own expectation
-instead of failing.
+retyping the file — a plain rewrite flips its line endings. Watch that in the other direction too:
+the generator writes CRLF separators around LF bodies, so regenerating a fixture that was LF-only
+in git makes the whole file look changed. Normalise it back rather than committing the churn.
+Leaving the switch enabled converts the whole suite into a rubber stamp: every future regression
+would silently rewrite its own expectation instead of failing.
 
 ```bash
 git diff --stat cfml.parsing/src/test/resources   # review before committing
