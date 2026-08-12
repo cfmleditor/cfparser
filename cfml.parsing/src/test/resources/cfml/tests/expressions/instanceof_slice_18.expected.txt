@@ -1,0 +1,426 @@
+/*===TOKENS===*/
+Hidden:LINE_COMMENT             <// instanceOf is a comparison operator; casing is not significant.>
+IDENTIFIER               <isUser>
+'='                      <=>
+IDENTIFIER               <candidate>
+INSTANCEOF               <instanceof>
+IDENTIFIER               <User>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <isAdmin>
+'='                      <=>
+IDENTIFIER               <candidate>
+INSTANCEOF               <InstanceOf>
+OPEN_STRING              <">
+STRING_LITERAL           <admin.User>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// Slicing, with each bound present and each one omitted.>
+IDENTIFIER               <initials>
+'='                      <=>
+IDENTIFIER               <fullName>
+'['                      <[>
+INTEGER_LITERAL          <1>
+':'                      <:>
+INTEGER_LITERAL          <1>
+']'                      <]>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <window>
+'='                      <=>
+IDENTIFIER               <readings>
+'['                      <[>
+IDENTIFIER               <start>
+':'                      <:>
+IDENTIFIER               <finish>
+']'                      <]>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <everyOther>
+'='                      <=>
+IDENTIFIER               <readings>
+'['                      <[>
+INTEGER_LITERAL          <1>
+':'                      <:>
+INTEGER_LITERAL          <10>
+':'                      <:>
+INTEGER_LITERAL          <2>
+']'                      <]>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <head>
+'='                      <=>
+IDENTIFIER               <readings>
+'['                      <[>
+':'                      <:>
+INTEGER_LITERAL          <6>
+']'                      <]>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <tail>
+'='                      <=>
+IDENTIFIER               <readings>
+'['                      <[>
+INTEGER_LITERAL          <4>
+':'                      <:>
+']'                      <]>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// A plain subscript still takes the subscript path, and [:] is still an empty>
+Hidden:LINE_COMMENT             <// ordered struct rather than a slice with no bounds.>
+IDENTIFIER               <first>
+'='                      <=>
+IDENTIFIER               <readings>
+'['                      <[>
+INTEGER_LITERAL          <1>
+']'                      <]>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <empty>
+'='                      <=>
+'['                      <[>
+':'                      <:>
+']'                      <]>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// instanceOf stays usable as an ordinary name. Making it a keyword broke>
+Hidden:LINE_COMMENT             <// `function instanceOf()`, which ColdBox's Matcher and TestBox's Assertion both declare.>
+INSTANCEOF               <instanceOf>
+'='                      <=>
+IDENTIFIER               <candidate>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <matched>
+'='                      <=>
+IDENTIFIER               <matcher>
+'.'                      <.>
+INSTANCEOF               <instanceOf>
+'('                      <(>
+OPEN_STRING              <">
+STRING_LITERAL           <admin.User>
+CLOSE_STRING             <">
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier isUser))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (baseExpression (unaryExpression (memberExpression (identifier candidate))))
+            (compareExpressionOperator instanceof)
+            (baseExpression (unaryExpression (memberExpression (identifier User))))
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier isAdmin))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (baseExpression (unaryExpression (memberExpression (identifier candidate))))
+            (compareExpressionOperator InstanceOf)
+            (baseExpression
+              (unaryExpression
+                (primaryExpression
+                  (literalExpression (stringLiteral " (stringLiteralPart admin.User) "))
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier initials))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier fullName)
+                (arrayMemberExpression
+                  (arraySlice
+                    [
+                    (startExpression
+                      (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                    )
+                    :
+                    (startExpression
+                      (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                    )
+                    ]
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier window))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier readings)
+                (arrayMemberExpression
+                  (arraySlice
+                    [
+                    (startExpression
+                      (baseExpression (unaryExpression (memberExpression (identifier start))))
+                    )
+                    :
+                    (startExpression
+                      (baseExpression (unaryExpression (memberExpression (identifier finish))))
+                    )
+                    ]
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier everyOther))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier readings)
+                (arrayMemberExpression
+                  (arraySlice
+                    [
+                    (startExpression
+                      (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                    )
+                    :
+                    (startExpression
+                      (baseExpression (unaryExpression (primaryExpression (literalExpression 10))))
+                    )
+                    :
+                    (startExpression
+                      (baseExpression (unaryExpression (primaryExpression (literalExpression 2))))
+                    )
+                    ]
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier head))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier readings)
+                (arrayMemberExpression
+                  (arraySlice
+                    [
+                    :
+                    (startExpression
+                      (baseExpression (unaryExpression (primaryExpression (literalExpression 6))))
+                    )
+                    ]
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier tail))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier readings)
+                (arrayMemberExpression
+                  (arraySlice
+                    [
+                    (startExpression
+                      (baseExpression (unaryExpression (primaryExpression (literalExpression 4))))
+                    )
+                    :
+                    ]
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier first))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier readings)
+                (arrayMemberExpression
+                  [
+                  (startExpression
+                    (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                  )
+                  ]
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier empty))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression (primaryExpression (implicitOrderedStruct [ : ])))
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier instanceOf))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier candidate))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier matched))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier matcher)
+                .
+                (qualifiedFunctionCall
+                  (identifier instanceOf)
+                  (
+                  (argumentList
+                    (argument
+                      (startExpression
+                        (baseExpression
+                          (unaryExpression
+                            (primaryExpression
+                              (literalExpression (stringLiteral " (stringLiteralPart admin.User) "))
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+{
+isUser = candidate instanceof User;
+isAdmin = candidate InstanceOf 'admin.User';
+initials = fullName[1:1];
+window = readings[start:finish];
+everyOther = readings[1:10:2];
+head = readings[:6];
+tail = readings[4:];
+first = readings[1];
+empty = [];
+instanceOf = candidate;
+matched = matcher.instanceOf('admin.User');
+
+}
+/*======*/

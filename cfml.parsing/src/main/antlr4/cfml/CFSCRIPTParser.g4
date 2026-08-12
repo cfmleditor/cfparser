@@ -46,8 +46,12 @@ functionModifier
   | FINAL
   ;
 
+// `public static string function f()` and `static public string function f()` are the
+// same declaration, so the access type may sit either side of the modifiers. Written as
+// one optional accessType between two modifier lists rather than (functionModifier |
+// accessType)*, which would also admit two access types.
 functionDeclaration
-  : functionModifier* accessType? typeSpec? FUNCTION identifier 
+  : functionModifier* accessType? functionModifier* typeSpec? FUNCTION identifier 
   	LEFTPAREN parameterList? RIGHTPAREN
   	functionAttribute* body=compoundStatement?
   ;
@@ -491,6 +495,7 @@ compareExpressionOperator:
     |   NEQ //-> ^(NEQ)
     |   CONTAINS //-> ^(CONTAINS)
     |   DOESNOTCONTAIN
+    |   INSTANCEOF
  ;
 	
 
@@ -545,6 +550,17 @@ identifier | reservedWord;
 
 arrayMemberExpression
 	:LEFTBRACKET startExpression RIGHTBRACKET 
+	| arraySlice
+	;
+
+// Slicing: s[4:13], s[4:13:2], and either bound omitted -- s[:6], s[4:].
+// Listed after the plain subscript so an ordinary index still takes that path.
+// At least one bound is required, spelled as two alternatives rather than making both
+// optional: [:] with neither is the empty ordered struct literal, not a slice, and a
+// fully optional rule swallows it (structures/emptyOrderedStructColon.cfc catches this).
+arraySlice
+	: LEFTBRACKET from=startExpression COLON to=startExpression? (COLON by=startExpression?)? RIGHTBRACKET
+	| LEFTBRACKET COLON to=startExpression (COLON by=startExpression?)? RIGHTBRACKET
 	;
 
 functionCall
@@ -641,6 +657,7 @@ identifier
   | VAR
   | TO
   | DEFAULT // default is a cfscript keyword that's always allowed as a var name
+  | INSTANCEOF // ColdBox's Matcher and TestBox's Assertion both declare function instanceOf()
   | INCLUDE
   | NEW
   | ABORT

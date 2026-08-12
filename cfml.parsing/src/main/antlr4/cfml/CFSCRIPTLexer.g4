@@ -114,6 +114,7 @@ PAGE_ENCODING: [pP][aA][gG][eE][eE][nN][cC][oO][dD][iI][nN][gG];
 CONTAINS:	[cC][oO][nN][tT][aA][iI][nN][sS];
 CONTAIN: [cC][oO][nN][tT][aA][iI][nN];
 DOESNOTCONTAIN: [dD][oO][eE][sS][ ]+[nN][oO][tT][ ]+[cC][oO][nN][tT][aA][iI][nN];
+INSTANCEOF: [iI][nN][sS][tT][aA][nN][cC][eE][oO][fF];
 IS:	[iI][sS] -> type(EQ);
 IS_NOT:	[iI][sS][ ]+[nN][oO][tT] -> type(NEQ);
 GT: [gG][tT];

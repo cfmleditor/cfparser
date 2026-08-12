@@ -1,0 +1,94 @@
+/*===TOKENS===*/
+COMPONENT                <component>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// The declaration form that the instanceOf keyword broke.>
+FUNCTION                 <function>
+INSTANCEOF               <instanceOf>
+'('                      <(>
+REQUIRED                 <required>
+IDENTIFIER               <classPath>
+')'                      <)>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <variables>
+'.'                      <.>
+INSTANCEOF               <instanceOf>
+'='                      <=>
+IDENTIFIER               <arguments>
+'.'                      <.>
+IDENTIFIER               <classPath>
+';'                      <;>
+Hidden:NEWLINE                  <>
+RETURN                   <return>
+IDENTIFIER               <this>
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (componentDeclaration
+    component
+    (componentGuts
+      {
+      (element
+        (functionDeclaration
+          function
+          (identifier instanceOf)
+          (
+          (parameterList (parameter required (identifier classPath)))
+          )
+          (compoundStatement
+            {
+            (statement
+              (assignmentExpression
+                (startExpression
+                  (baseExpression
+                    (unaryExpression
+                      (memberExpression (identifier variables) . (identifier instanceOf))
+                    )
+                  )
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (unaryExpression
+                      (memberExpression (identifier arguments) . (identifier classPath))
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (returnStatement
+                return
+                (anExpression
+                  (startExpression
+                    (baseExpression (unaryExpression (memberExpression (identifier this))))
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            }
+          )
+        )
+      )
+      }
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+component {
+  public function instanceOf(required classPath)     {
+variables.instanceOf = arguments.classPath;
+      return this;
+
+    }
+}
+/*======*/
