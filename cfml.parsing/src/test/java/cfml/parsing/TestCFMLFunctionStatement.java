@@ -12,6 +12,7 @@ import org.junit.Test;
 import cfml.parsing.cfscript.script.CFIncludeStatement;
 import cfml.parsing.cfscript.script.CFMLFunctionStatement;
 import cfml.parsing.cfscript.script.CFParamStatement;
+import cfml.parsing.cfscript.script.CFPropertyStatement;
 import cfml.parsing.cfscript.script.CFScriptStatement;
 import cfml.parsing.reporting.ParseException;
 
@@ -199,6 +200,57 @@ public class TestCFMLFunctionStatement {
 		CFParamStatement paramStatement = (CFParamStatement) scriptStatement;
 		try {
 			paramStatement.validateAttributes(paramStatement.getToken(), CFParamStatement.getValidAttributes());
+			fail("bogus should not have validated");
+		} catch (ParseException expected) {
+			assertTrue(expected.getMessage(), expected.getMessage().contains("bogus"));
+		}
+	}
+
+	/**
+	 * maxlength is a cfparam attribute the allowed set did not list, so a valid param counted as
+	 * invalid. getValidAttributes() is public, so the wrong answer was reachable from outside.
+	 */
+	@Test
+	public void testParamAllowsMaxLength() {
+		CFScriptStatement scriptStatement = parseScript("param name=\"x\" maxlength=\"5\";");
+		CFParamStatement paramStatement = (CFParamStatement) scriptStatement;
+		paramStatement.validateAttributes(paramStatement.getToken(), CFParamStatement.getValidAttributes());
+	}
+
+	/**
+	 * cfproperty's allowed set held cfparam's six attributes. Every one of these is a real
+	 * cfproperty attribute and every one of them was rejected -- getter and setter are on more or
+	 * less every accessor-generating CFC, and the ORM ones on every persistent entity.
+	 */
+	@Test
+	public void testPropertyAllowsItsOwnAttributes() {
+		CFScriptStatement scriptStatement = parseScript(
+				"property name=\"email\" type=\"string\" getter=\"true\" setter=\"false\" "
+						+ "required=\"true\" persistent=\"true\" fieldtype=\"column\" ormtype=\"string\" "
+						+ "hint=\"the address\";");
+		CFPropertyStatement propertyStatement = (CFPropertyStatement) scriptStatement;
+		assertEquals(9, propertyStatement.getAttributes().size());
+		propertyStatement.validateAttributes(propertyStatement.getToken(), CFPropertyStatement.getValidAttributes());
+	}
+
+	/**
+	 * The two sets are genuinely different tags and must not drift back into being copies.
+	 */
+	@Test
+	public void testPropertyAndParamSetsAreNotTheSame() {
+		assertEquals(7, CFParamStatement.getValidAttributes().size());
+		assertEquals(65, CFPropertyStatement.getValidAttributes().size());
+		assertFalse("property must not simply carry param's attributes",
+				CFPropertyStatement.getValidAttributes().equals(CFParamStatement.getValidAttributes()));
+	}
+
+	@Test
+	public void testPropertyStillRejectsUnknownAttributes() {
+		CFScriptStatement scriptStatement = parseScript("property name=\"x\" bogus=\"y\";");
+		CFPropertyStatement propertyStatement = (CFPropertyStatement) scriptStatement;
+		try {
+			propertyStatement.validateAttributes(propertyStatement.getToken(),
+					CFPropertyStatement.getValidAttributes());
 			fail("bogus should not have validated");
 		} catch (ParseException expected) {
 			assertTrue(expected.getMessage(), expected.getMessage().contains("bogus"));
