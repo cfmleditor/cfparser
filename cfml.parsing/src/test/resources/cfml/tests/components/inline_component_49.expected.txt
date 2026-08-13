@@ -1,0 +1,345 @@
+/*===TOKENS===*/
+COMPONENT                <component>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+FUNCTION                 <function>
+IDENTIFIER               <connect>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// Declares and instantiates in one expression -- the shape Lucee uses to pull a>
+Hidden:LINE_COMMENT             <// Maven dependency in via javaSettings.>
+VAR                      <var>
+IDENTIFIER               <msal>
+'='                      <=>
+NEW                      <new>
+COMPONENT                <component>
+IDENTIFIER               <javaSettings>
+'='                      <=>
+OPEN_STRING              <'>
+STRING_LITERAL           <{"maven":["com.microsoft.azure:msal4j:1.23.1"]}>
+CLOSE_STRING             <'>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+FUNCTION                 <function>
+IDENTIFIER               <buildApp>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+RETURN                   <return>
+INTEGER_LITERAL          <1>
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// Without attributes, and the ordinary path forms alongside it.>
+VAR                      <var>
+IDENTIFIER               <bare>
+'='                      <=>
+NEW                      <new>
+COMPONENT                <component>
+'{'                      <{>
+FUNCTION                 <function>
+IDENTIFIER               <f>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+RETURN                   <return>
+INTEGER_LITERAL          <2>
+';'                      <;>
+'}'                      <}>
+'}'                      <}>
+';'                      <;>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+IDENTIFIER               <named>
+'='                      <=>
+NEW                      <new>
+IDENTIFIER               <models>
+'.'                      <.>
+IDENTIFIER               <User>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+IDENTIFIER               <javaFile>
+'='                      <=>
+NEW                      <new>
+IDENTIFIER               <java>
+':'                      <:>
+IDENTIFIER               <java>
+'.'                      <.>
+IDENTIFIER               <io>
+'.'                      <.>
+FILE                     <File>
+'('                      <(>
+IDENTIFIER               <path>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+RETURN                   <return>
+IDENTIFIER               <msal>
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (componentDeclaration
+    component
+    (componentGuts
+      {
+      (element
+        (functionDeclaration
+          function
+          (identifier connect)
+          (
+          parameterList
+          )
+          (compoundStatement
+            {
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier msal))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (unaryExpression
+                      (memberExpression
+                        (newComponentExpression
+                          new
+                          (componentDeclaration
+                            component
+                            (componentAttribute
+                              (identifier javaSettings)
+                              =
+                              (startExpression
+                                (baseExpression
+                                  (unaryExpression
+                                    (primaryExpression
+                                      (literalExpression
+                                        (stringLiteral
+                                          '
+                                          (stringLiteralPart {"maven":["com.microsoft.azure:msal4j:1.23.1"]})
+                                          '
+                                        )
+                                      )
+                                    )
+                                  )
+                                )
+                              )
+                            )
+                            (componentGuts
+                              {
+                              (element
+                                (functionDeclaration
+                                  function
+                                  (identifier buildApp)
+                                  (
+                                  parameterList
+                                  )
+                                  (compoundStatement
+                                    {
+                                    (statement
+                                      (returnStatement
+                                        return
+                                        (anExpression
+                                          (startExpression
+                                            (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                                          )
+                                        )
+                                      )
+                                      (endOfStatement ;)
+                                    )
+                                    }
+                                  )
+                                )
+                              )
+                              }
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier bare))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (unaryExpression
+                      (memberExpression
+                        (newComponentExpression
+                          new
+                          (componentDeclaration
+                            component
+                            (componentGuts
+                              {
+                              (element
+                                (functionDeclaration
+                                  function
+                                  (identifier f)
+                                  (
+                                  parameterList
+                                  )
+                                  (compoundStatement
+                                    {
+                                    (statement
+                                      (returnStatement
+                                        return
+                                        (anExpression
+                                          (startExpression
+                                            (baseExpression (unaryExpression (primaryExpression (literalExpression 2))))
+                                          )
+                                        )
+                                      )
+                                      (endOfStatement ;)
+                                    )
+                                    }
+                                  )
+                                )
+                              )
+                              }
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier named))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (unaryExpression
+                      (memberExpression
+                        (newComponentExpression
+                          new
+                          (componentPath
+                            (multipartIdentifier
+                              (identifier models)
+                              .
+                              (identifierOrReservedWord (identifier User))
+                            )
+                          )
+                          (
+                          argumentList
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier javaFile))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (unaryExpression
+                      (memberExpression
+                        (newComponentExpression
+                          new
+                          (componentPath
+                            (identifier java)
+                            :
+                            (multipartIdentifier
+                              (identifier java)
+                              .
+                              (identifierOrReservedWord (identifier io))
+                              .
+                              (identifierOrReservedWord (identifier (cfmlFunction File)))
+                            )
+                          )
+                          (
+                          (argumentList
+                            (argument
+                              (startExpression
+                                (baseExpression (unaryExpression (memberExpression (identifier path))))
+                              )
+                            )
+                          )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (returnStatement
+                return
+                (anExpression
+                  (startExpression
+                    (baseExpression (unaryExpression (memberExpression (identifier msal))))
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            }
+          )
+        )
+      )
+      }
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+component {
+  public function connect()     {
+      var msal = new component javaSettings='{"maven":["com.microsoft.azure:msal4j:1.23.1"]}' {
+  public function buildApp()     {
+      return 1;
+
+    }
+};
+      var bare = new component {
+  public function f()     {
+      return 2;
+
+    }
+};
+      var named = new models.User();
+      var javaFile = new java:java.io.File(path);
+      return msal;
+
+    }
+}
+/*======*/
