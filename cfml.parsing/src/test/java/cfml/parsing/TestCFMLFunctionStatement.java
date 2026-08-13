@@ -237,13 +237,37 @@ public class TestCFMLFunctionStatement {
 		assertNotNull(scriptStatement);
 	}
 	
+	/**
+	 * This used to assert the opposite, that a semicolon-less import is an error. It is not an
+	 * import rule: the same text parses cleanly with a trailing newline after it, because
+	 * endOfStatement lets a newline stand in for the semicolon. What it actually pinned was that
+	 * end of input did not count, so the last statement in a file needed a terminator that the same
+	 * statement one line earlier did not.
+	 */
 	@Test
-	public void testImportStatementFail() {
-		/* need to check if this is valid in OBD/ACF */
-		String script = "import projectshen.core.*";
-		parseScript(script);
-		if (fCfmlParser.getMessages().size() != 1) {
+	public void testImportStatementWithoutSemicolon() {
+		parseScript("import projectshen.core.*");
+		if (fCfmlParser.getMessages().size() > 0) {
 			fail("whoops! " + fCfmlParser.getMessages());
+		}
+	}
+
+	/**
+	 * The shape from #37 -- a statement whose last token is a closing brace, at end of input with
+	 * no trailing newline. Written as a JUnit case rather than a fixture because the bug is in the
+	 * final byte of the file, and an editor adding a newline to a fixture would silently neuter it.
+	 */
+	@Test
+	public void testStatementEndingInABlockAtEndOfInput() {
+		for (String script : new String[] { "f = (x) => { return x; }", "f = (x) -> { return x; }",
+				"f = function(x) { return x; }" }) {
+			CFMLParser parser = new CFMLParser();
+			try {
+				parser.parseScript(script);
+			} catch (Exception e) {
+				fail("threw on " + script + ": " + e.getMessage());
+			}
+			assertEquals(script + " should need no trailing semicolon at EOF", 0, parser.getMessages().size());
 		}
 	}
 	
