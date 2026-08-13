@@ -1,0 +1,9 @@
+var plain = 1;
+final immutable = 2;
+static shared = 3;
+final var finalLocal = 4;
+static var staticLocal = 5;
+final = getValue();
+var final = getValue();
+static = getValue();
+var static = getValue();

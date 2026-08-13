@@ -1,0 +1,232 @@
+/*===TOKENS===*/
+VAR                      <var>
+IDENTIFIER               <plain>
+'='                      <=>
+INTEGER_LITERAL          <1>
+';'                      <;>
+Hidden:NEWLINE                  <>
+FINAL                    <final>
+IDENTIFIER               <immutable>
+'='                      <=>
+INTEGER_LITERAL          <2>
+';'                      <;>
+Hidden:NEWLINE                  <>
+STATIC                   <static>
+IDENTIFIER               <shared>
+'='                      <=>
+INTEGER_LITERAL          <3>
+';'                      <;>
+Hidden:NEWLINE                  <>
+FINAL                    <final>
+VAR                      <var>
+IDENTIFIER               <finalLocal>
+'='                      <=>
+INTEGER_LITERAL          <4>
+';'                      <;>
+Hidden:NEWLINE                  <>
+STATIC                   <static>
+VAR                      <var>
+IDENTIFIER               <staticLocal>
+'='                      <=>
+INTEGER_LITERAL          <5>
+';'                      <;>
+Hidden:NEWLINE                  <>
+FINAL                    <final>
+'='                      <=>
+IDENTIFIER               <getValue>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+FINAL                    <final>
+'='                      <=>
+IDENTIFIER               <getValue>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+STATIC                   <static>
+'='                      <=>
+IDENTIFIER               <getValue>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+STATIC                   <static>
+'='                      <=>
+IDENTIFIER               <getValue>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (element
+    (statement
+      (localAssignmentExpression
+        var
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier plain))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (localAssignmentExpression
+        final
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier immutable))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 2))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (localAssignmentExpression
+        static
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier shared))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 3))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (localAssignmentExpression
+        final
+        var
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier finalLocal))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 4))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (localAssignmentExpression
+        static
+        var
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier staticLocal))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 5))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier final))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression (functionCall (identifier getValue) ( argumentList )))
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (localAssignmentExpression
+        var
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier final))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression (functionCall (identifier getValue) ( argumentList )))
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier static))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression (functionCall (identifier getValue) ( argumentList )))
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (localAssignmentExpression
+        var
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier static))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression (functionCall (identifier getValue) ( argumentList )))
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+{
+  var plain = 1;
+  final immutable = 2;
+  static shared = 3;
+  final finalLocal = 4;
+  static staticLocal = 5;
+final = getValue();
+  var final = getValue();
+static = getValue();
+  var static = getValue();
+
+}
+/*======*/
