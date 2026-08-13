@@ -1,0 +1,434 @@
+/*===TOKENS===*/
+Hidden:LINE_COMMENT             <// Tags that had no token at all. imap is the one bare spelling the corpora use.>
+IMAP                     <imap>
+IDENTIFIER               <action>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <close>
+CLOSE_STRING             <">
+IDENTIFIER               <connection>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <testImap>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+IMAP                     <cfimap>
+IDENTIFIER               <action>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <open>
+CLOSE_STRING             <">
+IDENTIFIER               <server>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <mail.example.com>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+CFSPREADSHEET            <cfspreadsheet>
+IDENTIFIER               <action>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <read>
+CLOSE_STRING             <">
+IDENTIFIER               <src>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <report.xls>
+CLOSE_STRING             <">
+QUERY                    <query>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <data>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+CFDOCUMENT               <cfdocument>
+IDENTIFIER               <format>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <pdf>
+CLOSE_STRING             <">
+'{'                      <{>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <echo>
+'('                      <(>
+OPEN_STRING              <">
+STRING_LITERAL           <body>
+CLOSE_STRING             <">
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// The bare names stay ordinary identifiers -- these are functions and variables in>
+Hidden:LINE_COMMENT             <// real code, and minting bare tokens for them would have reclassified all of it.>
+IDENTIFIER               <dump>
+'('                      <(>
+IDENTIFIER               <results>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <trace>
+'='                      <=>
+INTEGER_LITERAL          <1>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <map>
+'='                      <=>
+'{'                      <{>
+'}'                      <}>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <xml>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <<a/>>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <flush>
+'='                      <=>
+BOOLEAN_LITERAL          <false>
+';'                      <;>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// ... and the cf-prefixed spellings are still usable as names too.>
+CFDUMP                   <cfdump>
+'='                      <=>
+INTEGER_LITERAL          <1>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <imapSettings>
+'='                      <=>
+IMAP                     <imap>
+';'                      <;>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction imap)
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier action))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart close) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier connection))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart testImap) "))
+                    )
+                  )
+                )
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction cfimap)
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier action))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart open) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier server))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart mail.example.com) "))
+                    )
+                  )
+                )
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction cfspreadsheet)
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier action))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart read) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier src))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart report.xls) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier (cfmlFunction query)))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart data) "))
+                    )
+                  )
+                )
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction cfdocument)
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier format))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart pdf) "))
+                    )
+                  )
+                )
+              )
+            )
+          )
+          (compoundStatement
+            {
+            (statement
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (memberExpression
+                      (functionCall
+                        (identifier echo)
+                        (
+                        (argumentList
+                          (argument
+                            (startExpression
+                              (baseExpression
+                                (unaryExpression
+                                  (primaryExpression
+                                    (literalExpression (stringLiteral " (stringLiteralPart body) "))
+                                  )
+                                )
+                              )
+                            )
+                          )
+                        )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              ;
+            )
+            }
+          )
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (startExpression
+        (baseExpression
+          (unaryExpression
+            (memberExpression
+              (functionCall
+                (identifier dump)
+                (
+                (argumentList
+                  (argument
+                    (startExpression
+                      (baseExpression (unaryExpression (memberExpression (identifier results))))
+                    )
+                  )
+                )
+                )
+              )
+            )
+          )
+        )
+      )
+      ;
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier trace))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier map))))
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (implicitStruct { }))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier xml))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (primaryExpression
+                (literalExpression (stringLiteral " (stringLiteralPart <a/>) "))
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier flush))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression (primaryExpression (literalExpression false)))
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression
+            (unaryExpression (memberExpression (identifier (cfmlFunction cfdump))))
+          )
+        )
+        =
+        (startExpression
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier imapSettings))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression (memberExpression (identifier (cfmlFunction imap))))
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+{
+imap action='close' connection='testImap';;
+cfimap action='open' server='mail.example.com';;
+cfspreadsheet action='read' query='data' src='report.xls';;
+cfdocument format='pdf'{
+echo('body');
+
+};
+dump(results);
+trace = 1;
+map = {};
+xml = '<a/>';
+flush = false;
+cfdump = 1;
+imapSettings = imap;
+
+}
+/*======*/
