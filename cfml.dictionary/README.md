@@ -7,6 +7,6 @@ The CFML dictionary project.  Aims to have the different vendor and version, ver
 <dependency>
     <groupId>com.github.cfmleditor</groupId>
     <artifactId>cfml.dictionary</artifactId>
-    <version>2.16.0</version>
+    <version>2.16.0-SNAPSHOT</version>
 </dependency>
 ```

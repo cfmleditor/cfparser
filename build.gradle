@@ -4,7 +4,7 @@ plugins {
 	id 'net.researchgate.release' version '3.0.2' apply(false)
 }
 
-version = '2.16.0'
+version = '2.16.0-SNAPSHOT'
 
 license {
 	header rootProject.file('LICENSE')
