@@ -27,9 +27,14 @@ public class CFParamStatement extends CFParsedAttributeStatement {
 		validAttributes.add("PATTERN");
 	}
 	
+	/**
+	 * The visitor fills _attributes after construction, so this used to call validateAttributes on a
+	 * map that was always empty -- the validation never ran. Wiring it up is a behaviour change
+	 * rather than a bug fix: validateAttributes throws, parseScript does not catch it, and one
+	 * unrecognised attribute would abort the whole file instead of reporting an error. See #39.
+	 */
 	public CFParamStatement(org.antlr.v4.runtime.Token t, Map<CFIdentifier, CFExpression> _attributes) {
 		super(t, _attributes);
-		validateAttributes(t, validAttributes);
 	}
 	
 	@Override

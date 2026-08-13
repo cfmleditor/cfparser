@@ -32,6 +32,13 @@ abstract public class CFParsedAttributeStatement extends CFParsedStatement {
 		return attributes;
 	}
 	
+	/*
+	 * The allowed-key sets subclasses pass in are upper case, and Decompile returns the attribute
+	 * name as the author wrote it, so the comparison has to fold case. It did not, which meant that
+	 * once this method saw a populated map it would reject the ordinary lower-case spelling of a
+	 * perfectly valid attribute. containsAttribute below already got this right.
+	 */
+	
 	// utility method used for outputting the attributes to string
 	protected void DecompileAttributes(StringBuilder sb) {
 		List<CFIdentifier> sorted = new ArrayList<CFIdentifier>(attributes.keySet());
@@ -65,13 +72,13 @@ abstract public class CFParsedAttributeStatement extends CFParsedStatement {
 	 * checks that all the attributes are in the allowed set, throwing a ParseException if an unrecognized attribute is
 	 * found
 	 */
-	protected void validateAttributes(Token _t, HashSet<String> _allowedKeys) {
+	public void validateAttributes(Token _t, HashSet<String> _allowedKeys) {
 		
 		Iterator<CFIdentifier> it = attributes.keySet().iterator();
 		
 		while (it.hasNext()) {
 			String nextKey = it.next().Decompile(0);
-			if (!_allowedKeys.contains(nextKey)) {
+			if (!_allowedKeys.contains(nextKey.toUpperCase())) {
 				throw new ParseException(_t, "Invalid attribute " + nextKey);
 			}
 		}
@@ -87,7 +94,7 @@ abstract public class CFParsedAttributeStatement extends CFParsedStatement {
 		
 		while (it.hasNext()) {
 			String nextKey = it.next().Decompile(0);
-			if (!_allowedKeys.contains(nextKey)) {
+			if (!_allowedKeys.contains(nextKey.toUpperCase())) {
 				throw new CFException(_msg, _context);
 			}
 		}

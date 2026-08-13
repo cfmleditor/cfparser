@@ -3,6 +3,7 @@ package cfml.parsing;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Before;
@@ -10,7 +11,9 @@ import org.junit.Test;
 
 import cfml.parsing.cfscript.script.CFIncludeStatement;
 import cfml.parsing.cfscript.script.CFMLFunctionStatement;
+import cfml.parsing.cfscript.script.CFParamStatement;
 import cfml.parsing.cfscript.script.CFScriptStatement;
+import cfml.parsing.reporting.ParseException;
 
 public class TestCFMLFunctionStatement {
 	
@@ -173,6 +176,33 @@ public class TestCFMLFunctionStatement {
 		}
 		assertFalse("comma-separated arguments should stay an ordinary call",
 				scriptStatement instanceof CFMLFunctionStatement);
+	}
+
+	/**
+	 * validateAttributes compares against an upper-case allowed set, so it has to fold case or it
+	 * rejects the ordinary spelling of a valid attribute. Pinned directly because nothing calls the
+	 * method today -- CFParamStatement's constructor used to, on a map the visitor had not filled
+	 * yet, so the fault was invisible from the outside. See #39.
+	 */
+	@Test
+	public void testValidateAttributesIgnoresCase() {
+		CFScriptStatement scriptStatement = parseScript("param name=\"url.age\" type=\"numeric\" default=\"1\";");
+		CFParamStatement paramStatement = (CFParamStatement) scriptStatement;
+		assertEquals(3, paramStatement.getAttributes().size());
+		// lower case as written, upper case in the allowed set
+		paramStatement.validateAttributes(paramStatement.getToken(), CFParamStatement.getValidAttributes());
+	}
+
+	@Test
+	public void testValidateAttributesStillRejectsUnknownOnes() {
+		CFScriptStatement scriptStatement = parseScript("param name=\"x\" bogus=\"y\";");
+		CFParamStatement paramStatement = (CFParamStatement) scriptStatement;
+		try {
+			paramStatement.validateAttributes(paramStatement.getToken(), CFParamStatement.getValidAttributes());
+			fail("bogus should not have validated");
+		} catch (ParseException expected) {
+			assertTrue(expected.getMessage(), expected.getMessage().contains("bogus"));
+		}
 	}
 
 	@Test
