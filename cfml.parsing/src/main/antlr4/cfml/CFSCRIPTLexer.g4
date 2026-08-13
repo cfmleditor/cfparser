@@ -381,6 +381,52 @@ CFUPDATE: [cC][fF] UPDATE -> type(UPDATE);
 CFWDDX: [cC][fF] WDDX -> type(WDDX);
 CFZIP: [cC][fF] ZIP -> type(ZIP);
 
+// Tags that exist only in their cf-prefixed spelling here. The bare names -- dump, trace,
+// map, xml, flush -- are ordinary function and variable names in real code (dump( ) alone
+// appears in four fixtures), so minting bare tokens for them would reclassify working code.
+// The cf-prefixed form carries no such risk, and each is listed in identifier as well.
+CFCALENDAR: [cC][fF][cC][aA][lL][eE][nN][dD][aA][rR];
+CFCHART: [cC][fF][cC][hH][aA][rR][tT];
+CFCHARTDATA: [cC][fF][cC][hH][aA][rR][tT][dD][aA][tT][aA];
+CFCHARTSERIES: [cC][fF][cC][hH][aA][rR][tT][sS][eE][rR][iI][eE][sS];
+CFCLIENT: [cC][fF][cC][lL][iI][eE][nN][tT];
+CFCLIENTSETTINGS: [cC][fF][cC][lL][iI][eE][nN][tT][sS][eE][tT][tT][iI][nN][gG][sS];
+CFDOCUMENT: [cC][fF][dD][oO][cC][uU][mM][eE][nN][tT];
+CFDOCUMENTITEM: [cC][fF][dD][oO][cC][uU][mM][eE][nN][tT][iI][tT][eE][mM];
+CFDOCUMENTSECTION: [cC][fF][dD][oO][cC][uU][mM][eE][nN][tT][sS][eE][cC][tT][iI][oO][nN];
+CFDUMP: [cC][fF][dD][uU][mM][pP];
+CFFILEUPLOAD: [cC][fF][fF][iI][lL][eE][uU][pP][lL][oO][aA][dD];
+CFFLUSH: [cC][fF][fF][lL][uU][sS][hH];
+CFFORMGROUP: [cC][fF][fF][oO][rR][mM][gG][rR][oO][uU][pP];
+CFFORMITEM: [cC][fF][fF][oO][rR][mM][iI][tT][eE][mM];
+CFHTMLTOPDF: [cC][fF][hH][tT][mM][lL][tT][oO][pP][dD][fF];
+CFHTMLTOPDFITEM: [cC][fF][hH][tT][mM][lL][tT][oO][pP][dD][fF][iI][tT][eE][mM];
+CFINVOKE: [cC][fF][iI][nN][vV][oO][kK][eE];
+CFINVOKEARGUMENT: [cC][fF][iI][nN][vV][oO][kK][eE][aA][rR][gG][uU][mM][eE][nN][tT];
+CFLOGIN: [cC][fF][lL][oO][gG][iI][nN];
+CFLOGINUSER: [cC][fF][lL][oO][gG][iI][nN][uU][sS][eE][rR];
+CFLOGOUT: [cC][fF][lL][oO][gG][oO][uU][tT];
+CFMAILPART: [cC][fF][mM][aA][iI][lL][pP][aA][rR][tT];
+CFMAP: [cC][fF][mM][aA][pP];
+CFMAPITEM: [cC][fF][mM][aA][pP][iI][tT][eE][mM];
+CFMEDIAPLAYER: [cC][fF][mM][eE][dD][iI][aA][pP][lL][aA][yY][eE][rR];
+CFMESSAGEBOX: [cC][fF][mM][eE][sS][sS][aA][gG][eE][bB][oO][xX];
+CFNTAUTHENTICATE: [cC][fF][nN][tT][aA][uU][tT][hH][eE][nN][tT][iI][cC][aA][tT][eE];
+CFOAUTH: [cC][fF][oO][aA][uU][tT][hH];
+CFOBJECTCACHE: [cC][fF][oO][bB][jJ][eE][cC][tT][cC][aA][cC][hH][eE];
+CFPROGRESSBAR: [cC][fF][pP][rR][oO][gG][rR][eE][sS][sS][bB][aA][rR];
+CFREPORTPARAM: [cC][fF][rR][eE][pP][oO][rR][tT][pP][aA][rR][aA][mM];
+CFSHAREPOINT: [cC][fF][sS][hH][aA][rR][eE][pP][oO][iI][nN][tT];
+CFSPREADSHEET: [cC][fF][sS][pP][rR][eE][aA][dD][sS][hH][eE][eE][tT];
+CFTEXTAREA: [cC][fF][tT][eE][xX][tT][aA][rR][eE][aA];
+CFTIMER: [cC][fF][tT][iI][mM][eE][rR];
+CFTRACE: [cC][fF][tT][rR][aA][cC][eE];
+CFWEBSOCKET: [cC][fF][wW][eE][bB][sS][oO][cC][kK][eE][tT];
+CFXML: [cC][fF][xX][mM][lL];
+// imap is the one bare spelling the corpora actually use, so it gets both.
+IMAP: [iI][mM][aA][pP];
+CFIMAP: [cC][fF] IMAP -> type(IMAP);
+
 CFCUSTOM_IDENTIFIER: [cC][fF]'_' IDENTIFIER+;
 
 IDENTIFIER 
