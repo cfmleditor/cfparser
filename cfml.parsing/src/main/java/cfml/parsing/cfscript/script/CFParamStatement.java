@@ -17,21 +17,28 @@ public class CFParamStatement extends CFParsedAttributeStatement {
 	private CFExpression paramType;
 	private CFExpression defaultExpression;
 	
+	/*
+	 * cfparam's attributes, per the shipped dictionaries, which agree across cf11 and lucee5.
+	 * MAXLENGTH was missing, so `param name="x" maxlength="5";` counted as invalid.
+	 */
 	static {
 		validAttributes = new HashSet<String>();
 		validAttributes.add("DEFAULT");
-		validAttributes.add("TYPE");
-		validAttributes.add("NAME");
 		validAttributes.add("MAX");
+		validAttributes.add("MAXLENGTH");
 		validAttributes.add("MIN");
+		validAttributes.add("NAME");
 		validAttributes.add("PATTERN");
+		validAttributes.add("TYPE");
 	}
 	
 	/**
 	 * The visitor fills _attributes after construction, so this used to call validateAttributes on a
-	 * map that was always empty -- the validation never ran. Wiring it up is a behaviour change
-	 * rather than a bug fix: validateAttributes throws, parseScript does not catch it, and one
-	 * unrecognised attribute would abort the whole file instead of reporting an error. See #39.
+	 * map that was always empty -- the validation never ran. It stays uncalled: validateAttributes
+	 * throws, parseScript does not catch it, and one unrecognised attribute would abort the whole
+	 * file instead of reporting an error on the statement. The set above is pinned to dictionaries
+	 * that ship with the parser and will fall behind whatever the next CF release adds, so that
+	 * failure would land on valid code. See #39.
 	 */
 	public CFParamStatement(org.antlr.v4.runtime.Token t, Map<CFIdentifier, CFExpression> _attributes) {
 		super(t, _attributes);
