@@ -1,0 +1,9 @@
+staticRef = Some::myVar;
+staticCall = Some::myFunc();
+staticChain = Some::a::b;
+nullSafe = obj?.prop;
+nullSafeCall = obj?.method();
+nullSafeChain = obj?.a?.b;
+mixed = obj.a?.b.c;
+withArray = obj?.list[1].name;
+plain = obj.a.b;

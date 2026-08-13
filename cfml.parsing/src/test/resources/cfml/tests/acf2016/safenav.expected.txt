@@ -85,7 +85,7 @@ Hidden:NEWLINE                  <>
 component {
   public function foo()     {
       var xyz = {};
-      if(xyz.bar )         {
+      if(xyz?.bar )         {
 
         };
 

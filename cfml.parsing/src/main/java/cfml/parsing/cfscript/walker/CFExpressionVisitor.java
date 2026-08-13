@@ -2,6 +2,7 @@ package cfml.parsing.cfscript.walker;
 
 import java.util.Stack;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -38,6 +39,7 @@ import cfml.CFSCRIPTParser.LocalAssignmentExpressionContext;
 import cfml.CFSCRIPTParser.MemberExpressionContext;
 import cfml.CFSCRIPTParser.MultipartIdentifierContext;
 import cfml.CFSCRIPTParser.NewComponentExpressionContext;
+import cfml.CFSCRIPTParser.NullSafeOperatorContext;
 import cfml.CFSCRIPTParser.OtherIdentifiersContext;
 import cfml.CFSCRIPTParser.ParameterAttributeContext;
 import cfml.CFSCRIPTParser.ParameterContext;
@@ -309,6 +311,7 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 		aggregator.push(fullVarExpression);
 		CFExpression retval = visitChildren(ctx);
 		aggregator.pop();
+		recordMemberOperators(ctx, retval);
 		// negative if minus present
 		// if (ctx.MINUS() != null) {
 		// retval = new CFUnaryExpression(ctx.MINUS().getSymbol(), retval);
@@ -316,6 +319,76 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 		return retval;
 	}
 	
+	/**
+	 * Notes which members were reached with <code>::</code> or <code>?.</code> rather than a dot.
+	 *
+	 * Both used to be discarded: the operator is a separator in memberExpression and never became
+	 * part of the AST, so `a::b` and `a?.b` both decompiled to `a.b`. That is not cosmetic --
+	 * `a?.b` yields null where `a.b` throws, so the round trip changed what the code does.
+	 *
+	 * The association is by source offset rather than by position in the child list, because the
+	 * members are gathered through aggregateResult and one child does not always produce one
+	 * element. Only the two non-default operators are recorded.
+	 */
+	private void recordMemberOperators(MemberExpressionContext ctx, CFExpression retval) {
+		if (!(retval instanceof CFFullVarExpression)) {
+			return;
+		}
+		CFFullVarExpression fullVar = (CFFullVarExpression) retval;
+		String pending = null;
+		for (int i = 0; i < ctx.getChildCount(); i++) {
+			ParseTree child = ctx.getChild(i);
+			String operator = memberOperatorOf(child);
+			if (operator != null) {
+				// DOT carries no information, but it still closes off any pending operator.
+				pending = operator.equals(".") ? null : operator;
+				continue;
+			}
+			if (pending != null) {
+				markMember(fullVar, child, pending);
+				pending = null;
+			}
+		}
+	}
+
+	/** The separator this child represents, or null when it is a member rather than a separator. */
+	private String memberOperatorOf(ParseTree child) {
+		if (child instanceof NullSafeOperatorContext) {
+			return "?.";
+		}
+		if (child instanceof TerminalNode) {
+			int type = ((TerminalNode) child).getSymbol().getType();
+			if (type == CFSCRIPTLexer.DOUBLECOLUMN) {
+				return "::";
+			}
+			if (type == CFSCRIPTLexer.DOT) {
+				return ".";
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Attaches the operator to whichever member starts at this child's first token. Matching on the
+	 * token keeps this correct when the child produced several expressions, or none.
+	 */
+	private void markMember(CFFullVarExpression fullVar, ParseTree child, String operator) {
+		if (!(child instanceof ParserRuleContext)) {
+			return;
+		}
+		Token start = ((ParserRuleContext) child).getStart();
+		if (start == null) {
+			return;
+		}
+		for (CFExpression expression : fullVar.getExpressions()) {
+			if (expression != null && expression.getToken() != null
+					&& expression.getToken().getStartIndex() == start.getStartIndex()) {
+				fullVar.setMemberOperator(expression, operator);
+				return;
+			}
+		}
+	}
+
 	@Override
 	public CFExpression visitInnerExpression(InnerExpressionContext ctx) {
 		return new CFNestedExpression(ctx.POUND_SIGN(0).getSymbol(), visit(ctx.anExpression()));

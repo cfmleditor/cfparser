@@ -1,0 +1,304 @@
+/*===TOKENS===*/
+IDENTIFIER               <staticRef>
+'='                      <=>
+IDENTIFIER               <Some>
+'::'                     <::>
+IDENTIFIER               <myVar>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <staticCall>
+'='                      <=>
+IDENTIFIER               <Some>
+'::'                     <::>
+IDENTIFIER               <myFunc>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <staticChain>
+'='                      <=>
+IDENTIFIER               <Some>
+'::'                     <::>
+IDENTIFIER               <a>
+'::'                     <::>
+IDENTIFIER               <b>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <nullSafe>
+'='                      <=>
+IDENTIFIER               <obj>
+'?'                      <?>
+'.'                      <.>
+IDENTIFIER               <prop>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <nullSafeCall>
+'='                      <=>
+IDENTIFIER               <obj>
+'?'                      <?>
+'.'                      <.>
+IDENTIFIER               <method>
+'('                      <(>
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <nullSafeChain>
+'='                      <=>
+IDENTIFIER               <obj>
+'?'                      <?>
+'.'                      <.>
+IDENTIFIER               <a>
+'?'                      <?>
+'.'                      <.>
+IDENTIFIER               <b>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <mixed>
+'='                      <=>
+IDENTIFIER               <obj>
+'.'                      <.>
+IDENTIFIER               <a>
+'?'                      <?>
+'.'                      <.>
+IDENTIFIER               <b>
+'.'                      <.>
+IDENTIFIER               <c>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <withArray>
+'='                      <=>
+IDENTIFIER               <obj>
+'?'                      <?>
+'.'                      <.>
+IDENTIFIER               <list>
+'['                      <[>
+INTEGER_LITERAL          <1>
+']'                      <]>
+'.'                      <.>
+IDENTIFIER               <name>
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <plain>
+'='                      <=>
+IDENTIFIER               <obj>
+'.'                      <.>
+IDENTIFIER               <a>
+'.'                      <.>
+IDENTIFIER               <b>
+';'                      <;>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier staticRef))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression (memberExpression (identifier Some) :: (identifier myVar)))
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier staticCall))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier Some)
+                ::
+                (qualifiedFunctionCall (identifier myFunc) ( argumentList ))
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier staticChain))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression (identifier Some) :: (identifier a) :: (identifier b))
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier nullSafe))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression (identifier obj) (nullSafeOperator ? .) (identifier prop))
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier nullSafeCall))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier obj)
+                (nullSafeOperator ? .)
+                (qualifiedFunctionCall (identifier method) ( argumentList ))
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression
+            (unaryExpression (memberExpression (identifier nullSafeChain)))
+          )
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier obj)
+                (nullSafeOperator ? .)
+                (identifier a)
+                (nullSafeOperator ? .)
+                (identifier b)
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier mixed))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier obj)
+                .
+                (identifier a)
+                (nullSafeOperator ? .)
+                (identifier b)
+                .
+                (identifier c)
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier withArray))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression
+                (identifier obj)
+                (nullSafeOperator ? .)
+                (identifier list)
+                (arrayMemberExpression
+                  [
+                  (startExpression
+                    (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+                  )
+                  ]
+                )
+                .
+                (identifier name)
+              )
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+  (element
+    (statement
+      (assignmentExpression
+        (startExpression
+          (baseExpression (unaryExpression (memberExpression (identifier plain))))
+        )
+        =
+        (startExpression
+          (baseExpression
+            (unaryExpression
+              (memberExpression (identifier obj) . (identifier a) . (identifier b))
+            )
+          )
+        )
+      )
+      (endOfStatement ;)
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+{
+staticRef = Some::myVar;
+staticCall = Some::myFunc();
+staticChain = Some::a::b;
+nullSafe = obj?.prop;
+nullSafeCall = obj?.method();
+nullSafeChain = obj?.a?.b;
+mixed = obj.a?.b.c;
+withArray = obj?.list[1].name;
+plain = obj.a.b;
+
+}
+/*======*/
