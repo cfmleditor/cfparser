@@ -69,6 +69,8 @@ public class CFMLStartTag extends StartTagTypeGenericImplementation {
 				if (!isInQuotes && !isInApos) {
 					if (x > 2 && text.subSequence(x - 3, x).equals("---")) {
 						// do nothing, this is a comment
+					} else if (isArrowOperator(text, x)) {
+						// do nothing, this '>' is the tail of => or -> inside an expression
 					} else {
 						return x + 1;
 					}
@@ -95,6 +97,25 @@ public class CFMLStartTag extends StartTagTypeGenericImplementation {
 		return endStartTagEnd;
 	}
 	
+	/**
+	 * True when the '>' at pos is the second character of an arrow operator, as in
+	 * <code>&lt;cfset f = (x) =&gt; x + 1&gt;</code>. Without this the tag ends inside the operator
+	 * and the expression is silently truncated to <code>f = (x) =</code>.
+	 *
+	 * A '-' is only an arrow when it does not follow another '-', so the decrement in
+	 * <code>&lt;cfset a = i--&gt;</code> still ends the tag.
+	 */
+	private static boolean isArrowOperator(final ParseText text, final int pos) {
+		if (pos < 1) {
+			return false;
+		}
+		final char previous = text.charAt(pos - 1);
+		if (previous == '=') {
+			return true;
+		}
+		return previous == '-' && (pos < 2 || text.charAt(pos - 2) != '-');
+	}
+
 	protected ArrayList getAttributes(String inData) {
 		ArrayList attributes = new ArrayList();
 		Matcher matcher;
