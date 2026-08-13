@@ -1,0 +1,166 @@
+/*===TOKENS===*/
+COMPONENT                <component>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+STATIC                   <static>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+PUBLIC                   <public>
+IDENTIFIER               <myPublic>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <p>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+PRIVATE                  <private>
+IDENTIFIER               <myPrivate>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <q>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <myPlain>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <r>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+FUNCTION                 <function>
+IDENTIFIER               <f>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+RETURN                   <return>
+IDENTIFIER               <myPlain>
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (componentDeclaration
+    component
+    (componentGuts
+      {
+      (element
+        (staticBlock
+          static
+          {
+          (staticMember
+            (accessType public)
+            (statement
+              (assignmentExpression
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier myPublic))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (unaryExpression
+                      (primaryExpression
+                        (literalExpression (stringLiteral " (stringLiteralPart p) "))
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+          )
+          (staticMember
+            (accessType private)
+            (statement
+              (assignmentExpression
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier myPrivate))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (unaryExpression
+                      (primaryExpression
+                        (literalExpression (stringLiteral " (stringLiteralPart q) "))
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+          )
+          (staticMember
+            (statement
+              (assignmentExpression
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier myPlain))))
+                )
+                =
+                (startExpression
+                  (baseExpression
+                    (unaryExpression
+                      (primaryExpression
+                        (literalExpression (stringLiteral " (stringLiteralPart r) "))
+                      )
+                    )
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+          )
+          }
+        )
+      )
+      (element
+        (functionDeclaration
+          function
+          (identifier f)
+          (
+          parameterList
+          )
+          (compoundStatement
+            {
+            (statement
+              (returnStatement
+                return
+                (anExpression
+                  (startExpression
+                    (baseExpression (unaryExpression (memberExpression (identifier myPlain))))
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            }
+          )
+        )
+      )
+      }
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+component {
+  {
+    static {
+      public myPublic = 'p';
+      private myPrivate = 'q';
+      myPlain = 'r';
+    };
+    public function f()       {
+        return myPlain;
+
+      };
+
+  }
+}
+/*======*/

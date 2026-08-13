@@ -55,6 +55,8 @@ import cfml.CFSCRIPTParser.ScriptBlockContext;
 import cfml.CFSCRIPTParser.StartExpressionContext;
 import cfml.CFSCRIPTParser.StatementContext;
 import cfml.CFSCRIPTParser.SwitchStatementContext;
+import cfml.CFSCRIPTParser.StaticBlockContext;
+import cfml.CFSCRIPTParser.StaticMemberContext;
 import cfml.CFSCRIPTParser.TemplateBlockContext;
 import cfml.CFSCRIPTParser.TagFunctionStatementContext;
 import cfml.CFSCRIPTParser.TagStatementContext;
@@ -99,6 +101,7 @@ import cfml.parsing.cfscript.script.CFReturnStatement;
 import cfml.parsing.cfscript.script.CFScriptStatement;
 import cfml.parsing.cfscript.script.CFSwitchStatement;
 import cfml.parsing.cfscript.script.CFTagThrowStatement;
+import cfml.parsing.cfscript.script.CFStaticBlockStatement;
 import cfml.parsing.cfscript.script.CFTemplateBlockStatement;
 import cfml.parsing.cfscript.script.CFThreadStatement;
 import cfml.parsing.cfscript.script.CFThrowStatement;
@@ -590,6 +593,22 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 		return exitStatement;
 	}
 	
+	@Override
+	public CFScriptStatement visitStaticBlock(StaticBlockContext ctx) {
+		// Without a visitor here the block was flattened by visitChildren: static { myVar = "v"; }
+		// decompiled to plain myVar = 'v', losing the fact that the member was static at all.
+		List<CFScriptStatement> members = new ArrayList<CFScriptStatement>();
+		List<String> accessTypes = new ArrayList<String>();
+		for (StaticMemberContext member : ctx.staticMember()) {
+			CFScriptStatement statement = visit(member.statement());
+			if (statement != null) {
+				members.add(statement);
+				accessTypes.add(member.accessType() == null ? null : member.accessType().getText());
+			}
+		}
+		return new CFStaticBlockStatement(ctx.STATIC().getSymbol(), members, accessTypes);
+	}
+
 	@Override
 	public CFScriptStatement visitTemplateBlock(TemplateBlockContext ctx) {
 		// The body is markup, not cfscript, so it is kept verbatim rather than modelled. Only the
