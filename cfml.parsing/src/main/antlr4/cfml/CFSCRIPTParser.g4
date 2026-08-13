@@ -591,7 +591,6 @@ arraySlice
 
 functionCall
     :(identifier | specialWord) LEFTPAREN argumentList RIGHTPAREN
-    body=compoundStatement?
     ;
 simpleFunctionCall
     :(identifier | specialWord) LEFTPAREN argumentList RIGHTPAREN
