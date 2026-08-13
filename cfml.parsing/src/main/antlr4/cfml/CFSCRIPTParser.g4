@@ -35,8 +35,14 @@ interfaceDeclaration
   : INTERFACE componentAttribute* componentGuts //-> ( COMPDECL componentAttribute* componentGuts)
   ;
 
+// A member inside a static block may carry an access type: static { public myVar = "v"; }.
+// accessType sits on the member rather than the block, so it is optional per statement.
 staticBlock
-  : STATIC LEFTCURLYBRACKET ( statement )* RIGHTCURLYBRACKET
+  : STATIC LEFTCURLYBRACKET ( staticMember )* RIGHTCURLYBRACKET
+  ;
+
+staticMember
+  : accessType? statement
   ;
 
 element
