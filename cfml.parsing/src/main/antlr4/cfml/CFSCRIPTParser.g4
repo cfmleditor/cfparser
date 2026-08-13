@@ -605,7 +605,6 @@ functionCall
     ;
 simpleFunctionCall
     :(identifier | specialWord) LEFTPAREN argumentList RIGHTPAREN
-    body=compoundStatement?
     ;
 qualifiedFunctionCall
 	:(identifier | reservedWord) LEFTPAREN argumentList RIGHTPAREN
@@ -795,8 +794,12 @@ implicitStructKeyExpression
   | reservedWord
   ;
 
+// `new component { ... }` defines and instantiates in one expression. The body is an
+// ordinary componentDeclaration, reused rather than restated so attributes, directives
+// and members all behave the same as in a named component.
 newComponentExpression
   : NEW componentPath LEFTPAREN argumentList RIGHTPAREN
+  | NEW componentDeclaration
   ;
   
 // Lucee types the path being instantiated: new java:java.io.File(p), new cfml:foo.Bar().

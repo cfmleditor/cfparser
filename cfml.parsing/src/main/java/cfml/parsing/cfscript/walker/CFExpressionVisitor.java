@@ -17,6 +17,7 @@ import cfml.CFSCRIPTParser.BaseExpressionContext;
 import cfml.CFSCRIPTParser.CfmlFunctionContext;
 import cfml.CFSCRIPTParser.CompareExpressionContext;
 import cfml.CFSCRIPTParser.ComponentAttributeContext;
+import cfml.CFSCRIPTParser.ComponentDeclarationContext;
 import cfml.CFSCRIPTParser.ComponentGutsContext;
 import cfml.CFSCRIPTParser.ComponentPathContext;
 import cfml.CFSCRIPTParser.ConditionContext;
@@ -57,6 +58,7 @@ import cfml.CFSCRIPTParser.TypeContext;
 import cfml.CFSCRIPTParser.UnaryExpressionContext;
 import cfml.CFSCRIPTParserBaseVisitor;
 import cfml.parsing.cfscript.ArgumentsVector;
+import cfml.parsing.cfscript.CFAnonymousComponentExpression;
 import cfml.parsing.cfscript.CFAnonymousFunctionExpression;
 import cfml.parsing.cfscript.CFArrayExpression;
 import cfml.parsing.cfscript.CFAssignmentExpression;
@@ -78,6 +80,7 @@ import cfml.parsing.cfscript.CFStructExpression;
 import cfml.parsing.cfscript.CFTernaryExpression;
 import cfml.parsing.cfscript.CFUnaryExpression;
 import cfml.parsing.cfscript.CFVarDeclExpression;
+import cfml.parsing.cfscript.script.CFCompDeclStatement;
 import cfml.parsing.cfscript.script.CFFuncDeclStatement;
 import cfml.parsing.cfscript.script.CFReturnStatement;
 
@@ -429,6 +432,13 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 	
 	@Override
 	public CFExpression visitNewComponentExpression(NewComponentExpressionContext ctx) {
+		if (ctx.componentDeclaration() != null) {
+			// `new component { ... }` -- the declaration is built by the statement visitor, the way
+			// an anonymous function's is, and wrapped so it can sit in an expression.
+			CFCompDeclStatement declaration = (CFCompDeclStatement) getCFScriptStatementVisitor()
+					.visitComponentDeclaration(ctx.componentDeclaration());
+			return new CFAnonymousComponentExpression(ctx.NEW().getSymbol(), declaration);
+		}
 		ArgumentsVector args = new ArgumentsVector();
 		if (ctx.getChildCount() > 4) {
 			for (ArgumentContext argCtx : ctx.argumentList().argument()) {
