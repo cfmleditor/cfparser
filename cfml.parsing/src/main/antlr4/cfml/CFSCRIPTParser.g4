@@ -18,6 +18,16 @@ cfscriptBlock
   : SCRIPTOPEN scriptBlock SCRIPTCLOSE
   ;
 
+// The inverse of cfscriptBlock: markup embedded in cfscript, between ``` fences, with
+// #...# interpolation as in a string literal.
+templateBlock
+  : OPEN_TEMPLATE (templateLiteralPart | POUND_SIGN anExpression POUND_SIGN)* CLOSE_TEMPLATE
+  ;
+
+templateLiteralPart
+  : TEMPLATE_LITERAL | DOUBLEHASH
+  ;
+
 componentDeclaration
   : componentModifier? COMPONENT componentAttribute* componentGuts //-> ( COMPDECL componentAttribute* componentGuts)
   ;
@@ -154,6 +164,7 @@ statement
   |   startExpression SEMICOLON
   |   SEMICOLON // empty statement
   | functionCall // without semi
+  | templateBlock
   ;
   
 endOfStatement
