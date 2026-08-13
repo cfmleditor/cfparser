@@ -1,0 +1,279 @@
+START:cfoutput
+  =========TAG=================
+  <cfoutput>prefix</cfoutput>
+END:cfoutput
+START:cfset
+  =========TAG=================
+  <cfset closure = t => t.b()>
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <closure>
+  '='                      <=>
+  IDENTIFIER               <t>
+  '=>'                     <=>>
+  IDENTIFIER               <t>
+  '.'                      <.>
+  IDENTIFIER               <b>
+  '('                      <(>
+  ')'                      <)>
+  ===========Tree================
+  (expression
+    (assignmentExpression
+      (startExpression
+        (baseExpression (unaryExpression (memberExpression (identifier closure))))
+      )
+      =
+      (startExpression
+        (baseExpression
+          (lambdaDeclaration
+            (identifier t)
+            =>
+            (startExpression
+              (baseExpression
+                (unaryExpression
+                  (memberExpression
+                    (identifier t)
+                    .
+                    (qualifiedFunctionCall (identifier b) ( argumentList ))
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  closure = (t) => t.b()
+  ==================================
+END:cfset
+START:cfset
+  =========TAG=================
+  <cfset lambda = t -> t.b()>
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <lambda>
+  '='                      <=>
+  IDENTIFIER               <t>
+  '->'                     <->>
+  IDENTIFIER               <t>
+  '.'                      <.>
+  IDENTIFIER               <b>
+  '('                      <(>
+  ')'                      <)>
+  ===========Tree================
+  (expression
+    (assignmentExpression
+      (startExpression
+        (baseExpression (unaryExpression (memberExpression (identifier lambda))))
+      )
+      =
+      (startExpression
+        (baseExpression
+          (lambdaDeclaration
+            (identifier t)
+            ->
+            (startExpression
+              (baseExpression
+                (unaryExpression
+                  (memberExpression
+                    (identifier t)
+                    .
+                    (qualifiedFunctionCall (identifier b) ( argumentList ))
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  lambda = (t) -> t.b()
+  ==================================
+END:cfset
+START:cfset
+  =========TAG=================
+  <cfset parenthesised = (x, y) => x + y>
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <parenthesised>
+  '='                      <=>
+  '('                      <(>
+  IDENTIFIER               <x>
+  ','                      <,>
+  IDENTIFIER               <y>
+  ')'                      <)>
+  '=>'                     <=>>
+  IDENTIFIER               <x>
+  '+'                      <+>
+  IDENTIFIER               <y>
+  ===========Tree================
+  (expression
+    (assignmentExpression
+      (startExpression
+        (baseExpression
+          (unaryExpression (memberExpression (identifier parenthesised)))
+        )
+      )
+      =
+      (startExpression
+        (baseExpression
+          (lambdaDeclaration
+            (
+            (parameterList (parameter (identifier x)) , (parameter (identifier y)))
+            )
+            =>
+            (startExpression
+              (baseExpression
+                (baseExpression (unaryExpression (memberExpression (identifier x))))
+                +
+                (baseExpression (unaryExpression (memberExpression (identifier y))))
+              )
+            )
+          )
+        )
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  parenthesised = (x, y) => x + y
+  ==================================
+END:cfset
+START:cfset
+  =========TAG=================
+  <cfset nested = getURLs().map( target -> target.toString() )>
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <nested>
+  '='                      <=>
+  IDENTIFIER               <getURLs>
+  '('                      <(>
+  ')'                      <)>
+  '.'                      <.>
+  IDENTIFIER               <map>
+  '('                      <(>
+  IDENTIFIER               <target>
+  '->'                     <->>
+  IDENTIFIER               <target>
+  '.'                      <.>
+  IDENTIFIER               <toString>
+  '('                      <(>
+  ')'                      <)>
+  ')'                      <)>
+  ===========Tree================
+  (expression
+    (assignmentExpression
+      (startExpression
+        (baseExpression (unaryExpression (memberExpression (identifier nested))))
+      )
+      =
+      (startExpression
+        (baseExpression
+          (unaryExpression
+            (memberExpression
+              (functionCall (identifier getURLs) ( argumentList ))
+              .
+              (qualifiedFunctionCall
+                (identifier map)
+                (
+                (argumentList
+                  (argument
+                    (lambdaDeclaration
+                      (identifier target)
+                      ->
+                      (startExpression
+                        (baseExpression
+                          (unaryExpression
+                            (memberExpression
+                              (identifier target)
+                              .
+                              (qualifiedFunctionCall (identifier toString) ( argumentList ))
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  nested = getURLs().map((target) -> target.toString())
+  ==================================
+END:cfset
+START:!---
+  =========TAG=================
+  <!--- the '>' of a decrement still ends the tag --->
+END:!---
+START:cfset
+  =========TAG=================
+  <cfset countdown = i-->
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <countdown>
+  '='                      <=>
+  IDENTIFIER               <i>
+  '--'                     <-->
+  ===========Tree================
+  (expression
+    (assignmentExpression
+      (startExpression
+        (baseExpression (unaryExpression (memberExpression (identifier countdown))))
+      )
+      =
+      (startExpression
+        (baseExpression
+          (unaryExpression (unaryExpression (memberExpression (identifier i))) --)
+        )
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  countdown = i--
+  ==================================
+END:cfset
+START:cfset
+  =========TAG=================
+  <cfset comparison = total gt 1>
+  TAG
+  ==========Tokens==============
+  IDENTIFIER               <comparison>
+  '='                      <=>
+  IDENTIFIER               <total>
+  GT                       <gt>
+  INTEGER_LITERAL          <1>
+  ===========Tree================
+  (expression
+    (assignmentExpression
+      (startExpression
+        (baseExpression (unaryExpression (memberExpression (identifier comparison))))
+      )
+      =
+      (startExpression
+        (baseExpression
+          (baseExpression (unaryExpression (memberExpression (identifier total))))
+          (compareExpressionOperator gt)
+          (baseExpression (unaryExpression (primaryExpression (literalExpression 1))))
+        )
+      )
+    )
+    <EOF>
+  )
+  ===========Expression===============
+  comparison = total gt 1
+  ==================================
+END:cfset
