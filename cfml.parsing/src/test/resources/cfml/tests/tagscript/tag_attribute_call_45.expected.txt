@@ -1,0 +1,307 @@
+/*===TOKENS===*/
+Hidden:LINE_COMMENT             <// A function call as an attribute value. The call's own optional block body used to>
+Hidden:LINE_COMMENT             <// swallow the tag's body, leaving the tag with nothing to match.>
+QUERY                    <query>
+IDENTIFIER               <name>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <results>
+CLOSE_STRING             <">
+IDENTIFIER               <cachedWithin>
+'='                      <=>
+IDENTIFIER               <createTimeSpan>
+'('                      <(>
+INTEGER_LITERAL          <0>
+','                      <,>
+INTEGER_LITERAL          <0>
+','                      <,>
+INTEGER_LITERAL          <0>
+','                      <,>
+INTEGER_LITERAL          <5>
+')'                      <)>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <echo>
+'('                      <(>
+OPEN_STRING              <">
+STRING_LITERAL           <select 1>
+CLOSE_STRING             <">
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+Hidden:LINE_COMMENT             <// The same tag with a plain attribute value, and with no body at all.>
+QUERY                    <query>
+IDENTIFIER               <name>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <other>
+CLOSE_STRING             <">
+IDENTIFIER               <cachedWithin>
+'='                      <=>
+IDENTIFIER               <timeout>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+IDENTIFIER               <echo>
+'('                      <(>
+OPEN_STRING              <">
+STRING_LITERAL           <select 2>
+CLOSE_STRING             <">
+')'                      <)>
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+DIRECTORY                <cfdirectory>
+DIRECTORY                <directory>
+'='                      <=>
+IDENTIFIER               <expandPath>
+'('                      <(>
+OPEN_STRING              <">
+STRING_LITERAL           </tmp>
+CLOSE_STRING             <">
+')'                      <)>
+IDENTIFIER               <action>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <list>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction query)
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier name))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart results) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier cachedWithin))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (memberExpression
+                      (functionCall
+                        (identifier createTimeSpan)
+                        (
+                        (argumentList
+                          (argument
+                            (startExpression
+                              (baseExpression (unaryExpression (primaryExpression (literalExpression 0))))
+                            )
+                          )
+                          ,
+                          (argument
+                            (startExpression
+                              (baseExpression (unaryExpression (primaryExpression (literalExpression 0))))
+                            )
+                          )
+                          ,
+                          (argument
+                            (startExpression
+                              (baseExpression (unaryExpression (primaryExpression (literalExpression 0))))
+                            )
+                          )
+                          ,
+                          (argument
+                            (startExpression
+                              (baseExpression (unaryExpression (primaryExpression (literalExpression 5))))
+                            )
+                          )
+                        )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+          (compoundStatement
+            {
+            (statement
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (memberExpression
+                      (functionCall
+                        (identifier echo)
+                        (
+                        (argumentList
+                          (argument
+                            (startExpression
+                              (baseExpression
+                                (unaryExpression
+                                  (primaryExpression
+                                    (literalExpression (stringLiteral " (stringLiteralPart select 1) "))
+                                  )
+                                )
+                              )
+                            )
+                          )
+                        )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              ;
+            )
+            }
+          )
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction query)
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier name))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart other) "))
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier cachedWithin))
+              =
+              (startExpression
+                (baseExpression (unaryExpression (memberExpression (identifier timeout))))
+              )
+            )
+          )
+          (compoundStatement
+            {
+            (statement
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (memberExpression
+                      (functionCall
+                        (identifier echo)
+                        (
+                        (argumentList
+                          (argument
+                            (startExpression
+                              (baseExpression
+                                (unaryExpression
+                                  (primaryExpression
+                                    (literalExpression (stringLiteral " (stringLiteralPart select 2) "))
+                                  )
+                                )
+                              )
+                            )
+                          )
+                        )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+              ;
+            )
+            }
+          )
+        )
+      )
+    )
+  )
+  (element
+    (statement
+      (tagOperatorStatement
+        (cfmlfunctionStatement
+          (cfmlFunction cfdirectory)
+          (paramStatementAttributes
+            (param
+              (multipartIdentifier (identifier (cfmlFunction directory)))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (memberExpression
+                      (functionCall
+                        (identifier expandPath)
+                        (
+                        (argumentList
+                          (argument
+                            (startExpression
+                              (baseExpression
+                                (unaryExpression
+                                  (primaryExpression
+                                    (literalExpression (stringLiteral " (stringLiteralPart /tmp) "))
+                                  )
+                                )
+                              )
+                            )
+                          )
+                        )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+            (param
+              (multipartIdentifier (identifier action))
+              =
+              (startExpression
+                (baseExpression
+                  (unaryExpression
+                    (primaryExpression
+                      (literalExpression (stringLiteral " (stringLiteralPart list) "))
+                    )
+                  )
+                )
+              )
+            )
+          )
+          ;
+        )
+      )
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+{
+query cachedWithin=createTimeSpan(0, 0, 0, 5) name='results'{
+echo('select 1');
+
+};
+query cachedWithin=timeout name='other'{
+echo('select 2');
+
+};
+cfdirectory action='list' directory=expandPath('/tmp');;
+
+}
+/*======*/
