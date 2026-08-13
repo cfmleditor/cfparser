@@ -171,14 +171,14 @@ Hidden:NEWLINE                  <>
 /*===DECOMPILE===*/
 component {
   {
+    public function dotrim(data, callback)       {
+callback(trim(data));
+
+      };
     public function bar()       {
 dotrim('hello world',  function (result)   {
 
   });
-
-      };
-    public function dotrim(data, callback)       {
-callback(trim(data));
 
       };
 

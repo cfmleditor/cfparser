@@ -104,10 +104,10 @@ IDENTIFIER               <support>
 /*======*/
 /*===DECOMPILE===*/
 {
-  public function setStatus2(rc) role='support:admin'    {
+  public function setStatus(rc) my:role='support:admin'    {
 
     };
-  public function setStatus(rc) my:role='support:admin'    {
+  public function setStatus2(rc) role='support:admin'    {
 
     };
   public function setStatus2(rc) role    {

@@ -242,12 +242,12 @@ Hidden:NEWLINE                  <>
 /*===DECOMPILE===*/
 component {
   {
-    static public string function caption()       {
-        return 'b';
-
-      };
     static public string function label()       {
         return 'a';
+
+      };
+    static public string function caption()       {
+        return 'b';
 
       };
     static public function plain()       {
