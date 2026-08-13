@@ -509,13 +509,20 @@ cfmlExpression
 	|   importStatement EOF
 	;
 	
-// FINAL is Lucee's immutable local; it takes the same shape as VAR and may combine
-// with it, as in `final var x = 1;`.
+// FINAL is Lucee's immutable local; it takes the same shape as VAR and may lead it, as in
+// `final var x = 1;`.
 // STATIC sits here alongside FINAL because `static x = 1;` is a declaration, not a function.
 // Without it, STATIC is only reachable as a functionModifier, so functionDeclaration wins
 // prediction and then finds no FUNCTION token -- see #63.
+//
+// The modifier only ever leads. A trailing `VAR (FINAL | STATIC)` alternative used to sit here
+// and could not match anything: both words are in the identifier rule, put there by #46 so code
+// naming a variable `final` keeps working, so `var final` matches the plain VAR alternative with
+// `final` as the identifier before the longer one is considered. That reading is the correct one
+// -- tree-sitter-cfml's corpus tests `var final = getValue();` as a local named final -- so the
+// alternative was removed rather than made reachable. See #68.
 localAssignmentExpression
-	:	(VAR | (FINAL | STATIC) VAR? | VAR (FINAL | STATIC)) left=startExpression ( (EQUALSOP otherIdentifiers)* EQUALSOP right=startExpression )? //-> ^( VARLOCAL identifier ( EQUALSOP baseExpression )? )
+	:	(VAR | (FINAL | STATIC) VAR?) left=startExpression ( (EQUALSOP otherIdentifiers)* EQUALSOP right=startExpression )? //-> ^( VARLOCAL identifier ( EQUALSOP baseExpression )? )
 	;
 	
 otherIdentifiers:
