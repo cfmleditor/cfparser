@@ -1,0 +1,144 @@
+/*===TOKENS===*/
+COMPONENT                <component>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+STATIC                   <static>
+IDENTIFIER               <myStatic>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <v>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+FINAL                    <final>
+IDENTIFIER               <myConst>
+'='                      <=>
+OPEN_STRING              <">
+STRING_LITERAL           <c>
+CLOSE_STRING             <">
+';'                      <;>
+Hidden:NEWLINE                  <>
+FUNCTION                 <function>
+IDENTIFIER               <f>
+'('                      <(>
+')'                      <)>
+'{'                      <{>
+Hidden:NEWLINE                  <>
+VAR                      <var>
+IDENTIFIER               <local1>
+'='                      <=>
+IDENTIFIER               <myStatic>
+';'                      <;>
+Hidden:NEWLINE                  <>
+RETURN                   <return>
+IDENTIFIER               <local1>
+';'                      <;>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+'}'                      <}>
+Hidden:NEWLINE                  <>
+/*===TREE===*/
+(scriptBlock
+  (componentDeclaration
+    component
+    (componentGuts
+      {
+      (element
+        (statement
+          (localAssignmentExpression
+            static
+            (startExpression
+              (baseExpression (unaryExpression (memberExpression (identifier myStatic))))
+            )
+            =
+            (startExpression
+              (baseExpression
+                (unaryExpression
+                  (primaryExpression
+                    (literalExpression (stringLiteral " (stringLiteralPart v) "))
+                  )
+                )
+              )
+            )
+          )
+          (endOfStatement ;)
+        )
+      )
+      (element
+        (statement
+          (localAssignmentExpression
+            final
+            (startExpression
+              (baseExpression (unaryExpression (memberExpression (identifier myConst))))
+            )
+            =
+            (startExpression
+              (baseExpression
+                (unaryExpression
+                  (primaryExpression
+                    (literalExpression (stringLiteral " (stringLiteralPart c) "))
+                  )
+                )
+              )
+            )
+          )
+          (endOfStatement ;)
+        )
+      )
+      (element
+        (functionDeclaration
+          function
+          (identifier f)
+          (
+          parameterList
+          )
+          (compoundStatement
+            {
+            (statement
+              (localAssignmentExpression
+                var
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier local1))))
+                )
+                =
+                (startExpression
+                  (baseExpression (unaryExpression (memberExpression (identifier myStatic))))
+                )
+              )
+              (endOfStatement ;)
+            )
+            (statement
+              (returnStatement
+                return
+                (anExpression
+                  (startExpression
+                    (baseExpression (unaryExpression (memberExpression (identifier local1))))
+                  )
+                )
+              )
+              (endOfStatement ;)
+            )
+            }
+          )
+        )
+      )
+      }
+    )
+  )
+)
+/*======*/
+/*===DECOMPILE===*/
+component {
+  {
+    static myStatic = 'v';
+    final myConst = 'c';
+    public function f()       {
+        var local1 = myStatic;
+        return local1;
+
+      };
+
+  }
+}
+/*======*/

@@ -505,8 +505,11 @@ cfmlExpression
 	
 // FINAL is Lucee's immutable local; it takes the same shape as VAR and may combine
 // with it, as in `final var x = 1;`.
-localAssignmentExpression 
-	:	(VAR | FINAL VAR? | VAR FINAL) left=startExpression ( (EQUALSOP otherIdentifiers)* EQUALSOP right=startExpression )? //-> ^( VARLOCAL identifier ( EQUALSOP baseExpression )? )
+// STATIC sits here alongside FINAL because `static x = 1;` is a declaration, not a function.
+// Without it, STATIC is only reachable as a functionModifier, so functionDeclaration wins
+// prediction and then finds no FUNCTION token -- see #63.
+localAssignmentExpression
+	:	(VAR | (FINAL | STATIC) VAR? | VAR (FINAL | STATIC)) left=startExpression ( (EQUALSOP otherIdentifiers)* EQUALSOP right=startExpression )? //-> ^( VARLOCAL identifier ( EQUALSOP baseExpression )? )
 	;
 	
 otherIdentifiers:

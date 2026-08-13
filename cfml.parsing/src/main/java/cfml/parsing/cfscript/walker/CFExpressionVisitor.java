@@ -185,6 +185,7 @@ public class CFExpressionVisitor extends CFSCRIPTParserBaseVisitor<CFExpression>
 		final CFExpression initExpression = ctx.right == null ? null : visit(ctx.right);
 		CFVarDeclExpression retval = new CFVarDeclExpression(ctx.start, visit(ctx.left), initExpression);
 		retval.setFinal(ctx.FINAL() != null);
+		retval.setStatic(ctx.STATIC() != null);
 		if (ctx.otherIdentifiers().size() > 0) {
 			for (OtherIdentifiersContext oi : ctx.otherIdentifiers()) {
 				CFIdentifier otherid = (CFIdentifier) visit(oi.identifier());
