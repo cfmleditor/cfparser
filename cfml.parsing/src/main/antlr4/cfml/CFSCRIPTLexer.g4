@@ -168,6 +168,9 @@ FINAL: [fF][iI][nN][aA][lL];
 ABSTRACT: [aA][Bb][sS][tT][Rr][aA][cC][tT];
 STATIC: [sS][tT][aA][tT][iI][cC];
 SCRIPTOPEN: '<' [cC] [fF] [sS] [cC] [rR] [iI] [pP] [tT] '>';
+// Lucee's template block: ``` drops out of cfscript into template markup, the mirror of
+// <cfscript> dropping the other way. The body interpolates #...# like a string does.
+OPEN_TEMPLATE: '```' -> pushMode(InTemplate);
 SCRIPTCLOSE:'</' [cC] [fF] [sS] [cC] [rR] [iI] [pP] [tT] '>';
 // operators
 DOT: '.';
@@ -456,4 +459,17 @@ HASH_SINGLE
 
 mode HashMode;
 HashMode_ANY:  -> popMode,skip;
- 
+
+mode InTemplate;
+CLOSE_TEMPLATE
+	: '```' -> popMode
+;
+TEMPLATE_DOUBLEHASH
+	: '##' -> type(DOUBLEHASH)
+;
+TEMPLATE_LITERAL
+	: (~[`#]+ | '`' ~[`] | '``' ~[`])+
+;
+TEMPLATE_HASH
+	: '#' -> type(POUND_SIGN),pushMode(HashMode),pushMode(DefaultMode)
+;

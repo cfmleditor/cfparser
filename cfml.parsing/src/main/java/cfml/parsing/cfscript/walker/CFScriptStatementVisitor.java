@@ -8,10 +8,13 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import cfml.CFSCRIPTParser.AbortStatementContext;
 import cfml.CFSCRIPTParser.AdminStatementContext;
+import cfml.CFSCRIPTParser.AnExpressionContext;
 import cfml.CFSCRIPTParser.AnonymousFunctionDeclarationContext;
 import cfml.CFSCRIPTParser.AssignmentExpressionContext;
 import cfml.CFSCRIPTParser.BaseExpressionContext;
@@ -52,6 +55,7 @@ import cfml.CFSCRIPTParser.ScriptBlockContext;
 import cfml.CFSCRIPTParser.StartExpressionContext;
 import cfml.CFSCRIPTParser.StatementContext;
 import cfml.CFSCRIPTParser.SwitchStatementContext;
+import cfml.CFSCRIPTParser.TemplateBlockContext;
 import cfml.CFSCRIPTParser.TagFunctionStatementContext;
 import cfml.CFSCRIPTParser.TagStatementContext;
 import cfml.CFSCRIPTParser.TagThrowStatementContext;
@@ -95,6 +99,7 @@ import cfml.parsing.cfscript.script.CFReturnStatement;
 import cfml.parsing.cfscript.script.CFScriptStatement;
 import cfml.parsing.cfscript.script.CFSwitchStatement;
 import cfml.parsing.cfscript.script.CFTagThrowStatement;
+import cfml.parsing.cfscript.script.CFTemplateBlockStatement;
 import cfml.parsing.cfscript.script.CFThreadStatement;
 import cfml.parsing.cfscript.script.CFThrowStatement;
 import cfml.parsing.cfscript.script.CFTransactionStatement;
@@ -583,6 +588,25 @@ public class CFScriptStatementVisitor extends CFSCRIPTParserBaseVisitor<CFScript
 		// System.out.println("visitExitStatement");
 		CFExitStatement exitStatement = new CFExitStatement(ctx.EXIT().getSymbol(), visitExpression(ctx.memberExpression()));
 		return exitStatement;
+	}
+	
+	@Override
+	public CFScriptStatement visitTemplateBlock(TemplateBlockContext ctx) {
+		// The body is markup, not cfscript, so it is kept verbatim rather than modelled. Only the
+		// interpolations are parsed -- without a visitor here the block vanished from the tree and
+		// its #...# expressions leaked out as bare statements.
+		List<CFExpression> expressions = new ArrayList<CFExpression>();
+		for (AnExpressionContext interpolation : ctx.anExpression()) {
+			CFExpression expression = cfExpressionVisitor.visit(interpolation);
+			if (expression != null) {
+				expressions.add(expression);
+			}
+		}
+		Token open = ctx.OPEN_TEMPLATE().getSymbol();
+		Token close = ctx.CLOSE_TEMPLATE().getSymbol();
+		String content = open.getInputStream().getText(
+				Interval.of(open.getStopIndex() + 1, close.getStartIndex() - 1));
+		return new CFTemplateBlockStatement(open, content, expressions);
 	}
 	
 	@Override
