@@ -10,18 +10,23 @@ on:
 jobs:
   gradle:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        # 11 is the baseline the published main artifact targets, 21 the runtime most
+        # consumers are on. Running the suite on both is the only way to catch a Java 11
+        # problem that compiling to 11 on a 21 JDK cannot see.
+        java-version: [11, 21]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Set up JDK 21
+    - name: Set up JDK ${{ matrix.java-version }}
       uses: actions/setup-java@v4
       with:
         distribution: temurin
-        java-version: 21
+        java-version: ${{ matrix.java-version }}
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3

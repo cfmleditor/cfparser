@@ -133,8 +133,11 @@ subprojects {
 		}
 	}
 
-	sourceCompatibility = 21
-	targetCompatibility = 21
+	// Matches the Maven main artifact. The published jdk21 classifier is produced by
+	// Maven, which is what publishes; Gradle builds the Java 11 line that CI exercises
+	// on both an 11 and a 21 runner.
+	sourceCompatibility = 11
+	targetCompatibility = 11
 	tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 
 	task sourcesJar(type: Jar) {
