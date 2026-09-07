@@ -57,7 +57,11 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<maven.compiler.release>21</maven.compiler.release>
+		<!-- The main artifact is Java 11 so it loads on every supported runtime; the
+		     jdk21 classifier below is the same source compiled at 21. See the jdk21
+		     executions in build/plugins. -->
+		<maven.compiler.release>11</maven.compiler.release>
+		<jdk21.release>21</jdk21.release>
 
 		<jacoco.version>0.8.12</jacoco.version>
 		<!-- jacoco:prepare-agent overwrites this at build time with the -javaagent setting.
@@ -130,6 +134,85 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Two artifacts from one source tree. default-compile emits Java 11 into
+			     target/classes for the main jar; compile-jdk21 emits Java 21 into
+			     target/classes-jdk21 for the jdk21 classifier. The resource copy is
+			     needed because maven-jar-plugin takes a single classesDirectory, and
+			     that directory holds only .class files, so without it the classified
+			     jar would ship without cfml.dictionary's XML.
+
+			     The copy must stay at process-classes and not move later. Setting
+			     outputDirectory on a compiler execution leaks into what the reactor
+			     hands dependent modules, so cfml.parsing's tests resolve
+			     cfml.dictionary to classes-jdk21. Copy the resources after the tests
+			     run and all 326 fail with "Problem loading dictionaryconfig.xml",
+			     which reads like a missing resource rather than a phase ordering
+			     problem. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.13.0</version>
+				<executions>
+					<execution>
+						<id>compile-jdk21</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<release>${jdk21.release}</release>
+							<outputDirectory>${project.build.directory}/classes-jdk21</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+				<executions>
+					<execution>
+						<id>copy-resources-jdk21</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/classes-jdk21</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.outputDirectory}</directory>
+									<excludes>
+										<exclude>**/*.class</exclude>
+									</excludes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.4.1</version>
+				<executions>
+					<execution>
+						<id>jar-jdk21</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<classifier>jdk21</classifier>
+							<classesDirectory>${project.build.directory}/classes-jdk21</classesDirectory>
+							<!-- The parent is pom-packaged and compiles nothing, so its
+							     classes-jdk21 is empty. Without this it still emits and
+							     deploys a spurious cfparser-VERSION-jdk21.jar. -->
+							<skipIfEmpty>true</skipIfEmpty>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

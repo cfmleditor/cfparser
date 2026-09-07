@@ -133,8 +133,22 @@ subprojects {
 		}
 	}
 
-	sourceCompatibility = 21
-	targetCompatibility = 21
+	// Bytecode stays at 11 to match the Maven main artifact, whatever JDK is running.
+	// The published jdk21 classifier is produced by Maven, which is what publishes.
+	sourceCompatibility = 11
+	targetCompatibility = 11
+
+	// -PjavaTestVersion selects the JDK that compiles and runs the tests, so CI can
+	// exercise the same Java 11 bytecode on an 11 and a 21 runtime. Gradle itself keeps
+	// running on the launcher JDK: the bnd OSGi plugin is class file 61 and throws
+	// UnsupportedClassVersionError if the daemon is on Java 11, so the toolchain has to
+	// move rather than the whole build.
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(
+				(project.findProperty('javaTestVersion') ?: '21') as Integer)
+		}
+	}
 	tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 
 	task sourcesJar(type: Jar) {
