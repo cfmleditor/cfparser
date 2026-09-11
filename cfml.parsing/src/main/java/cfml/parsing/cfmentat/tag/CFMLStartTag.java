@@ -23,6 +23,8 @@ public class CFMLStartTag extends StartTagTypeGenericImplementation {
 	}
 	
 	static protected final String REG_ATTRIBUTES = "(?si)(\\w+)[\\s=]+(((\\x22|\\x27|#)((?!\\4).|\\4{2})*\\4))";
+	// Compiled once: getAttributes() runs for every tag with attributes in a scan.
+	static private final Pattern ATTRIBUTES_PATTERN = Pattern.compile(REG_ATTRIBUTES, Pattern.CASE_INSENSITIVE);
 	private static CFMLStartTag INSTANCE = null;
 	
 	protected CFMLStartTag(final String description, final String startDelimiter, final String closingDelimiter,
@@ -121,7 +123,7 @@ public class CFMLStartTag extends StartTagTypeGenericImplementation {
 		Matcher matcher;
 		Pattern pattern;
 		String attributeName, attributeValue;
-		pattern = Pattern.compile(REG_ATTRIBUTES, Pattern.CASE_INSENSITIVE);
+		pattern = ATTRIBUTES_PATTERN;
 		matcher = pattern.matcher(inData);
 		if (inData.trim().endsWith("&")) {
 			userMessage(0, "stripAttributes", "Last attribute cannot be an ampersand", "ERR", null);
