@@ -29,7 +29,7 @@ public class CFForStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		String s = Indent(indent) + "for(";
 		if (init != null) {
 			s += init.Decompile(indent);

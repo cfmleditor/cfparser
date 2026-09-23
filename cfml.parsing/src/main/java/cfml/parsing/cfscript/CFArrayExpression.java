@@ -29,7 +29,7 @@ public class CFArrayExpression extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		if (elements.size() > 0) {
 			StringBuilder sb = new StringBuilder();
 			sb.append('[');

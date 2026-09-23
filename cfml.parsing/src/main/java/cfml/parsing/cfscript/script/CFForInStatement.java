@@ -27,7 +27,7 @@ public class CFForInStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Indent(indent));
 		sb.append("for( ");

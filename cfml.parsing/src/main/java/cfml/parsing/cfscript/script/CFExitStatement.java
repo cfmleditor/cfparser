@@ -36,7 +36,7 @@ public class CFExitStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		if (methodArg != null) {
 			return "exit \"" + methodArg + "\"";
 		} else {

@@ -28,7 +28,7 @@ public class CFAnonymousFunctionExpression extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		return (funcDeclStatement.Decompile(0));
 	}
 	

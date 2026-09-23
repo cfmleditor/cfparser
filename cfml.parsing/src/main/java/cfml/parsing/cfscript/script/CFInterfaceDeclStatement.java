@@ -18,7 +18,7 @@ public class CFInterfaceDeclStatement extends CFCompDeclStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
-		return super.Decompile(0).replaceFirst("component", "interface");
+	protected String decompileImpl(int indent) {
+		return super.decompileImpl(0).replaceFirst("component", "interface");
 	}
 }

@@ -129,6 +129,25 @@ empties the cache.
 Cache hits cost ~7% of a miss (0.002ms vs 0.032ms), worth roughly 30% of expression-parse time on
 a large file.
 
+### Decompile(0) is memoised — setters must invalidate
+
+`Decompile(int)` is declared on the `CFStatement` and `CFScriptStatement` interfaces, and both
+abstract `CFParsedStatement` bases implement it as a wrapper that caches the `indent == 0` result
+and delegates to `decompileImpl(int)`. **Concrete nodes override `decompileImpl`, not `Decompile`.**
+A non-zero indent is only reached from a parent already rendering itself, so it is not cached.
+
+`CFCase` and `CFCatchStatement` implement the interface directly rather than extending a base, so
+they still override `Decompile` and get no caching.
+
+The cached string is valid only while the node is unchanged. Nothing mutates a node after the
+visitor finishes building it — which is before any consumer can hold a reference — but **a setter
+that changes rendering must call `invalidateDecompiled()`**, or `Decompile(0)` keeps handing back
+the text from before the change. `setIsShortHand`, `setStatic`, `setModifier` and
+`setMemberOperator` are the kind of setter this applies to.
+
+Worth roughly 6% of a large CFLint scan (74% of `Decompile(0)` calls were repeats), and nothing on
+a small one, where DFA warm-up dominates — see below.
+
 ## Downstream: CFLint
 
 `cfmleditor/CFLint` is the main consumer. It declares the cfparser version **twice** — a

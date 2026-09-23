@@ -69,7 +69,7 @@ public class CFTryCatchStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		validate();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < catchStatements.size(); i++) {

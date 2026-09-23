@@ -46,7 +46,7 @@ public class CFStructExpression extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(ordered ? '[' : '{');
 		if (elements.isEmpty() && emptyMarker != null) {

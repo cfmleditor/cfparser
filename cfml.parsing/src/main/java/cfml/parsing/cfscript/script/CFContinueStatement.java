@@ -15,7 +15,7 @@ public class CFContinueStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		return Indent(indent) + "continue";
 	}
 	

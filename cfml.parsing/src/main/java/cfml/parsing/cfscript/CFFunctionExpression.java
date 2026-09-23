@@ -52,7 +52,7 @@ public class CFFunctionExpression extends CFMember {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		String s = nameId == null ? "" : nameId.Decompile(indent);
 		s += "(";
 		

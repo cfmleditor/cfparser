@@ -45,7 +45,7 @@ public class CFParamStatement extends CFParsedAttributeStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("param");
 		if (shorthand) {

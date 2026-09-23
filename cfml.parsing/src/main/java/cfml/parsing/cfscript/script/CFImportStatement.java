@@ -21,7 +21,7 @@ public class CFImportStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		return "import " + path.Decompile(0) + (all ? ".*" : "");
 	}
 	

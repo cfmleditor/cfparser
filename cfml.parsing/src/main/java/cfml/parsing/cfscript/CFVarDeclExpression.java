@@ -42,7 +42,7 @@ public class CFVarDeclExpression extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder s = new StringBuilder(Indent(indent));
 		s.append(staticDecl ? "static " : finalDecl ? "final " : "var ");
 		s.append(var.Decompile(0));

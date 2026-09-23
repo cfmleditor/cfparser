@@ -33,7 +33,7 @@ public class CFTagThrowStatement extends CFParsedAttributeStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < indent; i++)
 			sb.append(" ");

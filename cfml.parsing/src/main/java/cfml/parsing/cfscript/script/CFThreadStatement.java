@@ -44,7 +44,7 @@ public class CFThreadStatement extends CFParsedAttributeStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("thread ");
 		DecompileAttributes(sb);

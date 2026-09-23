@@ -42,7 +42,7 @@ public class CFSwitchStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int _indent) {
+	protected String decompileImpl(int _indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("switch (");
 		sb.append(variable.Decompile(0));

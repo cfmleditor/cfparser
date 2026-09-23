@@ -40,7 +40,7 @@ public class CFAnonymousComponentExpression extends CFExpression {
 	}
 
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		return "new " + componentDeclaration.Decompile(0);
 	}
 

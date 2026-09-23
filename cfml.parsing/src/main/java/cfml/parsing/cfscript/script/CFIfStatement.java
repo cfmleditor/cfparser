@@ -28,7 +28,7 @@ public class CFIfStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder s = new StringBuilder();
 		s.append(Indent(indent));
 		s.append("if(");

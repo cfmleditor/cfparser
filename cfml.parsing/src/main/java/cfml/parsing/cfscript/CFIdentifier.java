@@ -53,7 +53,7 @@ public class CFIdentifier extends CFVarExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		return getFullName();
 	}
 	

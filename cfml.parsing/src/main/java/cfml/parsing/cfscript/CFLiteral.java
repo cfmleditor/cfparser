@@ -60,7 +60,7 @@ public class CFLiteral extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		try {
 			if (CFSCRIPTLexer.STRING_LITERAL == kind && val != null) {
 				return "'" + val + "'";

@@ -43,7 +43,7 @@ public class CFBinaryExpression extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		String endChar = "";
 		if (_kind == CFSCRIPTLexer.LEFTBRACKET) {
 			endChar = "]";

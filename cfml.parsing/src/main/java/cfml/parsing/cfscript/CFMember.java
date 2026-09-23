@@ -34,7 +34,7 @@ public class CFMember extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		return "[" + expression.Decompile(0) + "]";
 	}
 	

@@ -46,7 +46,7 @@ public class CFUnaryExpression extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		
 		switch (kind) {
