@@ -6,6 +6,6 @@ Native binary CLI for cfparser.
 <dependency>
     <groupId>com.github.cfmleditor</groupId>
     <artifactId>cfml.cli</artifactId>
-    <version>2.16.1-SNAPSHOT</version>
+    <version>2.16.2-SNAPSHOT</version>
 </dependency>
 ```
