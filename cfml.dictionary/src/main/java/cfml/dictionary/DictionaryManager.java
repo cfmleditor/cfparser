@@ -357,6 +357,16 @@ public class DictionaryManager {
 		if (dictionaryConfig == null)
 			throw new IllegalArgumentException("Problem loading dictionaryconfig.xml");
 		
+		// The parsed dictionary is immutable once loaded and every CFMLParser construction
+		// asks for the same version, so re-parsing the XML each time is pure waste. Key the
+		// cache on the preference signature as well so a later initDictionaries(prefs) with
+		// different preferences still gets a freshly loaded dictionary.
+		final String versionCacheKey = versionkey + "\u0000" + prefsSignature(fPrefs);
+		final SyntaxDictionary cachedDictionary = (SyntaxDictionary) dictionaryVersionCache.get(versionCacheKey);
+		if (cachedDictionary != null) {
+			return cachedDictionary;
+		}
+		
 		// grab the cfml dictionary
 		// Node n = dictionaryConfig.getElementById(CFDIC).getFirstChild();
 		Node versionNode = dictionaryConfig.getElementById(versionkey);
@@ -400,6 +410,7 @@ public class DictionaryManager {
 			String filename = n.getAttributes().getNamedItem("location").getNodeValue().trim();
 			dic.loadDictionary(getDictionaryLocation(filename));
 		}
+		dictionaryVersionCache.put(versionCacheKey, dic);
 		return dic;
 	}
 	

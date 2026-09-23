@@ -269,7 +269,8 @@ public class CFMLParser {
 			// <cfset a = 1 /> would otherwise be parsed as the expression "a = 1 /".
 			// An expression can never legitimately end in '/' - division needs a right
 			// operand - so removing a trailing one is safe.
-			String cfscript = elem.toString().substring(elem.getName().length() + 1, elem.toString().length() - 1)
+			final String elemText = elem.toString();
+			String cfscript = elemText.substring(elem.getName().length() + 1, elemText.length() - 1)
 					.trim();
 			if (cfscript.endsWith("/")) {
 				cfscript = cfscript.substring(0, cfscript.length() - 1).trim();
@@ -295,21 +296,22 @@ public class CFMLParser {
 			// added twice, reading past the end of the tag (and out of the string entirely once
 			// the element sits far enough into the file).
 			final int elemBegin = elem.getBegin();
-			final int uglyNotPos = elem.toString().lastIndexOf("<>");
+			final String elemText = elem.toString();
+			final int uglyNotPos = elemText.lastIndexOf("<>");
 			int endPos = elem.getStartTag().getEnd() - 1 - elemBegin;
 
 			if (uglyNotPos > 0) {
-				final int nextPos = elem.toString().indexOf(">", uglyNotPos + 2);
+				final int nextPos = elemText.indexOf(">", uglyNotPos + 2);
 				// An unclosed or self-closing tag has no end tag; fall back to the element's own
 				// extent rather than dereferencing null.
-				final int endTagBegin = elem.getEndTag() == null ? elem.toString().length()
+				final int endTagBegin = elem.getEndTag() == null ? elemText.length()
 						: elem.getEndTag().getBegin() - elemBegin;
 				if (nextPos > 0 && nextPos < endTagBegin) {
 					endPos = nextPos;
 				}
 			}
 
-			final String cfscript = elem.toString().substring(elem.getName().length() + 1, endPos);
+			final String cfscript = elemText.substring(elem.getName().length() + 1, endPos);
 			if (cfscript.length() > 0 && visitor.visitPreParseExpression("TAG", cfscript)) {
 				final CFExpression expression = parseCFExpression(cfscript, visitor);
 				
