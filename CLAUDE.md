@@ -134,8 +134,35 @@ a large file.
 `cfmleditor/CFLint` is the main consumer. It declares the cfparser version **twice** — a
 `cfparser.version` property in `pom.xml` and a hardcoded coordinate in `build.gradle`. Bump both.
 
-It constructs a new `CFMLParser` per file, so the expression cache is per-file and never
-accumulates across a scan.
+It constructs **one** `CFMLParser` for the whole run — `private CFMLParser cfmlParser = new
+CFMLParser();` is a field initialiser on `CFLint`. A 158-file scan builds exactly one. So the
+expression cache accumulates across the entire scan, not per file.
+
+(This paragraph previously said the opposite. Anything reasoning about per-file parser construction
+cost — dictionary loading, cache locality — is reasoning about a pattern CFLint does not use.)
+
+### What a CFLint scan actually costs
+
+Almost all of it is ANTLR building its DFA the first time it meets each decision, not parsing.
+Measured on 158 files in one JVM:
+
+| | |
+|---|---|
+| first pass (cold DFA) | 4676 ms |
+| second and third pass (warm) | 86 ms |
+
+Same files, same process — **54×**. It is a fixed per-process cost, so scan time barely tracks
+codebase size: 158 files took 5037 ms and 632 files took 5945 ms, a marginal ~2 ms per file.
+
+Two consequences worth keeping in mind:
+
+- Caching and allocation work inside cfparser will not move a CFLint CLI scan. Profiling one shows
+  ~91% of samples in ANTLR, `parseScriptBlock` accounting for 74% of wall clock, the SLL→LL fallback
+  firing zero times, and the expression LRU taking zero hits.
+- A long-lived consumer (daemon, language server, IDE) amortises the warm-up completely and is the
+  single biggest available win. Conversely `clearDFA()` throws it away — and it is process-global
+  (`_decisionToDFA` is `static final` on the generated parser), so it clears every parser instance
+  in the JVM, not just the one it was called on.
 
 CFLint must stay on the same Java baseline. Its artifacts cannot load class file version 65 on an
 older JVM.
