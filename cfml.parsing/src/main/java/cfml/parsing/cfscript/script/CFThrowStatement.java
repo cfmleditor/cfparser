@@ -40,7 +40,7 @@ public class CFThrowStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		if (message != null) {
 			return "throw " + message + "";
 		} else {

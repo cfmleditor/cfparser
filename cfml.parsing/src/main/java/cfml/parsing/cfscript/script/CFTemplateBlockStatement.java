@@ -46,7 +46,7 @@ public class CFTemplateBlockStatement extends CFParsedStatement {
 	}
 
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		return FENCE + content + FENCE;
 	}
 

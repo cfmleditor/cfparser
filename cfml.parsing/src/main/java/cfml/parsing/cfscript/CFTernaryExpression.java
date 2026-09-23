@@ -39,7 +39,7 @@ public class CFTernaryExpression extends CFAssignmentExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		// String endChar = "";
 		// if (_kind == CFSCRIPTLexer.LEFTBRACKET) {
 		// endChar = "]";

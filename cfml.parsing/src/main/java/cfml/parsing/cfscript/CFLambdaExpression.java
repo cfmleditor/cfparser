@@ -57,7 +57,7 @@ public class CFLambdaExpression extends CFAnonymousFunctionExpression {
 	}
 
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		CFFuncDeclStatement declaration = getFuncDeclStatement();
 		StringBuilder sb = new StringBuilder();
 		sb.append("(");

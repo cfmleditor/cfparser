@@ -44,7 +44,7 @@ public class CFLockStatement extends CFParsedAttributeStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		validate();
 		
 		StringBuilder sb = new StringBuilder();

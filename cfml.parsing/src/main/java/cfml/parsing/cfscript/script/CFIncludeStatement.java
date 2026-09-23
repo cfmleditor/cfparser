@@ -34,7 +34,7 @@ public class CFIncludeStatement extends CFParsedAttributeStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder("include");
 		if (hasAttributes()) {
 			DecompileAttributes(sb);

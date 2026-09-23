@@ -47,7 +47,7 @@ public class CFSliceMember extends CFMember {
 	}
 
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder("[");
 		sb.append(decompileBound(getFrom()));
 		sb.append(":");

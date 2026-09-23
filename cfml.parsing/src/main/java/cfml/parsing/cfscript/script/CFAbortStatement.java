@@ -25,7 +25,7 @@ public class CFAbortStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		if (message != null) {
 			return "abort \"" + message + "\"";
 		} else {

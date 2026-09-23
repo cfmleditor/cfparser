@@ -32,7 +32,7 @@ public class CFStructElementExpression extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(key.Decompile(0));
 		sb.append(':');

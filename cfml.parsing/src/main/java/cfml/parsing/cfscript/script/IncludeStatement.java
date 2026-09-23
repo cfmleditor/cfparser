@@ -23,7 +23,7 @@ public class IncludeStatement extends CFParsedStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		return "include " + template.Decompile(0);
 	}
 	

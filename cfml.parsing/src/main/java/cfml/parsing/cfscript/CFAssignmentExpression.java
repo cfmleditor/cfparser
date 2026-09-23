@@ -105,7 +105,7 @@ public class CFAssignmentExpression extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		if (left != null) {
 			sb.append(left.Decompile(indent));

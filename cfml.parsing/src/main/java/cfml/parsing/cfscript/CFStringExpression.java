@@ -23,7 +23,7 @@ public class CFStringExpression extends CFExpression {
 	private static final long serialVersionUID = 233826913909000678L;
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("'");
 		for (CFExpression expression : subExpressions) {

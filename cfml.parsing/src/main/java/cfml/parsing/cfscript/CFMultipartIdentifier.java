@@ -20,9 +20,9 @@ public class CFMultipartIdentifier extends CFIdentifier {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(super.Decompile(indent));
+		sb.append(super.decompileImpl(indent));
 		for (int i = 1; i < ids.size(); i++) {
 			sb.append(".").append(ids.get(i).Decompile(0));
 		}

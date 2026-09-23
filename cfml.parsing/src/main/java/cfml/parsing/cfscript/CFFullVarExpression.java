@@ -65,7 +65,7 @@ public class CFFullVarExpression extends CFIdentifier {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		for (CFExpression expression : expressions) {
 			if (sb.length() > 0) {

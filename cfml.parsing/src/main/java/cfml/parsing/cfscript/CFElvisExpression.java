@@ -12,7 +12,7 @@ public class CFElvisExpression extends CFBinaryExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		return "" + _left.Decompile(indent) + " " + operatorImage + " " + _right.Decompile(indent);
 	}
 	

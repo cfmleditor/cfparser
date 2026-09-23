@@ -28,7 +28,7 @@ public class CFNestedExpression extends CFExpression {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append('#');
 		sb.append(sub.Decompile(0));

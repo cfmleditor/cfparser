@@ -40,7 +40,7 @@ public class CFTransactionStatement extends CFParsedAttributeStatement {
 	}
 	
 	@Override
-	public String Decompile(int indent) {
+	protected String decompileImpl(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("transaction ");
 		DecompileAttributes(sb);
